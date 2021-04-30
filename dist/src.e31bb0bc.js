@@ -7674,7 +7674,7 @@ var _Utils = _interopRequireDefault(require("./../../Utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n      <va-app-header title=\"Home\" user=", "></va-app-header>\n      \n      <div class=\"page-content\">\n        <h1 class=\"anim-in\">Hey ", "</h1>\n\n        <h3>Button example:</h3>\n        <sl-button class=\"anim-in\" @click=", ">View Profile</sl-button>\n        <p>&nbsp;</p>\n        <h3>Link example</h3>\n        <a href=\"/profile\" @click=", ">View Profile</a>\n        \n      </div>\n     \n    "]);
+  const data = _taggedTemplateLiteral(["\n      <va-app-header title=\"Home\" user=", "></va-app-header>\n      \n      <div class=\"page-content\">\n        <!-- <h1 class=\"anim-in\">Hey ", "</h1>\n\n        <h3>Button example:</h3>\n        <sl-button class=\"anim-in\" @click=", ">View Profile</sl-button>\n        <p>&nbsp;</p>\n        <h3>Link example</h3>\n        <a href=\"/profile\" @click=", ">View Profile</a> -->\n        \n      </div>\n     \n    "]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -7704,7 +7704,131 @@ class HomeView {
 var _default = new HomeView();
 
 exports.default = _default;
-},{"./../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","./../../Router":"Router.js","./../../Auth":"Auth.js","./../../Utils":"Utils.js"}],"Router.js":[function(require,module,exports) {
+},{"./../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","./../../Router":"Router.js","./../../Auth":"Auth.js","./../../Utils":"Utils.js"}],"views/pages/signin.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _App = _interopRequireDefault(require("./../../App"));
+
+var _litHtml = require("lit-html");
+
+var _Router = require("./../../Router");
+
+var _Auth = _interopRequireDefault(require("./../../Auth"));
+
+var _Utils = _interopRequireDefault(require("./../../Utils"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _templateObject() {
+  const data = _taggedTemplateLiteral(["      \n      <div class=\"page-content page-centered\">\n        <div class=\"signinup-box\">\n          <img class=\"signinup-logo\" src=\"/images/logo.svg\">          \n          <sl-form class=\"form-signup dark-theme\" @sl-submit=", ">          \n            <div class=\"input-group\">\n              <sl-input name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n            </div>\n            <sl-button class=\"submit-btn\" type=\"primary\" submit style=\"width: 100%;\">Sign In</sl-button>\n          </sl-form>\n          <p>No Account? <a href=\"/signup\" @click=", ">Sign Up</a></p>\n        </div>\n      </div>\n    "]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+class SignInView {
+  init() {
+    console.log('SignInView.init');
+    document.title = 'Sign In';
+    this.render();
+
+    _Utils.default.pageIntroAnim();
+  }
+
+  signInSubmitHandler(e) {
+    e.preventDefault();
+    const formData = e.detail.formData;
+    const submitBtn = document.querySelector('.submit-btn');
+    submitBtn.setAttribute('loading', ''); // sign in using Auth    
+
+    _Auth.default.signIn(formData, () => {
+      submitBtn.removeAttribute('loading');
+    });
+  }
+
+  render() {
+    const template = (0, _litHtml.html)(_templateObject(), this.signInSubmitHandler, _Router.anchorRoute);
+    (0, _litHtml.render)(template, _App.default.rootEl);
+  }
+
+}
+
+var _default = new SignInView();
+
+exports.default = _default;
+},{"./../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","./../../Router":"Router.js","./../../Auth":"Auth.js","./../../Utils":"Utils.js"}],"views/pages/signup.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _App = _interopRequireDefault(require("./../../App"));
+
+var _Auth = _interopRequireDefault(require("./../../Auth"));
+
+var _litHtml = require("lit-html");
+
+var _Router = require("./../../Router");
+
+var _Utils = _interopRequireDefault(require("./../../Utils"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _templateObject() {
+  const data = _taggedTemplateLiteral(["      \n      <div class=\"page-content page-centered\">      \n        <div class=\"signinup-box\">\n        <img class=\"signinup-logo\" src=\"/images/logo.svg\">\n          <h1>Sign Up</h1>\n          <sl-form class=\"form-signup\" @sl-submit=", ">\n            <div class=\"input-group\">\n              <sl-input name=\"firstName\" type=\"text\" placeholder=\"First Name\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input name=\"lastName\" type=\"text\" placeholder=\"Last Name\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n            </div>            \n            <div class=\"input-group\">\n              <sl-select name=\"accessLevel\" placeholder=\"I am a ...\">\n                <sl-menu-item value=\"1\">Customer</sl-menu-item>\n                <sl-menu-item value=\"2\">Hairdresser</sl-menu-item>\n              </sl-select>\n            </div>         \n            <sl-button type=\"primary\" class=\"submit-btn\" submit style=\"width: 100%;\">Sign Up</sl-button>\n          </sl-form>\n          <p>Have an account? <a href=\"/signin\" @click=", ">Sign In</a></p>\n        </div>\n      </div>\n    "]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+class SignUpView {
+  init() {
+    console.log('SignUpView.init');
+    document.title = 'Sign In';
+    this.render();
+
+    _Utils.default.pageIntroAnim();
+  }
+
+  signUpSubmitHandler(e) {
+    e.preventDefault();
+    const submitBtn = document.querySelector('.submit-btn');
+    submitBtn.setAttribute('loading', '');
+    const formData = e.detail.formData; // sign up using Auth
+
+    _Auth.default.signUp(formData, () => {
+      submitBtn.removeAttribute('loading');
+    });
+  }
+
+  render() {
+    const template = (0, _litHtml.html)(_templateObject(), this.signUpSubmitHandler, _Router.anchorRoute);
+    (0, _litHtml.render)(template, _App.default.rootEl);
+  }
+
+}
+
+var _default = new SignUpView();
+
+exports.default = _default;
+},{"./../../App":"App.js","./../../Auth":"Auth.js","lit-html":"../node_modules/lit-html/lit-html.js","./../../Router":"Router.js","./../../Utils":"Utils.js"}],"Router.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7716,12 +7840,14 @@ exports.default = void 0;
 
 var _home = _interopRequireDefault(require("./views/pages/home"));
 
+var _signin = _interopRequireDefault(require("./views/pages/signin"));
+
+var _signup = _interopRequireDefault(require("./views/pages/signup"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // import views
 // import fourOFourView from './views/pages/404'
-// import signinView from './views/pages/signin'
-// import signupView from './views/pages/signup'
 // import profileView from './views/pages/profile'
 // import editProfileView from './views/pages/editProfile'
 // import guideView from './views/pages/guide'
@@ -7730,14 +7856,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // import favouriteHaircutsView from './views/pages/favouriteHaircuts'
 // define routes
 const routes = {
-  '/': _home.default // '/guide': guideView,
+  '/': _home.default,
+  // '/guide': guideView,
   // '/haircuts': haircutsView,
   // '/hairdressers': hairdresserssView,
   // '/favouriteHaircuts': favouriteHaircutsView,
   // '404': fourOFourView,
-  // '/signin': signinView,
-  // '/signup': signupView,
-  // '/profile': profileView,
+  '/signin': _signin.default,
+  '/signup': _signup.default // '/profile': profileView,
   // '/editProfile': editProfileView
 
 };
@@ -7793,7 +7919,7 @@ function anchorRoute(e) {
   const pathname = e.target.closest('a').pathname;
   AppRouter.gotoRoute(pathname);
 }
-},{"./views/pages/home":"views/pages/home.js"}],"App.js":[function(require,module,exports) {
+},{"./views/pages/home":"views/pages/home.js","./views/pages/signin":"views/pages/signin.js","./views/pages/signup":"views/pages/signup.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9609,7 +9735,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n    <style>      \n      * {\n        box-sizing: border-box;\n      }\n      .app-header {\n        background: var(--brand-color);\n        position: fixed;\n        top: 0;\n        right: 0;\n        left: 0;\n        height: var(--app-header-height);\n        color: #fff;\n        display: flex;\n        z-index: 9;\n        box-shadow: 4px 0px 10px rgba(0,0,0,0.2);\n        align-items: center;\n      }\n      \n\n      .app-header-main {\n        flex-grow: 1;\n        display: flex;\n        align-items: center;\n      }\n\n      .app-header-main::slotted(h1){\n        color: #fff;\n      }\n\n      .app-logo a {\n        color: #fff;\n        text-decoration: none;\n        font-weight: bold;\n        font-size: 1.2em;\n        padding: .6em;\n        display: inline-block;        \n      }\n\n      .app-logo img {\n        width: 90px;\n      }\n      \n      .hamburger-btn::part(base) {\n        color: #fff;\n      }\n\n      .app-top-nav {\n        display: flex;\n        height: 100%;\n        align-items: center;\n      }\n\n      .app-top-nav a {\n        display: inline-block;\n        padding: .8em;\n        text-decoration: none;\n        color: #fff;\n      }\n      \n      .app-side-menu-items a {\n        display: block;\n        padding: .5em;\n        text-decoration: none;\n        font-size: 1.3em;\n        color: #333;\n      }\n\n      .app-side-menu-logo {\n        width: 120px;\n        margin-bottom: 1em;\n        position: absolute;\n        top: 2em;\n        left: 1.5em;\n      }\n\n      .page-title {\n        color: var(--app-header-txt-color);\n        margin-right: 0.5em;\n        font-size: var(--app-header-title-font-size);\n      }\n\n      /* active nav links */\n      .app-top-nav a.active,\n      .app-side-menu-items a.active {\n        font-weight: bold;\n      }\n\n      /* RESPONSIVE - MOBILE ------------------- */\n      @media all and (max-width: 768px){       \n        \n        .app-top-nav {\n          display: none;\n        }\n      }\n\n    </style>\n\n    <header class=\"app-header\">\n      <sl-icon-button class=\"hamburger-btn\" name=\"list\" @click=\"", "\" style=\"font-size: 1.5em;\"></sl-icon-button>       \n      \n      <div class=\"app-header-main\">\n        ", "\n        <slot></slot>\n      </div>\n\n      <nav class=\"app-top-nav\">\n        <a href=\"/\" @click=\"", "\">Home</a>        \n        <sl-dropdown>\n          <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n            <sl-avatar style=\"--size: 24px;\" image=", "></sl-avatar> ", "\n          </a>\n          <sl-menu>            \n            <sl-menu-item @click=\"", "\">Profile</sl-menu-item>\n            <sl-menu-item @click=\"", "\">Edit Profile</sl-menu-item>\n            <sl-menu-item @click=\"", "\">Sign Out</sl-menu-item>\n          </sl-menu>\n        </sl-dropdown>\n      </nav>\n    </header>\n\n    <sl-drawer class=\"app-side-menu\" placement=\"left\">\n      <img class=\"app-side-menu-logo\" src=\"/images/logo.svg\">\n      <nav class=\"app-side-menu-items\">\n        <a href=\"/\" @click=\"", "\">Home</a>\n        <a href=\"/hairdressers\" @click=\"", "\">Find a Hairdresser</a>\n        <a href=\"/haircute\" @click=\"", "\">Find a Haircut</a>\n        <a href=\"/favouriteHaircuts\" @click=\"", "\">Hairdressers</a>\n        <a href=\"/profile\" @click=\"", "\">Profile</a>\n        <a href=\"#\" @click=\"", "\">Sign Out</a>\n      </nav>  \n    </sl-drawer>\n    "]);
+  const data = _taggedTemplateLiteral(["\n    <style>      \n      * {\n        box-sizing: border-box;\n      }\n      .app-header {\n        background: rgb(94,85,107);\n        position: fixed;\n        top: 0;\n        right: 0;\n        left: 0;\n        height: var(--app-header-height);\n        color: #fff;\n        display: flex;\n        justify-content: flex-end; /*Added*/\n        z-index: 9;\n        box-shadow: 4px 0px 10px rgba(0,0,0,0.2);\n        align-items: center;\n      }\n      \n\n      .app-header-main {\n        flex-grow: 1;\n        display: flex;\n        align-items: center;\n      }\n\n      .app-header-main::slotted(h1){\n        color: #fff;\n      }\n\n      .app-logo a {\n        color: #fff;\n        text-decoration: none;\n        font-weight: bold;\n        font-size: 1.2em;\n        padding: .6em;\n        display: inline-block;        \n      }\n\n      .app-logo img {\n        width: 90px;\n      }\n      \n      .hamburger-btn::part(base) {\n        color: #fff;\n      }\n\n      .app-top-nav {\n        display: flex;\n        height: 100%;\n        align-items: center;\n      }\n\n      .app-top-nav a {\n        display: inline-block;\n        padding: .8em;\n        text-decoration: none;\n        color: #fff;\n      }\n      \n      .app-side-menu-items a {\n        display: block;\n        padding: .5em;\n        text-decoration: none;\n        font-size: 1.3em;\n        color: #333;\n      }\n\n      .app-side-menu-logo {\n        width: 120px;\n        margin-bottom: 1em;\n        position: absolute;\n        top: 2em;\n        left: 1.5em;\n      }\n\n      .page-title {\n        color: var(--app-header-txt-color);\n        margin-right: 0.5em;\n        font-size: var(--app-header-title-font-size);\n      }\n\n      /* active nav links */\n      .app-top-nav a.active,\n      .app-side-menu-items a.active {\n        font-weight: bold;\n      }\n\n      #bell-icon, #alert-icon{\n        color: gray;\n      }\n\n      sl-dropdown::part(panel){\n        background-color: rgb(94,85,107);\n        border: none;\n      }\n\n      /* RESPONSIVE - MOBILE ------------------- */\n      @media all and (max-width: 768px){       \n        \n        .app-top-nav {\n          display: none;\n        }\n      }\n\n    </style>\n\n    <header class=\"app-header\">\n      <!-- <sl-icon-button class=\"hamburger-btn\" name=\"list\" @click=\"", "\" style=\"font-size: 1.5em;\"></sl-icon-button>       \n      \n      <div class=\"app-header-main\">\n        ", "\n        <slot></slot> -->\n      </div>\n\n      <nav class=\"app-top-nav\">\n        <!-- <a href=\"/\" @click=\"", "\">Home</a>         -->\n        <a slot=\"trigger\" id=\"bell-icon\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n             <sl-icon slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n          </a>\n        <a slot=\"trigger\" id=\"alert-icon\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n             <sl-icon slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n          </a>\n        <sl-dropdown>\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n             <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 2rem;\"></sl-icon>\n          </a>\n          <sl-menu>            \n            <sl-menu-item @click=\"", "\">System Status</sl-menu-item>\n            <sl-menu-item @click=\"", "\">Logs</sl-menu-item>\n          </sl-menu>\n        </sl-dropdown>\n        <sl-dropdown>\n          <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n            <sl-avatar style=\"--size: 2rem;\" image=", "></sl-avatar> ", "\n          </a>\n          <sl-menu>            \n            <sl-menu-item @click=\"", "\">Register User</sl-menu-item>\n            <sl-menu-item @click=\"", "\">Manage User</sl-menu-item>\n            <sl-menu-item @click=\"", "\">Register Place</sl-menu-item>\n            <sl-menu-item @click=\"", "\">Manage Place</sl-menu-item>\n            <sl-menu-item @click=\"", "\">Register Device</sl-menu-item>\n            <sl-menu-item @click=\"", "\">Manage Device</sl-menu-item>\n            <sl-menu-item @click=\"", "\">Sign Out</sl-menu-item>\n          </sl-menu>\n        </sl-dropdown>\n      </nav>\n    </header>\n\n    <sl-drawer class=\"app-side-menu\" placement=\"left\">\n      <!-- <img class=\"app-side-menu-logo\" src=\"/images/logo.svg\">\n      <nav class=\"app-side-menu-items\">\n        <a href=\"/\" @click=\"", "\">Home</a>\n        <a href=\"/hairdressers\" @click=\"", "\">Find a Hairdresser</a>\n        <a href=\"/haircute\" @click=\"", "\">Find a Haircut</a>\n        <a href=\"/favouriteHaircuts\" @click=\"", "\">Hairdressers</a>\n        <a href=\"/profile\" @click=\"", "\">Profile</a>\n        <a href=\"#\" @click=\"", "\">Sign Out</a> -->\n      </nav>  \n    </sl-drawer>\n    "]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -9671,7 +9797,7 @@ customElements.define('va-app-header', class AppHeader extends _litElement.LitEl
   }
 
   render() {
-    return (0, _litElement.html)(_templateObject(), this.hamburgerClick, this.title ? (0, _litElement.html)(_templateObject2(), this.title) : "", _Router.anchorRoute, e => e.preventDefault(), this.user && this.user.avatar ? "".concat(_App.default.apiBase, "/images/").concat(this.user.avatar) : '', this.user && this.user.firstName, () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile'), () => _Auth.default.signOut(), this.menuClick, this.menuClick, this.menuClick, this.menuClick, this.menuClick, () => _Auth.default.signOut());
+    return (0, _litElement.html)(_templateObject(), this.hamburgerClick, this.title ? (0, _litElement.html)(_templateObject2(), this.title) : "", _Router.anchorRoute, e => e.preventDefault(), e => e.preventDefault(), e => e.preventDefault(), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile'), e => e.preventDefault(), this.user && this.user.avatar ? "".concat(_App.default.apiBase, "/images/").concat(this.user.avatar) : "", this.user && this.user.firstName, () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile'), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile'), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile'), () => _Auth.default.signOut(), this.menuClick, this.menuClick, this.menuClick, this.menuClick, this.menuClick, () => _Auth.default.signOut());
   }
 
 });
@@ -9792,7 +9918,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50643" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60772" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

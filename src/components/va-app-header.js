@@ -59,7 +59,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         box-sizing: border-box;
       }
       .app-header {
-        background: var(--brand-color);
+        background: rgb(94,85,107);
         position: fixed;
         top: 0;
         right: 0;
@@ -67,6 +67,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         height: var(--app-header-height);
         color: #fff;
         display: flex;
+        justify-content: flex-end; /*Added*/
         z-index: 9;
         box-shadow: 4px 0px 10px rgba(0,0,0,0.2);
         align-items: center;
@@ -141,6 +142,15 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         font-weight: bold;
       }
 
+      #bell-icon, #alert-icon{
+        color: gray;
+      }
+
+      sl-dropdown::part(panel){
+        background-color: rgb(94,85,107);
+        border: none;
+      }
+
       /* RESPONSIVE - MOBILE ------------------- */
       @media all and (max-width: 768px){       
         
@@ -152,24 +162,43 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
     </style>
 
     <header class="app-header">
-      <sl-icon-button class="hamburger-btn" name="list" @click="${this.hamburgerClick}" style="font-size: 1.5em;"></sl-icon-button>       
+      <!-- <sl-icon-button class="hamburger-btn" name="list" @click="${this.hamburgerClick}" style="font-size: 1.5em;"></sl-icon-button>       
       
       <div class="app-header-main">
         ${this.title ? html`
           <h1 class="page-title">${this.title}</h1>
-        `:``}
-        <slot></slot>
+        `: ``}
+        <slot></slot> -->
       </div>
 
       <nav class="app-top-nav">
-        <a href="/" @click="${anchorRoute}">Home</a>        
+        <!-- <a href="/" @click="${anchorRoute}">Home</a>         -->
+        <a slot="trigger" id="bell-icon" href="#" style="display: flex; align-items: center;" @click="${(e) => e.preventDefault()}">
+             <sl-icon slot="icon" name="bell" style="font-size: 2rem;"></sl-icon>
+          </a>
+        <a slot="trigger" id="alert-icon" href="#" style="display: flex; align-items: center;" @click="${(e) => e.preventDefault()}">
+             <sl-icon slot="icon" name="exclamation-circle" style="font-size: 2rem;"></sl-icon>
+          </a>
         <sl-dropdown>
-          <a slot="trigger" href="#" @click="${(e) => e.preventDefault()}">
-            <sl-avatar style="--size: 24px;" image=${(this.user && this.user.avatar) ? `${App.apiBase}/images/${this.user.avatar}` : ''}></sl-avatar> ${this.user && this.user.firstName}
+          <a slot="trigger" href="#" style="display: flex; align-items: center;" @click="${(e) => e.preventDefault()}">
+             <sl-icon slot="icon" name="gear-fill" style="font-size: 2rem;"></sl-icon>
           </a>
           <sl-menu>            
-            <sl-menu-item @click="${() => gotoRoute('/profile')}">Profile</sl-menu-item>
-            <sl-menu-item @click="${() => gotoRoute('/editProfile')}">Edit Profile</sl-menu-item>
+            <sl-menu-item @click="${() => gotoRoute('/profile')}">System Status</sl-menu-item>
+            <sl-menu-item @click="${() => gotoRoute('/editProfile')}">Logs</sl-menu-item>
+          </sl-menu>
+        </sl-dropdown>
+        <sl-dropdown>
+          <a slot="trigger" href="#" @click="${(e) => e.preventDefault()}">
+            <sl-avatar style="--size: 2rem;" image=${(this.user && this.user.avatar) ? `${App.apiBase}/images/${this.user.avatar}` : ``}></sl-avatar> ${this.user && this.user.firstName}
+          </a>
+          <sl-menu>            
+            <sl-menu-item @click="${() => gotoRoute('/profile')}">Register User</sl-menu-item>
+            <sl-menu-item @click="${() => gotoRoute('/editProfile')}">Manage User</sl-menu-item>
+            <sl-menu-item @click="${() => gotoRoute('/profile')}">Register Place</sl-menu-item>
+            <sl-menu-item @click="${() => gotoRoute('/editProfile')}">Manage Place</sl-menu-item>
+            <sl-menu-item @click="${() => gotoRoute('/profile')}">Register Device</sl-menu-item>
+            <sl-menu-item @click="${() => gotoRoute('/editProfile')}">Manage Device</sl-menu-item>
             <sl-menu-item @click="${() => Auth.signOut()}">Sign Out</sl-menu-item>
           </sl-menu>
         </sl-dropdown>
@@ -177,17 +206,17 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
     </header>
 
     <sl-drawer class="app-side-menu" placement="left">
-      <img class="app-side-menu-logo" src="/images/logo.svg">
+      <!-- <img class="app-side-menu-logo" src="/images/logo.svg">
       <nav class="app-side-menu-items">
         <a href="/" @click="${this.menuClick}">Home</a>
         <a href="/hairdressers" @click="${this.menuClick}">Find a Hairdresser</a>
         <a href="/haircute" @click="${this.menuClick}">Find a Haircut</a>
         <a href="/favouriteHaircuts" @click="${this.menuClick}">Hairdressers</a>
         <a href="/profile" @click="${this.menuClick}">Profile</a>
-        <a href="#" @click="${() => Auth.signOut()}">Sign Out</a>
+        <a href="#" @click="${() => Auth.signOut()}">Sign Out</a> -->
       </nav>  
     </sl-drawer>
     `
   }
-  
+
 })
