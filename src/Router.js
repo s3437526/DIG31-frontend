@@ -1,27 +1,27 @@
 // import views
 import homeView from './views/pages/home'
-import fourOFourView from './views/pages/404'
-import signinView from './views/pages/signin'
-import signupView from './views/pages/signup'
-import profileView from './views/pages/profile'
-import editProfileView from './views/pages/editProfile'
-import guideView from './views/pages/guide'
-import hairdresserssView from './views/pages/hairdressers'
-import haircutsView from './views/pages/haircuts'
-import favouriteHaircutsView from './views/pages/favouriteHaircuts'
+// import fourOFourView from './views/pages/404'
+// import signinView from './views/pages/signin'
+// import signupView from './views/pages/signup'
+// import profileView from './views/pages/profile'
+// import editProfileView from './views/pages/editProfile'
+// import guideView from './views/pages/guide'
+// import hairdresserssView from './views/pages/hairdressers'
+// import haircutsView from './views/pages/haircuts'
+// import favouriteHaircutsView from './views/pages/favouriteHaircuts'
 
 // define routes
 const routes = {
     '/': homeView,
-    '/guide': guideView,
-    '/haircuts': haircutsView,
-    '/hairdressers': hairdresserssView,
-    '/favouriteHaircuts': favouriteHaircutsView,
-    '404': fourOFourView,
-    '/signin': signinView,
-    '/signup': signupView,
-    '/profile': profileView,
-    '/editProfile': editProfileView
+    // '/guide': guideView,
+    // '/haircuts': haircutsView,
+    // '/hairdressers': hairdresserssView,
+    // '/favouriteHaircuts': favouriteHaircutsView,
+    // '404': fourOFourView,
+    // '/signin': signinView,
+    // '/signup': signupView,
+    // '/profile': profileView,
+    // '/editProfile': editProfileView
 }
 
 class Router {
