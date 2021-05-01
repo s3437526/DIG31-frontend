@@ -148,8 +148,90 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
 
       sl-dropdown::part(panel){
         background-color: rgb(94,85,107);
+        position: relative;
+        right: -1px;
         border: none;
+        /* overflow-y: scroll; */
+        max-height: 100vh;
+        border-radius:  0 0 5px 5px;
       }
+
+      /* .dropdowns::part(base){ */
+      /* } */
+      /* sl-dropdown::part(base){ */
+        /* background:blue; */
+        /* position:relative; */
+        /* --size:6rem; */
+        /* height: 100vh; */
+        /* height:10%; */
+        /* overflow-y:hidden; */
+/* height:80%; */
+
+      /* } */
+
+      /* sl-menu::part(base){
+      } */
+
+      sl-menu-item::part(base){
+        color: #fff;
+      }
+
+      sl-menu-item::part(base):hover{
+        color: rgb(94,85,107);
+      } 
+      
+      .dropdown-icon{
+        font-size: 2rem;
+
+      }.settings-icon{
+        font-size: 1.5rem; 
+        position:relative; 
+        top:-25%; 
+        left: -15%; 
+        margin-right:0;
+      }
+
+      .add-icon{
+        font-size: 1rem; 
+        position:relative; 
+        top:-25%; 
+        left: -5%;
+      }
+
+      .manage-place{
+        font-size: 1rem; 
+        position:relative; 
+        top:-25%; 
+        left: -5%;
+      }
+
+      .manage-device{
+        font-size: 1.5rem; 
+        position:relative; 
+        top:-25%; 
+        left: -5%; 
+        margin-right:0;
+      }
+
+      .add-device{
+        font-size: 1rem; 
+        position:relative; 
+        top:-25%; 
+        left: 0;
+      }
+
+      .signout-icon{
+        font-size: 2rem;
+        left: 10%;
+        margin-right:1.5rem;
+      }
+
+      /* sl-icon::part(base){ */
+        /* display: flex;
+        justify-content: center;
+        align-items: center;
+        size: 3.5rem; */
+      /* } */
 
       /* RESPONSIVE - MOBILE ------------------- */
       @media all and (max-width: 768px){       
@@ -181,25 +263,59 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
           </a>
         <sl-dropdown>
           <a slot="trigger" href="#" style="display: flex; align-items: center;" @click="${(e) => e.preventDefault()}">
-             <sl-icon slot="icon" name="gear-fill" style="font-size: 2rem;"></sl-icon>
+             <sl-icon slot="icon" name="gear-fill" style="font-size: 1.9rem;"></sl-icon>
           </a>
           <sl-menu>            
-            <sl-menu-item @click="${() => gotoRoute('/profile')}">System Status</sl-menu-item>
-            <sl-menu-item @click="${() => gotoRoute('/editProfile')}">Logs</sl-menu-item>
+            <sl-menu-item @click="${() => gotoRoute('/profile')}"><sl-icon class="dropdown-icon" slot="prefix" name="wifi"></sl-icon>System Status</sl-menu-item>
+            <sl-menu-item @click="${() => gotoRoute('/editProfile')}"><sl-icon class="dropdown-icon" slot="prefix" name="list-ul"></sl-icon>Logs</sl-menu-item>
           </sl-menu>
         </sl-dropdown>
-        <sl-dropdown>
+        <sl-dropdown class="dropdowns">
           <a slot="trigger" href="#" @click="${(e) => e.preventDefault()}">
-            <sl-avatar style="--size: 2rem;" image=${(this.user && this.user.avatar) ? `${App.apiBase}/images/${this.user.avatar}` : ``}></sl-avatar> ${this.user && this.user.firstName}
+            <sl-avatar style="--size: 1.9rem;" image=${(this.user && this.user.avatar) ? `${App.apiBase}/images/${this.user.avatar}` : ``}></sl-avatar> ${this.user && this.user.firstName}
           </a>
           <sl-menu>            
-            <sl-menu-item @click="${() => gotoRoute('/profile')}">Register User</sl-menu-item>
-            <sl-menu-item @click="${() => gotoRoute('/editProfile')}">Manage User</sl-menu-item>
-            <sl-menu-item @click="${() => gotoRoute('/profile')}">Register Place</sl-menu-item>
-            <sl-menu-item @click="${() => gotoRoute('/editProfile')}">Manage Place</sl-menu-item>
-            <sl-menu-item @click="${() => gotoRoute('/profile')}">Register Device</sl-menu-item>
-            <sl-menu-item @click="${() => gotoRoute('/editProfile')}">Manage Device</sl-menu-item>
-            <sl-menu-item @click="${() => Auth.signOut()}">Sign Out</sl-menu-item>
+          ${Auth.currentUser.accessLevel == 2? html`
+            <sl-menu-item @click="${() => gotoRoute('/profile')}">
+              <sl-icon class="dropdown-icon" slot="prefix" name="person"></sl-icon>
+              <sl-icon class="settings-icon" slot="prefix" name="plus"></sl-icon>
+                Register User
+            ` : ``}
+            </sl-menu-item>
+            <sl-menu-item @click="${() => gotoRoute('/editProfile')}">
+              <sl-icon class="dropdown-icon" slot="prefix" name="person"></sl-icon>
+              <sl-icon class="add-icon" slot="prefix" name="gear-fill"></sl-icon>
+                Manage Account
+            </sl-menu-item>
+            ${Auth.currentUser.accessLevel == 2? html`
+            <sl-menu-divider></sl-menu-divider>
+              <sl-menu-item @click="${() => gotoRoute('/profile')}">
+                <sl-icon class="dropdown-icon" slot="prefix" name="house-door"></sl-icon>
+                <sl-icon class="settings-icon" slot="prefix" name="plus"></sl-icon>
+                  Register Place
+              </sl-menu-item>
+            <sl-menu-item @click="${() => gotoRoute('/editProfile')}">
+              <sl-icon class="dropdown-icon" slot="prefix" name="house-door"></sl-icon>
+              <sl-icon class="manage-place" slot="prefix" name="gear-fill"></sl-icon>
+                Manage Place
+            </sl-menu-item>
+            <sl-menu-divider></sl-menu-divider>
+            <sl-menu-item @click="${() => gotoRoute('/profile')}">
+              <sl-icon class="dropdown-icon" slot="prefix" name="broadcast"></sl-icon>
+              <sl-icon class="manage-device" slot="prefix" name="plus"></sl-icon>
+                Register Device
+            </sl-menu-item>
+            <sl-menu-item @click="${() => gotoRoute('/editProfile')}">
+              <sl-icon class="dropdown-icon" slot="prefix" name="broadcast"></sl-icon>
+              <sl-icon class="add-device" slot="prefix" name="gear-fill"></sl-icon>
+                Manage Device
+            </sl-menu-item>
+            <sl-menu-divider></sl-menu-divider>
+            ` : ``}
+            <sl-menu-item @click="${() => Auth.signOut()}">
+              <sl-icon class="signout-icon" slot="prefix" name="box-arrow-right"></sl-icon>
+                Sign Out
+            </sl-menu-item>
           </sl-menu>
         </sl-dropdown>
       </nav>
