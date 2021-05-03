@@ -7462,7 +7462,54 @@ class Toast {
 }
 
 exports.default = Toast;
-},{"./App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","gsap":"../node_modules/gsap/index.js"}],"Auth.js":[function(require,module,exports) {
+},{"./App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","gsap":"../node_modules/gsap/index.js"}],"FetchAPI.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _App = _interopRequireDefault(require("./App"));
+
+var _Auth = _interopRequireDefault(require("./Auth"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+let headers = {};
+
+class FetchAPI {
+  // Get all posts function using asynchronous fetch API call
+  async getPlacesAsync(currentUser) {
+    headers = {
+      "Authorization": "Bearer ".concat(localStorage.accessToken) //,
+      // "access": JSON.stringify(currentUser.accessLevel)
+
+    };
+    let response = await fetch("".concat(_App.default.apiBase, "/place"), {
+      method: 'GET',
+      headers: {
+        "Authorization": "Bearer ".concat(localStorage.accessToken)
+      }
+    }); // Handle result of API call - if unsuccessful, throw error with customised message
+
+    if (!response.ok) {
+      const message = "Problem getting places ".concat(response.status);
+      throw new Error(message);
+    } // If successful, converd data to JSON and return it to the calling function
+
+
+    let data = await response.json();
+    console.log(data);
+    return data;
+  }
+
+}
+
+var _default = new FetchAPI();
+
+exports.default = _default;
+},{"./App":"App.js","./Auth":"Auth.js"}],"Auth.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7480,6 +7527,8 @@ var _litHtml = require("lit-html");
 
 var _Toast = _interopRequireDefault(require("./Toast"));
 
+var _FetchAPI = _interopRequireDefault(require("./FetchAPI"));
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -7489,6 +7538,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 class Auth {
   constructor() {
     this.currentUser = {};
+  }
+
+  async getCurrentUser() {
+    return this.currentUser;
   }
 
   async signUp(userData) {
@@ -7547,6 +7600,7 @@ class Auth {
 
     _Router.default.init();
 
+    await _FetchAPI.default.getPlacesAsync(this.currentUser);
     (0, _Router.gotoRoute)('/');
   }
 
@@ -7610,7 +7664,7 @@ class Auth {
 var _default = new Auth();
 
 exports.default = _default;
-},{"./App":"App.js","./Router":"Router.js","./views/partials/splash":"views/partials/splash.js","lit-html":"../node_modules/lit-html/lit-html.js","./Toast":"Toast.js"}],"Utils.js":[function(require,module,exports) {
+},{"./App":"App.js","./Router":"Router.js","./views/partials/splash":"views/partials/splash.js","lit-html":"../node_modules/lit-html/lit-html.js","./Toast":"Toast.js","./FetchAPI":"FetchAPI.js"}],"Utils.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9722,6 +9776,8 @@ var _Auth = _interopRequireDefault(require("./../Auth"));
 
 var _App = _interopRequireDefault(require("./../App"));
 
+var _FetchAPI = _interopRequireDefault(require("../FetchAPI"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject6() {
@@ -9775,7 +9831,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n    <style>      \n      * {\n        box-sizing: border-box;\n      }\n      .app-header {\n        background: rgb(94,85,107);\n        position: fixed;\n        top: 0;\n        right: 0;\n        left: 0;\n        height: var(--app-header-height);\n        color: #fff;\n        display: flex;\n        justify-content: flex-end; /*Added*/\n        z-index: 9;\n        box-shadow: 4px 0px 10px rgba(0,0,0,0.2);\n        align-items: center;\n      }\n\n      .app-header-main {\n        flex-grow: 1;\n        display: flex;\n        align-items: center;\n      }\n\n      .app-header-main::slotted(h1){\n        color: #fff;\n      }\n\n      .app-logo a {\n        color: #fff;\n        text-decoration: none;\n        font-weight: bold;\n        font-size: 1.2em;\n        padding: .6em;\n        display: inline-block;        \n      }\n\n      .app-logo img {\n        width: 90px;\n      }\n      \n      .hamburger-btn::part(base) {\n        color: #fff;\n        font-size: 2.5em;\n      }\n\n      .app-top-nav {\n        display: flex;\n        height: 100%;\n        align-items: center;\n      }\n\n      .app-top-nav a {\n        display: inline-block;\n        padding: .8em;\n        text-decoration: none;\n        color: #fff;\n      }\n\n      sl-drawer::part(panel){\n        background-color: rgb(94,85,107);\n        --size: 15em;\n      }\n      \n      sl-drawer::part(overlay){\n        background: transparent;\n      }\n\n      .sidenav-content{\n        display:flex; \n        flex-direction:column; \n        align-items:center; \n        height: 100%; \n        justify-content: space-between;\n      }\n\n      .bottom-menus{\n        width: 100%;\n      }\n\n      .app-side-menu-items a {\n        display: block;\n        padding: .5em;\n        text-decoration: none;\n        font-size: 1.3em;\n        color: var(--app-header-txt-color);\n      }\n\n      .page-title {\n        color: var(--app-header-txt-color);\n        margin-right: 0.5em;\n        font-size: var(--app-header-title-font-size);\n      }\n\n      /* active nav links */\n      .app-top-nav a.active,\n      .app-side-menu-items a.active {\n        font-weight: bold;\n      }\n      \n      sl-icon{\n        color:white;\n      }\n\n      #bell-icon, #bell-icon-sidenav, #alert-icon, #alert-icon-sidenav, .bi-bell{\n        color: gray;\n      }\n\n      sl-dropdown::part(panel){\n        background-color: rgb(94,85,107);\n        border: none;\n        max-height: 100vh;\n        border-radius:  0 0 5px 5px;\n      }\n\n      sl-menu.left-menu::part(base){\n        border: 1px solid #fff;\n        border-radius: 5px;\n      }\n\n      sl-menu-item::part(base){\n        color: #fff;\n      }\n\n      sl-menu-item::part(base):hover{\n        color: rgb(94,85,107);\n      } \n\n      sl-avatar::part(base){\n        --size: 2rem;\n        color:white;\n      }\n      \n      .dropdown-icon{\n        font-size: 2rem;\n\n      }.settings-icon{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -15%; \n        margin-right:0;\n      }\n\n      .add-icon{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-place{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-device{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -5%; \n        margin-right:0;\n      }\n\n      .add-device{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: 0;\n      }\n\n      .signout-icon{\n        font-size: 2rem;\n        left: 10%;\n        margin-right:1.5rem;\n      }\n\n      .app-side-nav{\n        display:none;\n      }\n\n      /* RESPONSIVE - MOBILE ------------------- */\n      @media all and (max-width: 768px){       \n        \n        .app-top-nav {\n          display: none;\n        }\n\n        .app-side-nav{\n          display:flex;\n          align-items: center;\n          justify-content: space-evenly;\n        }\n      }\n\n    </style>\n\n    <header class=\"app-header\" style=\"display:flex; justify-content: space-between; align-items:center;\">\n      <div class=\"left-navs\">\n        <sl-icon-button class=\"hamburger-btn\" name=\"list\" @click=\"", "\"></sl-icon-button>       \n      </div>\n\n      <!-- <div class=\"app-header-main\">\n        ", "\n        <slot></slot>\n      </div> -->\n      <div class=\"right-navs\">\n        <nav class=\"app-top-nav\">\n          <!-- <a href=\"/\" @click=\"", "\">Home</a>         -->\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"bell-icon\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"alert-icon\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <sl-dropdown>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 1.9rem;\"></sl-icon>\n            </a>\n            <sl-menu>            \n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n          <sl-dropdown distance=\"0\" class=\"dropdowns\">\n            <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n              <sl-avatar image=", "></sl-avatar> ", "\n            </a>\n            <sl-menu>            \n            ", "\n              </sl-menu-item>\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                  Manage Account\n              </sl-menu-item>\n              ", "\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                  Sign Out\n              </sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n        </nav>\n      </div>\n    </header>\n\n    <sl-drawer class=\"app-side-menu\" placement=\"left\">\n      <div class=\"sidenav-content\">\n        <div class=\"top-menus\">\n          <!-- <img class=\"app-side-menu-logo\" src=\"/images/logo.svg\"> -->\n          <nav class=\"app-side-menu-items\">\n            <a href=\"/\" @click=\"", "\">Dashboard</a>\n            <a href=\"/hairdressers\" @click=\"", "\">Find a Hairdresser</a>\n            <a href=\"/haircute\" @click=\"", "\">Find a Haircut</a>\n            <a href=\"/favouriteHaircuts\" @click=\"", "\">Hairdressers</a>\n            <a href=\"/profile\" @click=\"", "\">Profile</a>\n            <a href=\"#\" @click=\"", "\">Sign Out</a>\n          </nav>  \n        </div>\n        <div class=\"bottom-menus\">\n          <nav class=\"app-side-nav\">\n            <!-- <a href=\"/\" @click=\"", "\">Home</a>         -->\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"bell-icon-sidenav\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"alert-icon-sidenav\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <sl-dropdown skidding=\"-109\" distance=\"10\">\n              <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n              <sl-menu class=\"left-menu\">            \n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n            <sl-dropdown skidding=\"-171\" distance=\"10\" class=\"dropdowns-left\">\n              <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n                <sl-avatar image=", ">\n              </a>\n              <sl-menu class=\"left-menu\">            \n                ", "\n                  </sl-menu-item>\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                    <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                      Manage Account\n                  </sl-menu-item>\n                  ", "\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                      Sign Out\n                  </sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n          </nav>\n        </div>\n      </div>\n    </sl-drawer>\n    "]);
+  const data = _taggedTemplateLiteral(["\n    <style>      \n      * {\n        box-sizing: border-box;\n      }\n      .app-header {\n        background: rgb(94,85,107);\n        position: fixed;\n        top: 0;\n        right: 0;\n        left: 0;\n        height: var(--app-header-height);\n        color: #fff;\n        display: flex;\n        justify-content: flex-end;\n        z-index: 9;\n        box-shadow: 4px 0px 10px rgba(0,0,0,0.2);\n        align-items: center;\n      }\n\n      .app-header-main {\n        flex-grow: 1;\n        display: flex;\n        align-items: center;\n      }\n\n      .app-header-main::slotted(h1){\n        color: #fff;\n      }\n\n      .app-logo a {\n        color: #fff;\n        text-decoration: none;\n        font-weight: bold;\n        font-size: 1.2em;\n        padding: .6em;\n        display: inline-block;        \n      }\n\n      .app-logo img {\n        width: 90px;\n      }\n      \n      .hamburger-btn::part(base) {\n        color: #fff;\n        font-size: 2.5em;\n      }\n\n      .app-top-nav {\n        display: flex;\n        height: 100%;\n        align-items: center;\n      }\n\n      .app-top-nav a {\n        display: inline-block;\n        padding: .8em;\n        text-decoration: none;\n        color: #fff;\n      }\n\n      sl-drawer::part(panel){\n        background-color: rgb(94,85,107);\n        --size: 15em;\n        overflow-y:hidden;\n      }\n\n      sl-drawer::part(body){\n        /* overflow:hidden; */\n        padding: 0;\n        \n        /* overflow:scroll; */\n      }\n      \n      sl-drawer::part(overlay){\n        background: transparent;\n      }\n\n      sl-drawer::part(close-button){\n        color:white;\n      }\n\n      .sidenav-content{\n        display:flex; \n        flex-direction:column; \n        align-items:center; \n        height: 100%; \n        justify-content: space-between;\n      }\n\n      .bottom-menus{\n        width: 100%;\n      }\n\n      .app-side-menu-items a {\n        display: block;\n        padding: .5em;\n        text-decoration: none;\n        font-size: 1.3em;\n        color: var(--app-header-txt-color);\n      }\n\n      .page-title {\n        color: var(--app-header-txt-color);\n        margin-right: 0.5em;\n        font-size: var(--app-header-title-font-size);\n      }\n\n      /* active nav links */\n      .app-top-nav a.active,\n      .app-side-menu-items a.active {\n        font-weight: bold;\n      }\n      \n      sl-icon{\n        color:white;\n      }\n\n      #bell-icon, #bell-icon-sidenav, #alert-icon, #alert-icon-sidenav, .bi-bell{\n        color: gray;\n      }\n\n      sl-dropdown::part(panel){\n        background-color: rgb(94,85,107);\n        border: none;\n        max-height: 100vh;\n        border-radius:  0 0 5px 5px;\n      }\n\n      sl-menu.left-menu::part(base){\n        border: 1px solid #fff;\n        border-radius: 5px;\n      }\n\n      sl-menu-item::part(base){\n        color: #fff;\n      }\n\n      sl-menu-item::part(base):hover{\n        color: rgb(94,85,107);\n      } \n\n      sl-avatar::part(base){\n        --size: 2rem;\n        color:white;\n      }\n      \n      .dropdown-icon{\n        font-size: 2rem;\n\n      }.settings-icon{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -15%; \n        margin-right:0;\n      }\n\n      .add-icon{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-place{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-device{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -5%; \n        margin-right:0;\n      }\n\n      .add-device{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: 0;\n      }\n\n      .signout-icon{\n        font-size: 2rem;\n        left: 10%;\n        margin-right:1.5rem;\n      }\n\n      .app-side-nav{\n        display:none;\n      }\n\n      /* RESPONSIVE - MOBILE ------------------- */\n      @media all and (max-width: 768px){       \n        \n        .app-top-nav {\n          display: none;\n        }\n\n        .app-side-nav{\n          display:flex;\n          align-items: center;\n          justify-content: space-evenly;\n        }\n      }\n\n    </style>\n\n    <header class=\"app-header\" style=\"display:flex; justify-content: space-between; align-items:center;\">\n      <div class=\"left-navs\">\n        <sl-icon-button class=\"hamburger-btn\" name=\"list\" @click=\"", "\"></sl-icon-button>       \n      </div>\n\n      <!-- <div class=\"app-header-main\">\n        ", "\n        <slot></slot>\n      </div> -->\n      <div class=\"right-navs\">\n        <nav class=\"app-top-nav\">\n          <!-- <a href=\"/\" @click=\"", "\">Home</a>         -->\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"bell-icon\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"alert-icon\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <sl-dropdown>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 1.9rem;\"></sl-icon>\n            </a>\n            <sl-menu>            \n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n          <sl-dropdown distance=\"0\" class=\"dropdowns\">\n            <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n              <sl-avatar image=", "></sl-avatar> ", "\n            </a>\n            <sl-menu>            \n            ", "\n              </sl-menu-item>\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                  Manage Account\n              </sl-menu-item>\n              ", "\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                  Sign Out\n              </sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n        </nav>\n      </div>\n    </header>\n    <sl-drawer class=\"app-side-menu\" placement=\"left\">\n      <div class=\"sidenav-content\">\n        <div class=\"top-menus\">\n          <!-- <img class=\"app-side-menu-logo\" src=\"/images/logo.svg\"> -->\n          <nav class=\"app-side-menu-items\">\n            <a href=\"/\" @click=\"", "\">Dashboard</a>\n            <a href=\"/hairdressers\" @click=\"", "\">Find a Hairdresser</a>\n            <a href=\"/haircute\" @click=\"", "\">Find a Haircut</a>\n            <a href=\"/favouriteHaircuts\" @click=\"", "\">Hairdressers</a>\n            <a href=\"/profile\" @click=\"", "\">Profile</a>\n            <a href=\"#\" @click=\"", "\">Sign Out</a>\n          </nav>  \n        </div>\n        <!--  -->\n        <div>\n          <div class=\"details-group-example\">\n            <sl-details summary=\"Places\">\n              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\n              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n            </sl-details>\n\n            <sl-details summary=\"Devices\">\n              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\n              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n            </sl-details>\n\n            <sl-details summary=\"Users\">\n              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna\n              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n            </sl-details>\n          </div>\n\n          <script>\n            const container = document.querySelector('.details-group-example');\n\n            // Close all other details when one is shown\n            container.addEventListener('sl-show', event => {\n              [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));\n            });\n          </script>\n\n          <style>\n            .details-group-example sl-details:not(:last-of-type) {\n              margin-bottom: var(--sl-spacing-xx-small);\n            }\n          </style>\n        </div>\n        <!--  -->\n        <div class=\"bottom-menus\">\n          <nav class=\"app-side-nav\">\n            <!-- <a href=\"/\" @click=\"", "\">Home</a>         -->\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"bell-icon-sidenav\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"alert-icon-sidenav\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <sl-dropdown skidding=\"-109\" distance=\"10\">\n              <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n              <sl-menu class=\"left-menu\">            \n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n            <sl-dropdown skidding=\"-171\" distance=\"10\" class=\"dropdowns-left\">\n              <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n                <sl-avatar image=", ">\n              </a>\n              <sl-menu class=\"left-menu\">            \n                ", "\n                  </sl-menu-item>\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                    <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                      Manage Account\n                  </sl-menu-item>\n                  ", "\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                      Sign Out\n                  </sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n          </nav>\n        </div>\n      </div>\n    </sl-drawer>\n    "]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -9786,6 +9842,12 @@ function _templateObject() {
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
+// async function getPlaces() {
+//     const places = await fetch('localhost:3000/places')
+//     console.log(places)
+// }
+// FetchAPI.getPlacesAsync()
+console.log("Current user is: ".concat(JSON.stringify(_Auth.default.getCurrentUser)));
 customElements.define('va-app-header', class AppHeader extends _litElement.LitElement {
   constructor() {
     super();
@@ -9841,7 +9903,7 @@ customElements.define('va-app-header', class AppHeader extends _litElement.LitEl
   }
 
 });
-},{"@polymer/lit-element":"../node_modules/@polymer/lit-element/lit-element.js","./../Router":"Router.js","./../Auth":"Auth.js","./../App":"App.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"@polymer/lit-element":"../node_modules/@polymer/lit-element/lit-element.js","./../Router":"Router.js","./../Auth":"Auth.js","./../App":"App.js","../FetchAPI":"FetchAPI.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -9958,7 +10020,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49410" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60718" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

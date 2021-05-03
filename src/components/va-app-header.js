@@ -2,6 +2,15 @@ import { LitElement, html, css } from '@polymer/lit-element'
 import { anchorRoute, gotoRoute } from './../Router'
 import Auth from './../Auth'
 import App from './../App'
+import FetchAPI from '../FetchAPI'
+
+// async function getPlaces() {
+//     const places = await fetch('localhost:3000/places')
+//     console.log(places)
+// }
+
+// FetchAPI.getPlacesAsync()
+console.log(`Current user is: ${JSON.stringify((Auth.getCurrentUser))}`)
 
 customElements.define('va-app-header', class AppHeader extends LitElement {
             constructor() {
@@ -67,7 +76,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         height: var(--app-header-height);
         color: #fff;
         display: flex;
-        justify-content: flex-end; /*Added*/
+        justify-content: flex-end;
         z-index: 9;
         box-shadow: 4px 0px 10px rgba(0,0,0,0.2);
         align-items: center;
@@ -117,10 +126,22 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
       sl-drawer::part(panel){
         background-color: rgb(94,85,107);
         --size: 15em;
+        overflow-y:hidden;
+      }
+
+      sl-drawer::part(body){
+        /* overflow:hidden; */
+        padding: 0;
+        
+        /* overflow:scroll; */
       }
       
       sl-drawer::part(overlay){
         background: transparent;
+      }
+
+      sl-drawer::part(close-button){
+        color:white;
       }
 
       .sidenav-content{
@@ -334,7 +355,6 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         </nav>
       </div>
     </header>
-
     <sl-drawer class="app-side-menu" placement="left">
       <div class="sidenav-content">
         <div class="top-menus">
@@ -348,6 +368,41 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
             <a href="#" @click="${() => Auth.signOut()}">Sign Out</a>
           </nav>  
         </div>
+        <!--  -->
+        <div>
+          <div class="details-group-example">
+            <sl-details summary="Places">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </sl-details>
+
+            <sl-details summary="Devices">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </sl-details>
+
+            <sl-details summary="Users">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </sl-details>
+          </div>
+
+          <script>
+            const container = document.querySelector('.details-group-example');
+
+            // Close all other details when one is shown
+            container.addEventListener('sl-show', event => {
+              [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));
+            });
+          </script>
+
+          <style>
+            .details-group-example sl-details:not(:last-of-type) {
+              margin-bottom: var(--sl-spacing-xx-small);
+            }
+          </style>
+        </div>
+        <!--  -->
         <div class="bottom-menus">
           <nav class="app-side-nav">
             <!-- <a href="/" @click="${anchorRoute}">Home</a>         -->
