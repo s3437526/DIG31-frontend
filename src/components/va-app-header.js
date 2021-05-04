@@ -10,7 +10,6 @@ import FetchAPI from '../FetchAPI'
 // }
 
 // FetchAPI.getPlacesAsync()
-console.log(`Current user is: ${JSON.stringify((Auth.getCurrentUser))}`)
 
 customElements.define('va-app-header', class AppHeader extends LitElement {
             constructor() {
@@ -28,9 +27,15 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 }
             }
 
-            firstUpdated() {
+            async firstUpdated() {
                 super.firstUpdated()
                 this.navActiveLinks()
+                const container = document.querySelector('.details-group-example');
+
+                // Close all other details when one is shown
+                container.addEventListener('sl-show', event => {
+                    console.log("In event listener")
+                });
             }
 
             navActiveLinks() {
@@ -47,6 +52,10 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
             hamburgerClick() {
                 const appMenu = this.shadowRoot.querySelector('.app-side-menu')
                 appMenu.show()
+
+                // Test console logs - remove later****************************************************************
+                console.log(`Access token is: ${localStorage.accessToken}`)
+                console.log(`User is: ${localStorage.accessLevel}`)
             }
 
             menuClick(e) {

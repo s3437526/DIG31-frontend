@@ -7479,8 +7479,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 let headers = {};
 
 class FetchAPI {
-  // Get all posts function using asynchronous fetch API call
-  async getPlacesAsync(currentUser) {
+  // Get all places function using asynchronous fetch API call
+  async getPlacesAsync() {
     headers = {
       "Authorization": "Bearer ".concat(localStorage.accessToken) //,
       // "access": JSON.stringify(currentUser.accessLevel)
@@ -7496,7 +7496,59 @@ class FetchAPI {
     if (!response.ok) {
       const message = "Problem getting places ".concat(response.status);
       throw new Error(message);
-    } // If successful, converd data to JSON and return it to the calling function
+    } // If successful, convert data to JSON and return it to the calling function
+
+
+    let data = await response.json();
+    console.log(data);
+    return data;
+  } // Get all devices function using asynchronous fetch API call
+
+
+  async getItemsAsync() {
+    headers = {
+      "Authorization": "Bearer ".concat(localStorage.accessToken) //,
+      // "access": JSON.stringify(currentUser.accessLevel)
+
+    };
+    let response = await fetch("".concat(_App.default.apiBase, "/item"), {
+      method: 'GET',
+      headers: {
+        "Authorization": "Bearer ".concat(localStorage.accessToken)
+      }
+    }); // Handle result of API call - if unsuccessful, throw error with customised message
+
+    if (!response.ok) {
+      const message = "Problem getting items ".concat(response.status);
+      throw new Error(message);
+    } // If successful, convert data to JSON and return it to the calling function
+
+
+    let data = await response.json();
+    console.log(data);
+    return data;
+  } // Get all users function using asynchronous fetch API call
+
+
+  async getUsersAsync() {
+    console.log("Local stoarge user access levels is: ".concat(localStorage.accessLevel));
+    headers = {
+      "Authorization": "Bearer ".concat(localStorage.accessToken) //,
+      // "access": JSON.stringify(currentUser.accessLevel)
+
+    };
+    let response = await fetch("".concat(_App.default.apiBase, "/user"), {
+      method: 'GET',
+      headers: {
+        "Authorization": "Bearer ".concat(localStorage.accessToken),
+        "access": "".concat(localStorage.accessLevel)
+      }
+    }); // Handle result of API call - if unsuccessful, throw error with customised message
+
+    if (!response.ok) {
+      const message = "Problem getting users ".concat(response.status);
+      throw new Error(message);
+    } // If successful, convert data to JSON and return it to the calling function
 
 
     let data = await response.json();
@@ -7595,12 +7647,16 @@ class Auth {
 
     localStorage.setItem('accessToken', data.accessToken); // set current user
 
-    this.currentUser = data.user; // console.log(this.currentUser)           
-    // redirect to home
+    this.currentUser = data.user;
+    localStorage.setItem('accessLevel', this.currentUser.accessLevel); // Initialise router and load all relevant entities
 
     _Router.default.init();
 
-    await _FetchAPI.default.getPlacesAsync(this.currentUser);
+    await _FetchAPI.default.getPlacesAsync();
+    await _FetchAPI.default.getItemsAsync(); // console.log(`Localstorage user is: ${this.currentUser.accessLevel}`)
+
+    localStorage.accessLevel == 2 ? await _FetchAPI.default.getUsersAsync() : ""; // redirect to home
+
     (0, _Router.gotoRoute)('/');
   }
 
@@ -7631,6 +7687,7 @@ class Auth {
       if (err) console.log(err); // delete local token
 
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('user');
 
       _Toast.default.show("session expired, please sign in"); // redirect to sign in      
 
@@ -7652,7 +7709,8 @@ class Auth {
     _Toast.default.show("You are signed out"); // delete local token
 
 
-    localStorage.removeItem('accessToken'); // redirect to sign in    
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('user'); // redirect to sign in    
 
     (0, _Router.gotoRoute)('/signin'); // unset currentUser
 
@@ -7728,7 +7786,7 @@ var _Utils = _interopRequireDefault(require("./../../Utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n      <va-app-header title=\"Home\" user=", "></va-app-header>\n      \n      <div class=\"page-content\">\n        <!-- <h1 class=\"anim-in\">Hey ", "</h1>\n\n        <h3>Button example:</h3>\n        <sl-button class=\"anim-in\" @click=", ">View Profile</sl-button>\n        <p>&nbsp;</p>\n        <h3>Link example</h3>\n        <a href=\"/profile\" @click=", ">View Profile</a> -->\n        \n      </div>\n     \n    "]);
+  const data = _taggedTemplateLiteral(["\n      <va-app-header title=\"Dashboard\" user=", "></va-app-header>\n      \n      <div class=\"page-content\">\n        <!-- <h1 class=\"anim-in\">Hey ", "</h1>\n      \n              <h3>Button example:</h3>\n              <sl-button class=\"anim-in\" @click=", ">View Profile</sl-button>\n              <p>&nbsp;</p>\n              <h3>Link example</h3>\n              <a href=\"/profile\" @click=", ">View Profile</a> -->\n        <div class=\"details-group-example\">\n          <sl-details summary=\"First\">\n            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore\n            magna\n            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n            consequat.\n          </sl-details>\n      \n          <sl-details summary=\"Second\">\n            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore\n            magna\n            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n            consequat.\n          </sl-details>\n      \n          <sl-details summary=\"Third\">\n            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore\n            magna\n            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n            consequat.\n          </sl-details>\n        </div>\n      \n        <script>\n          const container = document.querySelector('.details-group-example');\n      \n        // Close all other details when one is shown\n        container.addEventListener('sl-show', event => {\n          console.log(\"In event listener\")\n          [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));\n        });\n        </script>\n     \n    "]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -7742,7 +7800,7 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 class HomeView {
   init() {
     console.log('HomeView.init');
-    document.title = 'Home';
+    document.title = 'Dashboard';
     this.render();
 
     _Utils.default.pageIntroAnim();
@@ -9847,7 +9905,6 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 //     console.log(places)
 // }
 // FetchAPI.getPlacesAsync()
-console.log("Current user is: ".concat(JSON.stringify(_Auth.default.getCurrentUser)));
 customElements.define('va-app-header', class AppHeader extends _litElement.LitElement {
   constructor() {
     super();
@@ -9864,9 +9921,14 @@ customElements.define('va-app-header', class AppHeader extends _litElement.LitEl
     };
   }
 
-  firstUpdated() {
+  async firstUpdated() {
     super.firstUpdated();
     this.navActiveLinks();
+    const container = document.querySelector('.details-group-example'); // Close all other details when one is shown
+
+    container.addEventListener('sl-show', event => {
+      console.log("In event listener");
+    });
   }
 
   navActiveLinks() {
@@ -9883,7 +9945,10 @@ customElements.define('va-app-header', class AppHeader extends _litElement.LitEl
 
   hamburgerClick() {
     const appMenu = this.shadowRoot.querySelector('.app-side-menu');
-    appMenu.show();
+    appMenu.show(); // Test console logs - remove later****************************************************************
+
+    console.log("Access token is: ".concat(localStorage.accessToken));
+    console.log("User is: ".concat(localStorage.accessLevel));
   }
 
   menuClick(e) {
@@ -10020,7 +10085,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60718" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51382" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

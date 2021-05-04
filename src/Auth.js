@@ -62,10 +62,15 @@ class Auth {
         localStorage.setItem('accessToken', data.accessToken)
             // set current user
         this.currentUser = data.user
-            // console.log(this.currentUser)           
-            // redirect to home
+        localStorage.setItem('accessLevel', this.currentUser.accessLevel)
+
+        // Initialise router and load all relevant entities
         Router.init()
-        await FetchAPI.getPlacesAsync(this.currentUser)
+        await FetchAPI.getPlacesAsync()
+        await FetchAPI.getItemsAsync()
+            // console.log(`Localstorage user is: ${this.currentUser.accessLevel}`)
+        localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
+            // redirect to home
         gotoRoute('/')
     }
 
@@ -98,6 +103,7 @@ class Auth {
             if (err) console.log(err)
                 // delete local token
             localStorage.removeItem('accessToken')
+            localStorage.removeItem('user')
             Toast.show("session expired, please sign in")
                 // redirect to sign in      
             gotoRoute('/signin')
@@ -117,6 +123,7 @@ class Auth {
         Toast.show("You are signed out")
             // delete local token
         localStorage.removeItem('accessToken')
+        localStorage.removeItem('user')
             // redirect to sign in    
         gotoRoute('/signin')
             // unset currentUser
