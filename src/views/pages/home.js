@@ -24,7 +24,7 @@ class HomeView {
               <p>&nbsp;</p>
               <h3>Link example</h3>
               <a href="/profile" @click=${anchorRoute}>View Profile</a> -->
-        <div class="details-group-example">
+        <!-- <div class="details-group-example">
           <sl-details summary="First">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
             magna
@@ -52,10 +52,9 @@ class HomeView {
       
         // Close all other details when one is shown
         container.addEventListener('sl-show', event => {
-          console.log("In event listener")
           [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));
         });
-        </script>
+        </script> -->
      
     `
         render(template, App.rootEl)

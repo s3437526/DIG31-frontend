@@ -4,12 +4,10 @@ import Auth from './../Auth'
 import App from './../App'
 import FetchAPI from '../FetchAPI'
 
-// async function getPlaces() {
-//     const places = await fetch('localhost:3000/places')
-//     console.log(places)
-// }
-
-// FetchAPI.getPlacesAsync()
+let places = [{}]
+let items = [{}]
+let users = [{}]
+const listButton = (item) => { html `<h3>${item}</h3>` }
 
 customElements.define('va-app-header', class AppHeader extends LitElement {
             constructor() {
@@ -30,12 +28,33 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
             async firstUpdated() {
                 super.firstUpdated()
                 this.navActiveLinks()
-                const container = document.querySelector('.details-group-example');
+                const container = this.shadowRoot.querySelector('.accordion-menu');
 
-                // Close all other details when one is shown
-                container.addEventListener('sl-show', event => {
-                    console.log("In event listener")
-                });
+                // // Close all other details when one is shown
+                // container.addEventListener('sl-show', event => {
+                //     [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));
+                // });
+
+                places = await FetchAPI.getPlacesAsync()
+                items = await FetchAPI.getItemsAsync()
+                users = localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
+                    // console.log(`Places are: ${JSON.stringify(places)}`)
+                    // console.log(`Items are: ${JSON.stringify(items)}`)
+                    // console.log(`Users are: ${JSON.stringify(users)}`)
+
+                this.renderPlaceButtons()
+
+            }
+
+            async renderPlaceButtons() {
+
+                let placesList = this.shadowRoot.querySelector('.places-list')
+                places.forEach(place => {
+                    console.log(`Theeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee plaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaace is: ${place.placeName}`)
+                    let itemElement = document.createElement('h3')
+                    placesList.appendChild(itemElement)
+                    itemElement.append(place.placeName)
+                })
             }
 
             navActiveLinks() {
@@ -55,7 +74,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
 
                 // Test console logs - remove later****************************************************************
                 console.log(`Access token is: ${localStorage.accessToken}`)
-                console.log(`User is: ${localStorage.accessLevel}`)
+                console.log(`Access level is is: ${localStorage.accessLevel}`)
             }
 
             menuClick(e) {
@@ -163,6 +182,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
 
       .bottom-menus{
         width: 100%;
+        padding: 5%;
       }
 
       .app-side-menu-items a {
@@ -289,15 +309,8 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         <sl-icon-button class="hamburger-btn" name="list" @click="${this.hamburgerClick}"></sl-icon-button>       
       </div>
 
-      <!-- <div class="app-header-main">
-        ${this.title ? html`
-          <h1 class="page-title">${this.title}</h1>
-        `: ``}
-        <slot></slot>
-      </div> -->
       <div class="right-navs">
         <nav class="app-top-nav">
-          <!-- <a href="/" @click="${anchorRoute}">Home</a>         -->
           <a slot="trigger" href="#" style="display: flex; align-items: center;" @click="${(e) => e.preventDefault()}">
               <sl-icon id="bell-icon" slot="icon" name="bell" style="font-size: 2rem;"></sl-icon>
             </a>
@@ -369,21 +382,22 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         <div class="top-menus">
           <!-- <img class="app-side-menu-logo" src="/images/logo.svg"> -->
           <nav class="app-side-menu-items">
-            <a href="/" @click="${this.menuClick}">Dashboard</a>
-            <a href="/hairdressers" @click="${this.menuClick}">Find a Hairdresser</a>
+            <!-- <a href="/" @click="${this.menuClick}">Dashboard</a> -->
+            <!-- <a href="/hairdressers" @click="${this.menuClick}">Find a Hairdresser</a>
             <a href="/haircute" @click="${this.menuClick}">Find a Haircut</a>
             <a href="/favouriteHaircuts" @click="${this.menuClick}">Hairdressers</a>
             <a href="/profile" @click="${this.menuClick}">Profile</a>
-            <a href="#" @click="${() => Auth.signOut()}">Sign Out</a>
+            <a href="#" @click="${() => Auth.signOut()}">Sign Out</a> -->
           </nav>  
         </div>
         <!--  -->
         <div>
-          <div class="details-group-example">
-            <sl-details summary="Places">
+          <div class="accordion-menu">
+          <sl-details summary="Dashboard">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
               aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             </sl-details>
+            <sl-details class="places-list" summary="Places"></sl-details>
 
             <sl-details summary="Devices">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
@@ -396,14 +410,14 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
             </sl-details>
           </div>
 
-          <script>
+          <!-- <script>
             const container = document.querySelector('.details-group-example');
 
             // Close all other details when one is shown
             container.addEventListener('sl-show', event => {
               [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));
             });
-          </script>
+          </script> -->
 
           <style>
             .details-group-example sl-details:not(:last-of-type) {
