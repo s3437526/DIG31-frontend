@@ -4,10 +4,9 @@ import Auth from './../Auth'
 import App from './../App'
 import FetchAPI from '../FetchAPI'
 
-let places = [{}]
-let items = [{}]
-let users = [{}]
-const listButton = (item) => { html `<h3>${item}</h3>` }
+let places, items, users = [{}]
+let collections = [{ places, items, users }]
+    //const listButton = (item) => { html `<h3>${item}</h3>` }
 
 customElements.define('va-app-header', class AppHeader extends LitElement {
             constructor() {
@@ -30,30 +29,55 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 this.navActiveLinks()
                 const container = this.shadowRoot.querySelector('.accordion-menu');
 
-                // // Close all other details when one is shown
-                // container.addEventListener('sl-show', event => {
-                //     [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));
-                // });
+                // Close all other details when one is shown
+                container.addEventListener('sl-show', event => {
+                    [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));
+                });
 
-                places = await FetchAPI.getPlacesAsync()
-                items = await FetchAPI.getItemsAsync()
-                users = localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
+                collections.places = await FetchAPI.getPlacesAsync()
+                collections.items = await FetchAPI.getItemsAsync()
+                collections.users = localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
                     // console.log(`Places are: ${JSON.stringify(places)}`)
                     // console.log(`Items are: ${JSON.stringify(items)}`)
                     // console.log(`Users are: ${JSON.stringify(users)}`)
 
-                this.renderPlaceButtons()
-
+                // these HAVE to be streamlined! Do if time permits, otherwise after unit completion!
+                this.renderPlacesButtons()
+                this.renderItemsButtons()
+                this.renderUsersButtons()
             }
 
-            async renderPlaceButtons() {
-
-                let placesList = this.shadowRoot.querySelector('.places-list')
-                places.forEach(place => {
-                    console.log(`Theeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee plaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaace is: ${place.placeName}`)
+            async renderPlacesButtons() {
+                let list = this.shadowRoot.querySelector('.places-list')
+                collections.places.forEach(entity => {
                     let itemElement = document.createElement('h3')
-                    placesList.appendChild(itemElement)
-                    itemElement.append(place.placeName)
+                    itemElement.append(entity.placeName)
+                    list.appendChild(itemElement)
+
+                    let name = "name"
+                    console.log(collections)
+                })
+            }
+
+            async renderItemsButtons() {
+                let list = this.shadowRoot.querySelector('.devices-list')
+                collections.items.forEach(entity => {
+                    let itemElement = document.createElement('h3')
+                    itemElement.append(entity.name)
+                    list.appendChild(itemElement)
+
+                    // console.log(entity)
+                })
+            }
+
+            async renderUsersButtons() {
+                let list = this.shadowRoot.querySelector('.users-list')
+                collections.users.forEach(entity => {
+                    let itemElement = document.createElement('h3')
+                    itemElement.append(entity.firstName, " ", entity.lastName)
+                    list.appendChild(itemElement)
+
+                    // console.log(entity)
                 })
             }
 
@@ -154,14 +178,16 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
       sl-drawer::part(panel){
         background-color: rgb(94,85,107);
         --size: 15em;
-        overflow-y:hidden;
       }
 
       sl-drawer::part(body){
-        /* overflow:hidden; */
         padding: 0;
-        
-        /* overflow:scroll; */
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none;  /* IE 10+ */
+        &::-webkit-scrollbar {
+        width: 0px;
+        background: transparent; /* Chrome/Safari/Webkit */
+        }
       }
       
       sl-drawer::part(overlay){
@@ -178,6 +204,18 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         align-items:center; 
         height: 100%; 
         justify-content: space-between;
+      }
+
+      .accordion-container{
+        width: 100%;
+      }
+
+      .accordion-menu{
+
+      }
+
+      .dashboard-button::part(content){
+display:none;
       }
 
       .bottom-menus{
@@ -379,45 +417,26 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
     </header>
     <sl-drawer class="app-side-menu" placement="left">
       <div class="sidenav-content">
-        <div class="top-menus">
+        <!-- <div class="top-menus"> -->
           <!-- <img class="app-side-menu-logo" src="/images/logo.svg"> -->
-          <nav class="app-side-menu-items">
+          <!-- <nav class="app-side-menu-items"> -->
             <!-- <a href="/" @click="${this.menuClick}">Dashboard</a> -->
             <!-- <a href="/hairdressers" @click="${this.menuClick}">Find a Hairdresser</a>
             <a href="/haircute" @click="${this.menuClick}">Find a Haircut</a>
             <a href="/favouriteHaircuts" @click="${this.menuClick}">Hairdressers</a>
             <a href="/profile" @click="${this.menuClick}">Profile</a>
             <a href="#" @click="${() => Auth.signOut()}">Sign Out</a> -->
-          </nav>  
-        </div>
+          <!-- </nav>   -->
+        <!-- </div> -->
         <!--  -->
-        <div>
+        <div class="accordion-container">
           <div class="accordion-menu">
-          <sl-details summary="Dashboard">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </sl-details>
-            <sl-details class="places-list" summary="Places"></sl-details>
-
-            <sl-details summary="Devices">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </sl-details>
-
-            <sl-details summary="Users">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            <sl-details summary="Dashboard" class="dashboard-button"></sl-details>
+            <sl-details summary="Places" class="places-list"></sl-details>
+            <sl-details summary="Devices" class="devices-list"></sl-details>
+            <sl-details summary="Users" class="users-list">
             </sl-details>
           </div>
-
-          <!-- <script>
-            const container = document.querySelector('.details-group-example');
-
-            // Close all other details when one is shown
-            container.addEventListener('sl-show', event => {
-              [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));
-            });
-          </script> -->
 
           <style>
             .details-group-example sl-details:not(:last-of-type) {
