@@ -24,6 +24,8 @@ class HomeView {
               <p>&nbsp;</p>
               <h3>Link example</h3>
               <a href="/profile" @click=${anchorRoute}>View Profile</a> -->
+              <div><span class="material-icons">face</span></div>
+              <!-- <aa-accordion-button>textContent</aa-accordion-button> -->
         <!-- <div class="details-group-example">
           <sl-details summary="First">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore

@@ -62,13 +62,13 @@ class Auth {
         localStorage.setItem('accessToken', data.accessToken)
             // set current user
         this.currentUser = data.user
-        localStorage.setItem('accessLevel', this.currentUser.accessLevel)
+        localStorage.setItem('accessLevel', data.user.accessLevel)
 
         // Initialise router and load all relevant entities
         Router.init()
             // await FetchAPI.getPlacesAsync()
             // await FetchAPI.getItemsAsync()
-            //     // console.log(`Localstorage user is: ${this.currentUser.accessLevel}`)
+            // console.log(`Localstorage user is: ${this.currentUser.accessLevel}`)
             // localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
             // redirect to home
         gotoRoute('/')

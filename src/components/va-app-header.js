@@ -4,6 +4,7 @@ import Auth from './../Auth'
 import App from './../App'
 import FetchAPI from '../FetchAPI'
 
+
 let places, items, users = [{}]
 let collections = [{ places, items, users }]
     //const listButton = (item) => { html `<h3>${item}</h3>` }
@@ -36,48 +37,86 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
 
                 collections.places = await FetchAPI.getPlacesAsync()
                 collections.items = await FetchAPI.getItemsAsync()
+                    // collections.devices = await FetchAPI.getDevicesAsync()
                 collections.users = localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
                     // console.log(`Places are: ${JSON.stringify(places)}`)
                     // console.log(`Items are: ${JSON.stringify(items)}`)
                     // console.log(`Users are: ${JSON.stringify(users)}`)
 
-                // these HAVE to be streamlined! Do if time permits, otherwise after unit completion!
+                // these HAVE to be streamlined...waaay to repetitive! Do if time permits, otherwise after unit completion!
                 this.renderPlacesButtons()
                 this.renderItemsButtons()
+                    // this.renderLocationsButtons()
+                    // this.renderDevicesButtons()
                 this.renderUsersButtons()
             }
 
             async renderPlacesButtons() {
                 let list = this.shadowRoot.querySelector('.places-list')
                 collections.places.forEach(entity => {
-                    let itemElement = document.createElement('h3')
+                    let itemElement = document.createElement('aa-accordion-button')
+                    itemElement.setAttribute('icon', entity.locationType.iconURL)
+                    itemElement.setAttribute('path', "icons")
                     itemElement.append(entity.placeName)
                     list.appendChild(itemElement)
 
-                    let name = "name"
-                    console.log(collections)
+                    // let name = "name"
+                    // console.log(`Thing is.... ${JSON.stringify(entity.locationType)}`)
                 })
             }
+
+            // async renderLocationsButtons() {
+            //     let list = this.shadowRoot.querySelector('.places-list')
+            //     collections.places.forEach(entity => {
+            //         let itemElement = document.createElement('aa-accordion-button')
+            //         itemElement.setAttribute('icon', entity.locationType.iconURL)
+            //         itemElement.setAttribute('path', "icons")
+            //         itemElement.append(entity.placeName)
+            //         list.appendChild(itemElement)
+
+            //         // let name = "name"
+            //         // console.log(`Thing is.... ${JSON.stringify(entity.locationType)}`)
+            //     })
+            // }
 
             async renderItemsButtons() {
                 let list = this.shadowRoot.querySelector('.devices-list')
                 collections.items.forEach(entity => {
-                    let itemElement = document.createElement('h3')
+                    let itemElement = document.createElement('aa-accordion-button')
                     itemElement.append(entity.name)
+                    itemElement.setAttribute('icon', `${entity.type.iconURL}`)
+                    itemElement.setAttribute('path', "icons")
+                        // console.log(`Icon url is: ${JSON.stringify(entity)}`)
                     list.appendChild(itemElement)
 
                     // console.log(entity)
+                    // console.log(`Device is: ${entity.type.iconURL}`)
                 })
             }
 
+            // async renderDevicesButtons() {
+            //     let list = this.shadowRoot.querySelector('.devices-list')
+            //     collections.items.forEach(entity => {
+            //         let itemElement = document.createElement('aa-accordion-button')
+            //         itemElement.append(entity.name)
+            //         itemElement.setAttribute('icon', `${entity.type.iconURL}`)
+            //             // console.log(`Icon url is: ${JSON.stringify(entity)}`)
+            //         list.appendChild(itemElement)
+
+            //         // console.log(entity)
+            //     })
+            // }
+
             async renderUsersButtons() {
-                let list = this.shadowRoot.querySelector('.users-list')
-                collections.users.forEach(entity => {
-                    let itemElement = document.createElement('h3')
+                    let list = this.shadowRoot.querySelector('.users-list')
+                    collections.users.forEach(entity => {
+                                let itemElement = document.createElement('aa-accordion-button')
+                                itemElement.setAttribute('icon', `${(entity && entity.imageURL != "") ? `${entity.imageURL}` : "account_circle_white_24dp.svg"}`)
+                                itemElement.setAttribute('path', `${(entity && entity.imageURL != "") ? `images` : `icons`}`)
                     itemElement.append(entity.firstName, " ", entity.lastName)
                     list.appendChild(itemElement)
 
-                    // console.log(entity)
+                    // console.log(entity.imageURL)
                 })
             }
 
@@ -97,8 +136,9 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 appMenu.show()
 
                 // Test console logs - remove later****************************************************************
-                console.log(`Access token is: ${localStorage.accessToken}`)
-                console.log(`Access level is is: ${localStorage.accessLevel}`)
+                // console.log(`Access token is: ${localStorage.accessToken}`)
+                // console.log(`Access level is is: ${localStorage.accessLevel}`)
+                // console.log(`Full local storage is: ${JSON.stringify(localStorage)}`)
             }
 
             menuClick(e) {
@@ -177,7 +217,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
 
       sl-drawer::part(panel){
         background-color: rgb(94,85,107);
-        --size: 15em;
+        --size: 18em;
       }
 
       sl-drawer::part(body){
@@ -215,7 +255,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
       }
 
       .dashboard-button::part(content){
-display:none;
+        display:none;
       }
 
       .bottom-menus{
@@ -244,7 +284,10 @@ display:none;
       }
       
       sl-icon{
-        color:white;
+        /* color: white; */
+      }
+
+      sl-icon:hover{
       }
 
       #bell-icon, #bell-icon-sidenav, #alert-icon, #alert-icon-sidenav, .bi-bell{
@@ -273,9 +316,38 @@ display:none;
 
       sl-avatar::part(base){
         --size: 2rem;
-        color:white;
+        color: white;
       }
       
+      sl-details::part(content){
+        padding: 0;
+        
+        border-top: 1px solid white;
+      }
+
+      sl-details::part(summary){
+        /* color: white; */
+      }
+
+      sl-details::part(summary):hover{
+        color: var(--base-color);
+      }
+
+      sl-details::part(base){
+        color: white;
+        background: var(--base-color);
+        /* font-size: 1rem; */
+      }
+
+      sl-details::part(base):hover{
+        color: var(--base-color);
+        background: white;
+      }
+
+      /* aa-accordion-button.icon{
+        color: red;
+      } */
+
       .dropdown-icon{
         font-size: 2rem;
 
@@ -366,7 +438,7 @@ display:none;
           </sl-dropdown>
           <sl-dropdown distance="0" class="dropdowns">
             <a slot="trigger" href="#" @click="${(e) => e.preventDefault()}">
-              <sl-avatar image=${(this.user && this.user.avatar) ? `${App.apiBase}/images/${this.user.avatar}` : ``}></sl-avatar> ${this.user && this.user.firstName}
+              <sl-avatar image=${(this.user && this.user.imageURL) ? `${App.apiBase}/images/${this.user.imageURL}` : ``}></sl-avatar> ${this.user && this.user.firstName}
             </a>
             <sl-menu>            
             ${Auth.currentUser.accessLevel == 2 ? html`
@@ -432,9 +504,9 @@ display:none;
         <div class="accordion-container">
           <div class="accordion-menu">
             <sl-details summary="Dashboard" class="dashboard-button"></sl-details>
-            <sl-details summary="Places" class="places-list"></sl-details>
-            <sl-details summary="Devices" class="devices-list"></sl-details>
-            <sl-details summary="Users" class="users-list">
+            <sl-details summary="Places" class="details places-list"></sl-details>
+            <sl-details summary="Devices" class="details devices-list"></sl-details>
+            <sl-details summary="Users" class="details users-list">
             </sl-details>
           </div>
 
@@ -456,7 +528,7 @@ display:none;
               </a>
             <sl-dropdown skidding="-109" distance="10">
               <a slot="trigger" href="#" style="display: flex; align-items: center;" @click="${(e) => e.preventDefault()}">
-                <sl-icon slot="icon" name="gear-fill" style="font-size: 2rem;"></sl-icon>
+                <sl-icon slot="icon" name="gear-fill" style="font-size: 2rem; color: white;"></sl-icon>
               </a>
               <sl-menu class="left-menu">            
                 <sl-menu-item @click="${() => gotoRoute('/profile')}"><sl-icon class="dropdown-icon" slot="prefix" name="wifi"></sl-icon>System Status</sl-menu-item>
