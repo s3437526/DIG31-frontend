@@ -20,12 +20,19 @@ class AccordionButton extends LitElement {
             },
             path: {
                 type: String
+            },
+            active: {
+                type: String
             }
         }
     }
 
     firstUpdated() {
         super.firstUpdated()
+        let button = this.shadowRoot.querySelector('.container')
+        button.addEventListener('click', () => {
+            this.shadowRoot.querySelector('.active-indicator').classList.toggle('active')
+        })
     }
 
     render() {
@@ -50,16 +57,15 @@ class AccordionButton extends LitElement {
             .container:hover{
                 color: var(--brand-color);
                 background: white;
-                border: 1px solid white;
+                border: 0 1px 1px 1px solid white;
                 cursor: pointer;
             }
 
             .icon{
-                padding-left: 1rem;
+                padding-left: 2rem;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                /* font-size: 3rem; */
             }
 
             .icon slot{
@@ -68,35 +74,23 @@ class AccordionButton extends LitElement {
 
             .active-indicator{
                 height: 100%; 
-                width: 15px; 
+                width: 10px; 
                 position: absolute; 
                 right: 0;
             }
 
-            .active-indicator:active{
+            .active-indicator.active{
                 background: white;
             }
         </style>
 
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-            ${console.log(`Inner HTML is: ${this.innerHTML}`)}
-            ${console.log(`Icon is: ${this.icon}`)}
             <div class="container" part="container">
             ${this.path === "icons" ? html `
             <span class="material-icons icon" style="font-size: 2rem;">${this.icon}</span>
             `: html `
             <img class="icon" style="width: auto; height: 40px;" src=${this.icon}></span>
             `}
-            <!-- <slot class="icon" part="icon-part"></slot> -->
-            <!-- <div class="icon" part="icon-part"> -->
-                <!-- <slot name="icon-slot"></slot> -->
-                <!-- <span class="material-icons">local_florist</span> -->
-                <!-- ${this.path == "images" ? html`
-                <img src="${App.apiBase}/${this.path}/${this.icon}" alt="${this.textContent} icon"/>
-                ` : html `
-                <img src="${App.apiBase}/${this.path}/${this.icon}" alt="${this.textContent} icon"/>
-                `} -->
-            <!-- </div> -->
             <h3>${this.textContent}</h3>
             <div class="active-indicator" part="active-indicator"></div>
         </div>
@@ -105,22 +99,3 @@ class AccordionButton extends LitElement {
 }
 
 customElements.define('aa-accordion-button', AccordionButton)
-
-/**
- *         <!-- ${console.log(`Path sent in is: ${this.path}`)} -->
-        <div class="container" part="container">
-            <slot class="icon" part="icon-part"></slot>
-            <!-- <div class="icon" part="icon-part"> -->
-                <!-- <slot name="icon-slot"></slot> -->
-                <!-- <span class="material-icons">local_florist</span> -->
-                <!-- ${this.path == "images" ? html`
-                <img src="${App.apiBase}/${this.path}/${this.icon}" alt="${this.textContent} icon"/>
-                ` : html `
-                <img src="${App.apiBase}/${this.path}/${this.icon}" alt="${this.textContent} icon"/>
-                `} -->
-            <!-- </div> -->
-            <h3>${this.textContent}</h3>
-            <div class="active-indicator" part="active-indicator"></div>
-        </div>
- * 
- */

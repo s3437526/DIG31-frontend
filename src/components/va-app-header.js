@@ -6,8 +6,6 @@ import FetchAPI from '../FetchAPI'
 
 let places, items, users = [{}]
 let collections = [{ places, items, users }]
-    //const listButton = (item) => { html `<h3>${item}</h3>` }
-
 customElements.define('va-app-header', class AppHeader extends LitElement {
             constructor() {
                 super()
@@ -36,17 +34,11 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
 
                 collections.places = await FetchAPI.getPlacesAsync()
                 collections.items = await FetchAPI.getItemsAsync()
-                    // collections.devices = await FetchAPI.getDevicesAsync()
                 collections.users = localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
-                    // console.log(`Places are: ${JSON.stringify(places)}`)
-                    // console.log(`Items are: ${JSON.stringify(items)}`)
-                    // console.log(`Users are: ${JSON.stringify(users)}`)
 
                 // these HAVE to be streamlined...waaay to repetitive! Do if time permits, otherwise after unit completion!
                 this.renderPlacesButtons()
                 this.renderItemsButtons()
-                    // this.renderLocationsButtons()
-                    // this.renderDevicesButtons()
                 this.renderUsersButtons()
             }
 
@@ -64,20 +56,6 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 })
             }
 
-            // async renderLocationsButtons() {
-            //     let list = this.shadowRoot.querySelector('.places-list')
-            //     collections.places.forEach(entity => {
-            //         let itemElement = document.createElement('aa-accordion-button')
-            //         itemElement.setAttribute('icon', entity.locationType.iconURL)
-            //         itemElement.setAttribute('path', "icons")
-            //         itemElement.append(entity.placeName)
-            //         list.appendChild(itemElement)
-
-            //         // let name = "name"
-            //         // console.log(`Thing is.... ${JSON.stringify(entity.locationType)}`)
-            //     })
-            // }
-
             async renderItemsButtons() {
                 let list = this.shadowRoot.querySelector('.devices-list')
                 collections.items.forEach(entity => {
@@ -92,22 +70,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 })
             }
 
-            // async renderDevicesButtons() {
-            //     let list = this.shadowRoot.querySelector('.devices-list')
-            //     collections.items.forEach(entity => {
-            //         let itemElement = document.createElement('aa-accordion-button')
-            //         itemElement.append(entity.name)
-            //         itemElement.setAttribute('icon', `${entity.type.iconURL}`)
-            //             // console.log(`Icon url is: ${JSON.stringify(entity)}`)
-            //         list.appendChild(itemElement)
-
-            //         // console.log(entity)
-            //     })
-            // }
-
             renderImage(itemElement, entity) {
-                // let 
-                itemElement.classList.remove('material-icons')
                 itemElement.setAttribute('icon', `${App.apiBase}/images/${entity.imageURL}`)
                 itemElement.setAttribute('path', "Images")
             }
@@ -122,19 +85,8 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 collections.users.forEach(entity => {
                     let itemElement = document.createElement('aa-accordion-button')
                     entity && entity.imageURL != "" ?
-                        // itemElement.setAttribute('icon', entity.imageURL)
-                        // itemElement.setAttribute('path', `images`)
                         this.renderImage(itemElement, entity) :
-                        // itemElement.setAttribute('path', `images`)
-                        // let spanElement = document.createElement('span')
-                        // spanElement.classList.add('material-icons')
-                        // spanElement.innerText = "account_circle"
-                        // itemElement.append(spanElement)
-                        // console.log("a;lsdkfja;lskdfja;lskdjf")
                         this.renderIcon(itemElement)
-
-                    //             itemElement.setAttribute('icon', `${(entity && entity.imageURL != "") ? `${entity.imageURL}` : `account_circle`}`)
-                    // itemElement.setAttribute('path', `${(entity && entity.imageURL != "") ? `images` : `icons`}`)
                     itemElement.append(entity.firstName, " ", entity.lastName)
                     list.appendChild(itemElement)
 
@@ -158,11 +110,6 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
             hamburgerClick() {
                 const appMenu = this.shadowRoot.querySelector('.app-side-menu')
                 appMenu.show()
-
-                // Test console logs - remove later****************************************************************
-                // console.log(`Access token is: ${localStorage.accessToken}`)
-                // console.log(`Access level is is: ${localStorage.accessLevel}`)
-                // console.log(`Full local storage is: ${JSON.stringify(localStorage)}`)
             }
 
             menuClick(e) {
@@ -274,10 +221,6 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         width: 100%;
       }
 
-      /* .accordion-menu{
-
-      } */
-
       .dashboard-button::part(content){
         display:none;
       }
@@ -306,13 +249,6 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
       .app-side-menu-items a.active {
         font-weight: bold;
       }
-      
-      /* sl-icon{
-        color: white;
-      }
-
-      sl-icon:hover{
-      } */
 
       #bell-icon, #bell-icon-sidenav, #alert-icon, #alert-icon-sidenav, .bi-bell{
         color: gray;
@@ -342,16 +278,16 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         --size: 2rem;
         color: white;
       }
+
+      sl-details::part(header){
+        padding: var(--sl-spacing-x-small);
+      }
       
       sl-details::part(content){
         padding: 0;
         
         border-top: 1px solid white;
       }
-
-      /* sl-details::part(summary){
-        color: white;
-      } */
 
       sl-details::part(summary):hover{
         color: var(--base-color);
@@ -360,17 +296,12 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
       sl-details::part(base){
         color: white;
         background: var(--base-color);
-        /* font-size: 1rem; */
       }
 
       sl-details::part(base):hover{
         color: var(--base-color);
         background: white;
       }
-
-      /* aa-accordion-button.icon{
-        color: red;
-      } */
 
       .dropdown-icon{
         font-size: 2rem;
@@ -420,6 +351,10 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
 
       .app-side-nav{
         display:none;
+      }
+
+      .summary-icon::part(summary){
+        font-size: 2rem;
       }
 
       /* RESPONSIVE - MOBILE ------------------- */
@@ -525,11 +460,12 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         <!-- </div> -->
         <!--  -->
         <div class="accordion-container">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
           <div class="accordion-menu">
-            <sl-details summary="Dashboard" class="dashboard-button"></sl-details>
-            <sl-details summary="Places" class="details places-list"></sl-details>
-            <sl-details summary="Devices" class="details devices-list"></sl-details>
-            <sl-details summary="Users" class="details users-list"></sl-details>
+            <sl-details class="dashboard-button"><span slot="summary" class="material-icons" style="font-size: 40px;">dashboard</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Dashboard</span></sl-details>
+            <sl-details summary="Places" class="details places-list"><span slot="summary" class="material-icons" style="font-size: 40px;">home</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Places</span></sl-details>
+            <sl-details summary="Devices" class="details devices-list"><span slot="summary" class="material-icons" style="font-size: 40px;">sensors</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Devices</span></sl-details>
+            <sl-details summary="Users" class="details users-list"><span slot="summary" class="material-icons" style="font-size: 40px;">account_circle</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Users</span></sl-details>
           </div>
           <style>
             .details-group-example sl-details:not(:last-of-type) {
