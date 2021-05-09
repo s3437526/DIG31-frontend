@@ -23,7 +23,7 @@ class FetchAPI {
         }
         // If successful, convert data to JSON and return it to the calling function
         let data = await response.json();
-        console.log(data)
+        // console.log(data)
         return data;
     }
 
@@ -45,7 +45,7 @@ class FetchAPI {
         }
         // If successful, convert data to JSON and return it to the calling function
         let data = await response.json();
-        console.log(data)
+        // console.log(data)
         return data;
     }
 
@@ -114,7 +114,7 @@ class FetchAPI {
         }
         // If successful, convert data to JSON and return it to the calling function
         let data = await response.json();
-        console.log(data)
+        // console.log(data)
         return data;
     }
 }

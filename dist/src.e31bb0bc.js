@@ -7499,8 +7499,8 @@ class FetchAPI {
     } // If successful, convert data to JSON and return it to the calling function
 
 
-    let data = await response.json();
-    console.log(data);
+    let data = await response.json(); // console.log(data)
+
     return data;
   } // Get all devices function using asynchronous fetch API call
 
@@ -7524,8 +7524,8 @@ class FetchAPI {
     } // If successful, convert data to JSON and return it to the calling function
 
 
-    let data = await response.json();
-    console.log(data);
+    let data = await response.json(); // console.log(data)
+
     return data;
   } // // Get all devices function using asynchronous fetch API call
   // async getDevicesAsync() {
@@ -7591,8 +7591,8 @@ class FetchAPI {
     } // If successful, convert data to JSON and return it to the calling function
 
 
-    let data = await response.json();
-    console.log(data);
+    let data = await response.json(); // console.log(data)
+
     return data;
   }
 
@@ -7826,7 +7826,7 @@ var _Utils = _interopRequireDefault(require("./../../Utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n      <va-app-header title=\"Dashboard\" user=", "></va-app-header>\n      \n      <div class=\"page-content\">\n        <!-- <h1 class=\"anim-in\">Hey ", "</h1>\n      \n              <h3>Button example:</h3>\n              <sl-button class=\"anim-in\" @click=", ">View Profile</sl-button>\n              <p>&nbsp;</p>\n              <h3>Link example</h3>\n              <a href=\"/profile\" @click=", ">View Profile</a> -->\n              <div><span class=\"material-icons\">face</span></div>\n              <!-- <aa-accordion-button>textContent</aa-accordion-button> -->\n        <!-- <div class=\"details-group-example\">\n          <sl-details summary=\"First\">\n            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore\n            magna\n            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n            consequat.\n          </sl-details>\n      \n          <sl-details summary=\"Second\">\n            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore\n            magna\n            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n            consequat.\n          </sl-details>\n      \n          <sl-details summary=\"Third\">\n            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore\n            magna\n            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n            consequat.\n          </sl-details>\n        </div>\n      \n        <script>\n          const container = document.querySelector('.details-group-example');\n      \n        // Close all other details when one is shown\n        container.addEventListener('sl-show', event => {\n          [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));\n        });\n        </script> -->\n     \n    "]);
+  const data = _taggedTemplateLiteral(["\n      <va-app-header title=\"Dashboard\" user=", "></va-app-header>\n      <div class=\"page-content\">\n      \n      </div>\n    "]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -7847,7 +7847,7 @@ class HomeView {
   }
 
   render() {
-    const template = (0, _litHtml.html)(_templateObject(), JSON.stringify(_Auth.default.currentUser), _Auth.default.currentUser.firstName, () => (0, _Router.gotoRoute)('/profile'), _Router.anchorRoute);
+    const template = (0, _litHtml.html)(_templateObject(), JSON.stringify(_Auth.default.currentUser));
     (0, _litHtml.render)(template, _App.default.rootEl);
   }
 
@@ -9919,7 +9919,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n    <style>      \n      * {\n        box-sizing: border-box;\n      }\n      .app-header {\n        background: rgb(94,85,107);\n        position: fixed;\n        top: 0;\n        right: 0;\n        left: 0;\n        height: var(--app-header-height);\n        color: #fff;\n        display: flex;\n        justify-content: flex-end;\n        z-index: 9;\n        box-shadow: 4px 0px 10px rgba(0,0,0,0.2);\n        align-items: center;\n      }\n\n      .app-header-main {\n        flex-grow: 1;\n        display: flex;\n        align-items: center;\n      }\n\n      .app-header-main::slotted(h1){\n        color: #fff;\n      }\n\n      .app-logo a {\n        color: #fff;\n        text-decoration: none;\n        font-weight: bold;\n        font-size: 1.2em;\n        padding: .6em;\n        display: inline-block;        \n      }\n\n      .app-logo img {\n        width: 90px;\n      }\n      \n      .hamburger-btn::part(base) {\n        color: #fff;\n        font-size: 2.5em;\n      }\n\n      .app-top-nav {\n        display: flex;\n        height: 100%;\n        align-items: center;\n      }\n\n      .app-top-nav a {\n        display: inline-block;\n        padding: .8em;\n        text-decoration: none;\n        color: #fff;\n      }\n\n      sl-drawer::part(panel){\n        background-color: rgb(94,85,107);\n        --size: 18em;\n      }\n\n      sl-drawer::part(body){\n        padding: 0;\n        scrollbar-width: none; /* Firefox */\n        -ms-overflow-style: none;  /* IE 10+ */\n        &::-webkit-scrollbar {\n        width: 0px;\n        background: transparent; /* Chrome/Safari/Webkit */\n        }\n      }\n      \n      sl-drawer::part(overlay){\n        background: transparent;\n      }\n\n      sl-drawer::part(close-button){\n        color:white;\n      }\n\n      .sidenav-content{\n        display:flex; \n        flex-direction:column; \n        align-items:center; \n        height: 100%; \n        justify-content: space-between;\n      }\n\n      .accordion-container{\n        width: 100%;\n      }\n\n      .accordion-menu{\n\n      }\n\n      .dashboard-button::part(content){\n        display:none;\n      }\n\n      .bottom-menus{\n        width: 100%;\n        padding: 5%;\n      }\n\n      .app-side-menu-items a {\n        display: block;\n        padding: .5em;\n        text-decoration: none;\n        font-size: 1.3em;\n        color: var(--app-header-txt-color);\n      }\n\n      .page-title {\n        color: var(--app-header-txt-color);\n        margin-right: 0.5em;\n        font-size: var(--app-header-title-font-size);\n      }\n\n      /* active nav links */\n      .app-top-nav a.active,\n      .app-side-menu-items a.active {\n        font-weight: bold;\n      }\n      \n      sl-icon{\n        /* color: white; */\n      }\n\n      sl-icon:hover{\n      }\n\n      #bell-icon, #bell-icon-sidenav, #alert-icon, #alert-icon-sidenav, .bi-bell{\n        color: gray;\n      }\n\n      sl-dropdown::part(panel){\n        background-color: rgb(94,85,107);\n        border: none;\n        max-height: 100vh;\n        border-radius:  0 0 5px 5px;\n      }\n\n      sl-menu.left-menu::part(base){\n        border: 1px solid #fff;\n        border-radius: 5px;\n      }\n\n      sl-menu-item::part(base){\n        color: #fff;\n      }\n\n      sl-menu-item::part(base):hover{\n        color: rgb(94,85,107);\n      } \n\n      sl-avatar::part(base){\n        --size: 2rem;\n        color: white;\n      }\n      \n      sl-details::part(content){\n        padding: 0;\n        \n        border-top: 1px solid white;\n      }\n\n      sl-details::part(summary){\n        /* color: white; */\n      }\n\n      sl-details::part(summary):hover{\n        color: var(--base-color);\n      }\n\n      sl-details::part(base){\n        color: white;\n        background: var(--base-color);\n        /* font-size: 1rem; */\n      }\n\n      sl-details::part(base):hover{\n        color: var(--base-color);\n        background: white;\n      }\n\n      /* aa-accordion-button.icon{\n        color: red;\n      } */\n\n      .dropdown-icon{\n        font-size: 2rem;\n\n      }.settings-icon{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -15%; \n        margin-right:0;\n      }\n\n      .add-icon{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-place{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-device{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -5%; \n        margin-right:0;\n      }\n\n      .add-device{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: 0;\n      }\n\n      .signout-icon{\n        font-size: 2rem;\n        left: 10%;\n        margin-right:1.5rem;\n      }\n\n      .app-side-nav{\n        display:none;\n      }\n\n      /* RESPONSIVE - MOBILE ------------------- */\n      @media all and (max-width: 768px){       \n        \n        .app-top-nav {\n          display: none;\n        }\n\n        .app-side-nav{\n          display:flex;\n          align-items: center;\n          justify-content: space-evenly;\n        }\n      }\n\n    </style>\n\n    <header class=\"app-header\" style=\"display:flex; justify-content: space-between; align-items:center;\">\n      <div class=\"left-navs\">\n        <sl-icon-button class=\"hamburger-btn\" name=\"list\" @click=\"", "\"></sl-icon-button>       \n      </div>\n\n      <div class=\"right-navs\">\n        <nav class=\"app-top-nav\">\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"bell-icon\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"alert-icon\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <sl-dropdown>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 1.9rem;\"></sl-icon>\n            </a>\n            <sl-menu>            \n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n          <sl-dropdown distance=\"0\" class=\"dropdowns\">\n            <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n              <sl-avatar image=", "></sl-avatar> ", "\n            </a>\n            <sl-menu>            \n            ", "\n              </sl-menu-item>\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                  Manage Account\n              </sl-menu-item>\n              ", "\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                  Sign Out\n              </sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n        </nav>\n      </div>\n    </header>\n    <sl-drawer class=\"app-side-menu\" placement=\"left\">\n      <div class=\"sidenav-content\">\n        <!-- <div class=\"top-menus\"> -->\n          <!-- <img class=\"app-side-menu-logo\" src=\"/images/logo.svg\"> -->\n          <!-- <nav class=\"app-side-menu-items\"> -->\n            <!-- <a href=\"/\" @click=\"", "\">Dashboard</a> -->\n            <!-- <a href=\"/hairdressers\" @click=\"", "\">Find a Hairdresser</a>\n            <a href=\"/haircute\" @click=\"", "\">Find a Haircut</a>\n            <a href=\"/favouriteHaircuts\" @click=\"", "\">Hairdressers</a>\n            <a href=\"/profile\" @click=\"", "\">Profile</a>\n            <a href=\"#\" @click=\"", "\">Sign Out</a> -->\n          <!-- </nav>   -->\n        <!-- </div> -->\n        <!--  -->\n        <div class=\"accordion-container\">\n          <div class=\"accordion-menu\">\n            <sl-details summary=\"Dashboard\" class=\"dashboard-button\"></sl-details>\n            <sl-details summary=\"Places\" class=\"details places-list\"></sl-details>\n            <sl-details summary=\"Devices\" class=\"details devices-list\"></sl-details>\n            <sl-details summary=\"Users\" class=\"details users-list\">\n            </sl-details>\n          </div>\n\n          <style>\n            .details-group-example sl-details:not(:last-of-type) {\n              margin-bottom: var(--sl-spacing-xx-small);\n            }\n          </style>\n        </div>\n        <!--  -->\n        <div class=\"bottom-menus\">\n          <nav class=\"app-side-nav\">\n            <!-- <a href=\"/\" @click=\"", "\">Home</a>         -->\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"bell-icon-sidenav\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"alert-icon-sidenav\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <sl-dropdown skidding=\"-109\" distance=\"10\">\n              <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 2rem; color: white;\"></sl-icon>\n              </a>\n              <sl-menu class=\"left-menu\">            \n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n            <sl-dropdown skidding=\"-171\" distance=\"10\" class=\"dropdowns-left\">\n              <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n                <sl-avatar image=", ">\n              </a>\n              <sl-menu class=\"left-menu\">            \n                ", "\n                  </sl-menu-item>\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                    <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                      Manage Account\n                  </sl-menu-item>\n                  ", "\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                      Sign Out\n                  </sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n          </nav>\n        </div>\n      </div>\n    </sl-drawer>\n    "]);
+  const data = _taggedTemplateLiteral(["\n    <style>      \n      * {\n        box-sizing: border-box;\n      }\n      .app-header {\n        background: rgb(94,85,107);\n        position: fixed;\n        top: 0;\n        right: 0;\n        left: 0;\n        height: var(--app-header-height);\n        color: #fff;\n        display: flex;\n        justify-content: flex-end;\n        z-index: 9;\n        box-shadow: 4px 0px 10px rgba(0,0,0,0.2);\n        align-items: center;\n      }\n\n      .app-header-main {\n        flex-grow: 1;\n        display: flex;\n        align-items: center;\n      }\n\n      .app-header-main::slotted(h1){\n        color: #fff;\n      }\n\n      .app-logo a {\n        color: #fff;\n        text-decoration: none;\n        font-weight: bold;\n        font-size: 1.2em;\n        padding: .6em;\n        display: inline-block;        \n      }\n\n      .app-logo img {\n        width: 90px;\n      }\n      \n      .hamburger-btn::part(base) {\n        color: #fff;\n        font-size: 2.5em;\n      }\n\n      .app-top-nav {\n        display: flex;\n        height: 100%;\n        align-items: center;\n      }\n\n      .app-top-nav a {\n        display: inline-block;\n        padding: .8em;\n        text-decoration: none;\n        color: #fff;\n      }\n\n      sl-drawer::part(panel){\n        background-color: rgb(94,85,107);\n        --size: 20em;\n      }\n\n      sl-drawer::part(body){\n        padding: 0;\n        scrollbar-width: none; /* Firefox */\n        -ms-overflow-style: none;  /* IE 10+ */\n        &::-webkit-scrollbar {\n        width: 0px;\n        background: transparent; /* Chrome/Safari/Webkit */\n        }\n      }\n      \n      sl-drawer::part(overlay){\n        background: transparent;\n      }\n\n      sl-drawer::part(close-button){\n        color:white;\n      }\n\n      .sidenav-content{\n        display:flex; \n        flex-direction:column; \n        align-items:center; \n        height: 100%; \n        justify-content: space-between;\n      }\n\n      .accordion-container{\n        width: 100%;\n      }\n\n      /* .accordion-menu{\n\n      } */\n\n      .dashboard-button::part(content){\n        display:none;\n      }\n\n      .bottom-menus{\n        width: 100%;\n        padding: 5%;\n      }\n\n      .app-side-menu-items a {\n        display: block;\n        padding: .5em;\n        text-decoration: none;\n        font-size: 1.3em;\n        color: var(--app-header-txt-color);\n      }\n\n      .page-title {\n        color: var(--app-header-txt-color);\n        margin-right: 0.5em;\n        font-size: var(--app-header-title-font-size);\n      }\n\n      /* active nav links */\n      .app-top-nav a.active,\n      .app-side-menu-items a.active {\n        font-weight: bold;\n      }\n      \n      /* sl-icon{\n        color: white;\n      }\n\n      sl-icon:hover{\n      } */\n\n      #bell-icon, #bell-icon-sidenav, #alert-icon, #alert-icon-sidenav, .bi-bell{\n        color: gray;\n      }\n\n      sl-dropdown::part(panel){\n        background-color: rgb(94,85,107);\n        border: none;\n        max-height: 100vh;\n        border-radius:  0 0 5px 5px;\n      }\n\n      sl-menu.left-menu::part(base){\n        border: 1px solid #fff;\n        border-radius: 5px;\n      }\n\n      sl-menu-item::part(base){\n        color: #fff;\n      }\n\n      sl-menu-item::part(base):hover{\n        color: rgb(94,85,107);\n      } \n\n      sl-avatar::part(base){\n        --size: 2rem;\n        color: white;\n      }\n      \n      sl-details::part(content){\n        padding: 0;\n        \n        border-top: 1px solid white;\n      }\n\n      /* sl-details::part(summary){\n        color: white;\n      } */\n\n      sl-details::part(summary):hover{\n        color: var(--base-color);\n      }\n\n      sl-details::part(base){\n        color: white;\n        background: var(--base-color);\n        /* font-size: 1rem; */\n      }\n\n      sl-details::part(base):hover{\n        color: var(--base-color);\n        background: white;\n      }\n\n      /* aa-accordion-button.icon{\n        color: red;\n      } */\n\n      .dropdown-icon{\n        font-size: 2rem;\n\n      }.settings-icon{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -15%; \n        margin-right:0;\n      }\n\n      .add-icon{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-place{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-device{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -5%; \n        margin-right:0;\n      }\n\n      .add-device{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: 0;\n      }\n\n      .signout-icon{\n        font-size: 2rem;\n        left: 10%;\n        margin-right:1.5rem;\n      }\n\n      .app-side-nav{\n        display:none;\n      }\n\n      /* RESPONSIVE - MOBILE ------------------- */\n      @media all and (max-width: 768px){       \n        \n        .app-top-nav {\n          display: none;\n        }\n\n        .app-side-nav{\n          display:flex;\n          align-items: center;\n          justify-content: space-evenly;\n        }\n      }\n\n    </style>\n\n    <header class=\"app-header\" style=\"display:flex; justify-content: space-between; align-items:center;\">\n      <div class=\"left-navs\">\n        <sl-icon-button class=\"hamburger-btn\" name=\"list\" @click=\"", "\"></sl-icon-button>       \n      </div>\n      <div class=\"right-navs\">\n        <nav class=\"app-top-nav\">\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"bell-icon\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"alert-icon\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <sl-dropdown>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 1.9rem;\"></sl-icon>\n            </a>\n            <sl-menu>            \n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n          <sl-dropdown distance=\"0\" class=\"dropdowns\">\n            <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n              <sl-avatar image=", "></sl-avatar> ", "\n            </a>\n            <sl-menu>            \n            ", "\n              </sl-menu-item>\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                  Manage Account\n              </sl-menu-item>\n              ", "\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                  Sign Out\n              </sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n        </nav>\n      </div>\n    </header>\n    <sl-drawer class=\"app-side-menu\" placement=\"left\">\n      <div class=\"sidenav-content\">\n        <!-- <div class=\"top-menus\"> -->\n          <!-- <img class=\"app-side-menu-logo\" src=\"/images/logo.svg\"> -->\n          <!-- <nav class=\"app-side-menu-items\"> -->\n            <!-- <a href=\"/\" @click=\"", "\">Dashboard</a> -->\n            <!-- <a href=\"/hairdressers\" @click=\"", "\">Find a Hairdresser</a>\n            <a href=\"/haircute\" @click=\"", "\">Find a Haircut</a>\n            <a href=\"/favouriteHaircuts\" @click=\"", "\">Hairdressers</a>\n            <a href=\"/profile\" @click=\"", "\">Profile</a>\n            <a href=\"#\" @click=\"", "\">Sign Out</a> -->\n          <!-- </nav>   -->\n        <!-- </div> -->\n        <!--  -->\n        <div class=\"accordion-container\">\n          <div class=\"accordion-menu\">\n            <sl-details summary=\"Dashboard\" class=\"dashboard-button\"></sl-details>\n            <sl-details summary=\"Places\" class=\"details places-list\"></sl-details>\n            <sl-details summary=\"Devices\" class=\"details devices-list\"></sl-details>\n            <sl-details summary=\"Users\" class=\"details users-list\"></sl-details>\n          </div>\n          <style>\n            .details-group-example sl-details:not(:last-of-type) {\n              margin-bottom: var(--sl-spacing-xx-small);\n            }\n          </style>\n        </div>\n        <!--  -->\n        <div class=\"bottom-menus\">\n          <nav class=\"app-side-nav\">\n            <!-- <a href=\"/\" @click=\"", "\">Home</a>         -->\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"bell-icon-sidenav\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"alert-icon-sidenav\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <sl-dropdown skidding=\"-109\" distance=\"10\">\n              <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 2rem; color: white;\"></sl-icon>\n              </a>\n              <sl-menu class=\"left-menu\">            \n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n            <sl-dropdown skidding=\"-171\" distance=\"10\" class=\"dropdowns-left\">\n              <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n                <sl-avatar image=", ">\n              </a>\n              <sl-menu class=\"left-menu\">            \n                ", "\n                  </sl-menu-item>\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                    <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                      Manage Account\n                  </sl-menu-item>\n                  ", "\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                      Sign Out\n                  </sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n          </nav>\n        </div>\n      </div>\n    </sl-drawer>\n    "]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -9985,8 +9985,10 @@ customElements.define('va-app-header', class AppHeader extends _litElement.LitEl
       itemElement.setAttribute('icon', entity.locationType.iconURL);
       itemElement.setAttribute('path', "icons");
       itemElement.append(entity.placeName);
-      list.appendChild(itemElement); // let name = "name"
-      // console.log(`Thing is.... ${JSON.stringify(entity.locationType)}`)
+      list.appendChild(itemElement);
+      itemElement.addEventListener('click', () => {
+        console.log(entity);
+      });
     });
   } // async renderLocationsButtons() {
   //     let list = this.shadowRoot.querySelector('.places-list')
@@ -10006,12 +10008,13 @@ customElements.define('va-app-header', class AppHeader extends _litElement.LitEl
     let list = this.shadowRoot.querySelector('.devices-list');
     collections.items.forEach(entity => {
       let itemElement = document.createElement('aa-accordion-button');
-      itemElement.append(entity.name);
       itemElement.setAttribute('icon', "".concat(entity.type.iconURL));
-      itemElement.setAttribute('path', "icons"); // console.log(`Icon url is: ${JSON.stringify(entity)}`)
-
-      list.appendChild(itemElement); // console.log(entity)
-      // console.log(`Device is: ${entity.type.iconURL}`)
+      itemElement.setAttribute('path', "icons");
+      itemElement.append(entity.name);
+      list.appendChild(itemElement);
+      itemElement.addEventListener('click', () => {
+        console.log(entity);
+      });
     });
   } // async renderDevicesButtons() {
   //     let list = this.shadowRoot.querySelector('.devices-list')
@@ -10026,14 +10029,38 @@ customElements.define('va-app-header', class AppHeader extends _litElement.LitEl
   // }
 
 
+  renderImage(itemElement, entity) {
+    // let 
+    itemElement.classList.remove('material-icons');
+    itemElement.setAttribute('icon', "".concat(_App.default.apiBase, "/images/").concat(entity.imageURL));
+    itemElement.setAttribute('path', "Images");
+  }
+
+  renderIcon(itemElement) {
+    itemElement.setAttribute('icon', "account_circle");
+    itemElement.setAttribute('path', "icons");
+  }
+
   async renderUsersButtons() {
     let list = this.shadowRoot.querySelector('.users-list');
     collections.users.forEach(entity => {
       let itemElement = document.createElement('aa-accordion-button');
-      itemElement.setAttribute('icon', "".concat(entity && entity.imageURL != "" ? "".concat(entity.imageURL) : "account_circle_white_24dp.svg"));
-      itemElement.setAttribute('path', "".concat(entity && entity.imageURL != "" ? "images" : "icons"));
+      entity && entity.imageURL != "" ? // itemElement.setAttribute('icon', entity.imageURL)
+      // itemElement.setAttribute('path', `images`)
+      this.renderImage(itemElement, entity) : // itemElement.setAttribute('path', `images`)
+      // let spanElement = document.createElement('span')
+      // spanElement.classList.add('material-icons')
+      // spanElement.innerText = "account_circle"
+      // itemElement.append(spanElement)
+      // console.log("a;lsdkfja;lskdfja;lskdjf")
+      this.renderIcon(itemElement); //             itemElement.setAttribute('icon', `${(entity && entity.imageURL != "") ? `${entity.imageURL}` : `account_circle`}`)
+      // itemElement.setAttribute('path', `${(entity && entity.imageURL != "") ? `images` : `icons`}`)
+
       itemElement.append(entity.firstName, " ", entity.lastName);
-      list.appendChild(itemElement); // console.log(entity.imageURL)
+      list.appendChild(itemElement);
+      itemElement.addEventListener('click', () => {
+        console.log(entity);
+      });
     });
   }
 
@@ -10087,8 +10114,38 @@ var _App = _interopRequireDefault(require("../App"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _templateObject5() {
+  const data = _taggedTemplateLiteral(["\n                <img src=\"", "/", "/", "\" alt=\"", " icon\"/>\n                "]);
+
+  _templateObject5 = function _templateObject5() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject4() {
+  const data = _taggedTemplateLiteral(["\n                <img src=\"", "/", "/", "\" alt=\"", " icon\"/>\n                "]);
+
+  _templateObject4 = function _templateObject4() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject3() {
+  const data = _taggedTemplateLiteral(["\n            <img class=\"icon\" style=\"width: auto; height: 40px;\" src=", "></span>\n            "]);
+
+  _templateObject3 = function _templateObject3() {
+    return data;
+  };
+
+  return data;
+}
+
 function _templateObject2() {
-  const data = _taggedTemplateLiteral(["<img src=\"", "/", "/", "\" alt=\"", " icon\"/>"]);
+  const data = _taggedTemplateLiteral(["\n            <span class=\"material-icons icon\" style=\"font-size: 2rem;\">", "</span>\n            "]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -10098,7 +10155,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n        <style>\n            h3{\n                margin: 1rem;\n            }\n\n            .container{\n                border-bottom: 1px solid;\n                color: white;\n                background: var(--brand-color);\n                width: 100%;\n                display: flex;\n                justify-content: flex-start;\n                align-items: center;\n                /* padding-left: 1rem; */\n            }\n\n            .container:hover{\n                color: var(--brand-color);\n                background: white;\n                border: 1px solid white;\n                cursor: pointer;\n            }\n\n            .icon{\n                padding-left: 1rem;\n            }\n\n            .icon img{\n                width: 2rem;\n            }\n\n            .icon img:hover{\n                width: 2rem;\n                color: var(--brand-color)\n            }\n\n            .icon:hover{\n                /* color: var(--brand-color); */\n                /* background: white; */\n            }\n        </style>\n\n        <div class=\"container\">\n            <div class=\"icon\">\n                ", "\n            </div>\n            <h3>", "</h3>\n        </div>\n        "]);
+  const data = _taggedTemplateLiteral(["\n        <style>\n            h3{\n                margin: 1rem;\n            }\n\n            .container{\n                position: relative;\n                border-bottom: 1px solid;\n                color: white;\n                background: var(--brand-color);\n                width: 100%;\n                height: 100%;\n                display: flex;\n                justify-content: flex-start;\n                align-items: center;\n            }\n\n            .container:hover{\n                color: var(--brand-color);\n                background: white;\n                border: 1px solid white;\n                cursor: pointer;\n            }\n\n            .icon{\n                padding-left: 1rem;\n                display: flex;\n                justify-content: center;\n                align-items: center;\n                /* font-size: 3rem; */\n            }\n\n            .icon slot{\n                width: 2rem;\n            }\n\n            .active-indicator{\n                height: 100%; \n                width: 15px; \n                position: absolute; \n                right: 0;\n            }\n\n            .active-indicator:active{\n                background: white;\n            }\n        </style>\n\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n            ", "\n            ", "\n            <div class=\"container\" part=\"container\">\n            ", "\n            <!-- <slot class=\"icon\" part=\"icon-part\"></slot> -->\n            <!-- <div class=\"icon\" part=\"icon-part\"> -->\n                <!-- <slot name=\"icon-slot\"></slot> -->\n                <!-- <span class=\"material-icons\">local_florist</span> -->\n                <!-- ", " -->\n            <!-- </div> -->\n            <h3>", "</h3>\n            <div class=\"active-indicator\" part=\"active-indicator\"></div>\n        </div>\n        "]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -10109,7 +10166,7 @@ function _templateObject() {
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-// import { registerIconLibrary } from '/dist/shoelace.js';
+// const template = document.createElement
 class AccordionButton extends _litElement.LitElement {
   constructor() {
     super();
@@ -10135,12 +10192,30 @@ class AccordionButton extends _litElement.LitElement {
   }
 
   render() {
-    return (0, _litElement.html)(_templateObject(), (0, _litElement.html)(_templateObject2(), _App.default.apiBase, this.path, this.icon, this.textContent), this.textContent);
+    return (0, _litElement.html)(_templateObject(), console.log("Inner HTML is: ".concat(this.innerHTML)), console.log("Icon is: ".concat(this.icon)), this.path === "icons" ? (0, _litElement.html)(_templateObject2(), this.icon) : (0, _litElement.html)(_templateObject3(), this.icon), this.path == "images" ? (0, _litElement.html)(_templateObject4(), _App.default.apiBase, this.path, this.icon, this.textContent) : (0, _litElement.html)(_templateObject5(), _App.default.apiBase, this.path, this.icon, this.textContent), this.textContent);
   }
 
 }
 
 customElements.define('aa-accordion-button', AccordionButton);
+/**
+ *         <!-- ${console.log(`Path sent in is: ${this.path}`)} -->
+        <div class="container" part="container">
+            <slot class="icon" part="icon-part"></slot>
+            <!-- <div class="icon" part="icon-part"> -->
+                <!-- <slot name="icon-slot"></slot> -->
+                <!-- <span class="material-icons">local_florist</span> -->
+                <!-- ${this.path == "images" ? html`
+                <img src="${App.apiBase}/${this.path}/${this.icon}" alt="${this.textContent} icon"/>
+                ` : html `
+                <img src="${App.apiBase}/${this.path}/${this.icon}" alt="${this.textContent} icon"/>
+                `} -->
+            <!-- </div> -->
+            <h3>${this.textContent}</h3>
+            <div class="active-indicator" part="active-indicator"></div>
+        </div>
+ * 
+ */
 },{"@polymer/lit-element":"../node_modules/@polymer/lit-element/lit-element.js","../Router":"Router.js","../Auth":"Auth.js","../App":"App.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
@@ -10260,7 +10335,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62166" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56758" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
