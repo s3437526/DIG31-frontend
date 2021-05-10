@@ -463,9 +463,9 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
           <div class="accordion-menu">
             <sl-details class="dashboard-button"><span slot="summary" class="material-icons" style="font-size: 40px;">dashboard</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Dashboard</span></sl-details>
-            <sl-details summary="Places" class="details places-list"><span slot="summary" class="material-icons" style="font-size: 40px;">home</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Places</span></sl-details>
-            <sl-details summary="Devices" class="details devices-list"><span slot="summary" class="material-icons" style="font-size: 40px;">sensors</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Devices</span></sl-details>
-            <sl-details summary="Users" class="details users-list"><span slot="summary" class="material-icons" style="font-size: 40px;">account_circle</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Users</span></sl-details>
+            <sl-details class="details places-list" summary="Places" ><span slot="summary" class="material-icons" style="font-size: 40px;">home</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Places</span></sl-details>
+            <sl-details class="details devices-list" summary="Devices"><span slot="summary" class="material-icons" style="font-size: 40px;">sensors</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Devices</span></sl-details>
+            <sl-details class="details users-list" summary="Users"><span slot="summary" class="material-icons" style="font-size: 40px;">account_circle</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Users</span></sl-details>
           </div>
           <style>
             .details-group-example sl-details:not(:last-of-type) {

@@ -5,7 +5,7 @@ import signinView from './views/pages/signin'
 import signupView from './views/pages/signup'
 // import profileView from './views/pages/profile'
 // import editProfileView from './views/pages/editProfile'
-// import guideView from './views/pages/guide'
+import guideView from './views/pages/guide'
 // import hairdresserssView from './views/pages/hairdressers'
 // import haircutsView from './views/pages/haircuts'
 // import favouriteHaircutsView from './views/pages/favouriteHaircuts'
@@ -13,7 +13,7 @@ import signupView from './views/pages/signup'
 // define routes
 const routes = {
     '/': homeView,
-    // '/guide': guideView,
+    '/guide': guideView,
     // '/haircuts': haircutsView,
     // '/hairdressers': hairdresserssView,
     // '/favouriteHaircuts': favouriteHaircutsView,

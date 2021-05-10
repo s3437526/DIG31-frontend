@@ -7826,7 +7826,7 @@ var _Utils = _interopRequireDefault(require("./../../Utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n      <va-app-header title=\"Dashboard\" user=", "></va-app-header>\n      <div class=\"page-content\">\n      \n      </div>\n    "]);
+  const data = _taggedTemplateLiteral(["\n      <va-app-header title=\"Sign in/Sign up\" user=", "></va-app-header>\n      <div class=\"page-content\">\n        <aa-signin-signup-panel></aa-signin-signup-panel>\n      </div>\n    "]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -7837,10 +7837,11 @@ function _templateObject() {
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
+// import SignInSignup from './../../components/aa-signin-signup-panel'
 class HomeView {
   init() {
     console.log('HomeView.init');
-    document.title = 'Dashboard';
+    document.title = 'Sign in/Sign up';
     this.render();
 
     _Utils.default.pageIntroAnim();
@@ -7980,7 +7981,57 @@ class SignUpView {
 var _default = new SignUpView();
 
 exports.default = _default;
-},{"./../../App":"App.js","./../../Auth":"Auth.js","lit-html":"../node_modules/lit-html/lit-html.js","./../../Router":"Router.js","./../../Utils":"Utils.js"}],"Router.js":[function(require,module,exports) {
+},{"./../../App":"App.js","./../../Auth":"Auth.js","lit-html":"../node_modules/lit-html/lit-html.js","./../../Router":"Router.js","./../../Utils":"Utils.js"}],"views/pages/guide.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _App = _interopRequireDefault(require("../../App"));
+
+var _litHtml = require("lit-html");
+
+var _Router = require("../../Router");
+
+var _Auth = _interopRequireDefault(require("../../Auth"));
+
+var _Utils = _interopRequireDefault(require("../../Utils"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _templateObject() {
+  const data = _taggedTemplateLiteral(["\n      <va-app-header title=\"Guide\" user=\"", "\"></va-app-header>\n      <div class=\"page-content calign\">\n        <h3 class=\"brand-color\">Welcome ", "!</h3>\n        <p>This is a quick tour to teach you the basics of using Haircuts ...</p>\n      \n        <div class=\"guide-step\">\n          <h4>Search Hairdressers</h4>\n          <img src=\"https://plchldr.co/i/500x300?&bg=dddddd&fc=666666&text=IMAGE\">\n        </div>\n      \n        <div class=\"guide-step\">\n          <h4>Find a haircut</h4>\n          <img src=\"https://plchldr.co/i/500x300?&bg=dddddd&fc=666666&text=IMAGE\">\n        </div>\n      \n        <div class=\"guide-step\">\n          <h4>Save haircuts to favourites</h4>\n          <img src=\"https://plchldr.co/i/500x300?&bg=dddddd&fc=666666&text=IMAGE\">\n        </div>\n      \n        <sl-button type=\"primary\" @click=", ">Okay got it!</sl-button>\n      \n      \n      </div>\n    "]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+class GuideView {
+  init() {
+    document.title = 'Guide';
+    this.render();
+
+    _Utils.default.pageIntroAnim();
+  }
+
+  render() {
+    const template = (0, _litHtml.html)(_templateObject(), JSON.stringify(_Auth.default.currentUser), _Auth.default.currentUser.firstName, () => (0, _Router.gotoRoute)('/'));
+    (0, _litHtml.render)(template, _App.default.rootEl);
+  }
+
+}
+
+var _default = new GuideView();
+
+exports.default = _default;
+},{"../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","../../Router":"Router.js","../../Auth":"Auth.js","../../Utils":"Utils.js"}],"Router.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7996,20 +8047,21 @@ var _signin = _interopRequireDefault(require("./views/pages/signin"));
 
 var _signup = _interopRequireDefault(require("./views/pages/signup"));
 
+var _guide = _interopRequireDefault(require("./views/pages/guide"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // import views
 // import fourOFourView from './views/pages/404'
 // import profileView from './views/pages/profile'
 // import editProfileView from './views/pages/editProfile'
-// import guideView from './views/pages/guide'
 // import hairdresserssView from './views/pages/hairdressers'
 // import haircutsView from './views/pages/haircuts'
 // import favouriteHaircutsView from './views/pages/favouriteHaircuts'
 // define routes
 const routes = {
   '/': _home.default,
-  // '/guide': guideView,
+  '/guide': _guide.default,
   // '/haircuts': haircutsView,
   // '/hairdressers': hairdresserssView,
   // '/favouriteHaircuts': favouriteHaircutsView,
@@ -8071,7 +8123,7 @@ function anchorRoute(e) {
   const pathname = e.target.closest('a').pathname;
   AppRouter.gotoRoute(pathname);
 }
-},{"./views/pages/home":"views/pages/home.js","./views/pages/signin":"views/pages/signin.js","./views/pages/signup":"views/pages/signup.js"}],"App.js":[function(require,module,exports) {
+},{"./views/pages/home":"views/pages/home.js","./views/pages/signin":"views/pages/signin.js","./views/pages/signup":"views/pages/signup.js","./views/pages/guide":"views/pages/guide.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9919,7 +9971,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n    <style>      \n      * {\n        box-sizing: border-box;\n      }\n      .app-header {\n        background: rgb(94,85,107);\n        position: fixed;\n        top: 0;\n        right: 0;\n        left: 0;\n        height: var(--app-header-height);\n        color: #fff;\n        display: flex;\n        justify-content: flex-end;\n        z-index: 9;\n        box-shadow: 4px 0px 10px rgba(0,0,0,0.2);\n        align-items: center;\n      }\n\n      .app-header-main {\n        flex-grow: 1;\n        display: flex;\n        align-items: center;\n      }\n\n      .app-header-main::slotted(h1){\n        color: #fff;\n      }\n\n      .app-logo a {\n        color: #fff;\n        text-decoration: none;\n        font-weight: bold;\n        font-size: 1.2em;\n        padding: .6em;\n        display: inline-block;        \n      }\n\n      .app-logo img {\n        width: 90px;\n      }\n      \n      .hamburger-btn::part(base) {\n        color: #fff;\n        font-size: 2.5em;\n      }\n\n      .app-top-nav {\n        display: flex;\n        height: 100%;\n        align-items: center;\n      }\n\n      .app-top-nav a {\n        display: inline-block;\n        padding: .8em;\n        text-decoration: none;\n        color: #fff;\n      }\n\n      sl-drawer::part(panel){\n        background-color: rgb(94,85,107);\n        --size: 20em;\n      }\n\n      sl-drawer::part(body){\n        padding: 0;\n        scrollbar-width: none; /* Firefox */\n        -ms-overflow-style: none;  /* IE 10+ */\n        &::-webkit-scrollbar {\n        width: 0px;\n        background: transparent; /* Chrome/Safari/Webkit */\n        }\n      }\n      \n      sl-drawer::part(overlay){\n        background: transparent;\n      }\n\n      sl-drawer::part(close-button){\n        color:white;\n      }\n\n      .sidenav-content{\n        display:flex; \n        flex-direction:column; \n        align-items:center; \n        height: 100%; \n        justify-content: space-between;\n      }\n\n      .accordion-container{\n        width: 100%;\n      }\n\n      .dashboard-button::part(content){\n        display:none;\n      }\n\n      .bottom-menus{\n        width: 100%;\n        padding: 5%;\n      }\n\n      .app-side-menu-items a {\n        display: block;\n        padding: .5em;\n        text-decoration: none;\n        font-size: 1.3em;\n        color: var(--app-header-txt-color);\n      }\n\n      .page-title {\n        color: var(--app-header-txt-color);\n        margin-right: 0.5em;\n        font-size: var(--app-header-title-font-size);\n      }\n\n      /* active nav links */\n      .app-top-nav a.active,\n      .app-side-menu-items a.active {\n        font-weight: bold;\n      }\n\n      #bell-icon, #bell-icon-sidenav, #alert-icon, #alert-icon-sidenav, .bi-bell{\n        color: gray;\n      }\n\n      sl-dropdown::part(panel){\n        background-color: rgb(94,85,107);\n        border: none;\n        max-height: 100vh;\n        border-radius:  0 0 5px 5px;\n      }\n\n      sl-menu.left-menu::part(base){\n        border: 1px solid #fff;\n        border-radius: 5px;\n      }\n\n      sl-menu-item::part(base){\n        color: #fff;\n      }\n\n      sl-menu-item::part(base):hover{\n        color: rgb(94,85,107);\n      } \n\n      sl-avatar::part(base){\n        --size: 2rem;\n        color: white;\n      }\n\n      sl-details::part(header){\n        padding: var(--sl-spacing-x-small);\n      }\n      \n      sl-details::part(content){\n        padding: 0;\n        \n        border-top: 1px solid white;\n      }\n\n      sl-details::part(summary):hover{\n        color: var(--base-color);\n      }\n\n      sl-details::part(base){\n        color: white;\n        background: var(--base-color);\n      }\n\n      sl-details::part(base):hover{\n        color: var(--base-color);\n        background: white;\n      }\n\n      .dropdown-icon{\n        font-size: 2rem;\n\n      }.settings-icon{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -15%; \n        margin-right:0;\n      }\n\n      .add-icon{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-place{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-device{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -5%; \n        margin-right:0;\n      }\n\n      .add-device{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: 0;\n      }\n\n      .signout-icon{\n        font-size: 2rem;\n        left: 10%;\n        margin-right:1.5rem;\n      }\n\n      .app-side-nav{\n        display:none;\n      }\n\n      .summary-icon::part(summary){\n        font-size: 2rem;\n      }\n\n      /* RESPONSIVE - MOBILE ------------------- */\n      @media all and (max-width: 768px){       \n        \n        .app-top-nav {\n          display: none;\n        }\n\n        .app-side-nav{\n          display:flex;\n          align-items: center;\n          justify-content: space-evenly;\n        }\n      }\n\n    </style>\n\n    <header class=\"app-header\" style=\"display:flex; justify-content: space-between; align-items:center;\">\n      <div class=\"left-navs\">\n        <sl-icon-button class=\"hamburger-btn\" name=\"list\" @click=\"", "\"></sl-icon-button>       \n      </div>\n      <div class=\"right-navs\">\n        <nav class=\"app-top-nav\">\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"bell-icon\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"alert-icon\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <sl-dropdown>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 1.9rem;\"></sl-icon>\n            </a>\n            <sl-menu>            \n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n          <sl-dropdown distance=\"0\" class=\"dropdowns\">\n            <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n              <sl-avatar image=", "></sl-avatar> ", "\n            </a>\n            <sl-menu>            \n            ", "\n              </sl-menu-item>\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                  Manage Account\n              </sl-menu-item>\n              ", "\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                  Sign Out\n              </sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n        </nav>\n      </div>\n    </header>\n    <sl-drawer class=\"app-side-menu\" placement=\"left\">\n      <div class=\"sidenav-content\">\n        <!-- <div class=\"top-menus\"> -->\n          <!-- <img class=\"app-side-menu-logo\" src=\"/images/logo.svg\"> -->\n          <!-- <nav class=\"app-side-menu-items\"> -->\n            <!-- <a href=\"/\" @click=\"", "\">Dashboard</a> -->\n            <!-- <a href=\"/hairdressers\" @click=\"", "\">Find a Hairdresser</a>\n            <a href=\"/haircute\" @click=\"", "\">Find a Haircut</a>\n            <a href=\"/favouriteHaircuts\" @click=\"", "\">Hairdressers</a>\n            <a href=\"/profile\" @click=\"", "\">Profile</a>\n            <a href=\"#\" @click=\"", "\">Sign Out</a> -->\n          <!-- </nav>   -->\n        <!-- </div> -->\n        <!--  -->\n        <div class=\"accordion-container\">\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n          <div class=\"accordion-menu\">\n            <sl-details class=\"dashboard-button\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">dashboard</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Dashboard</span></sl-details>\n            <sl-details summary=\"Places\" class=\"details places-list\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">home</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Places</span></sl-details>\n            <sl-details summary=\"Devices\" class=\"details devices-list\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">sensors</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Devices</span></sl-details>\n            <sl-details summary=\"Users\" class=\"details users-list\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">account_circle</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Users</span></sl-details>\n          </div>\n          <style>\n            .details-group-example sl-details:not(:last-of-type) {\n              margin-bottom: var(--sl-spacing-xx-small);\n            }\n          </style>\n        </div>\n        <!--  -->\n        <div class=\"bottom-menus\">\n          <nav class=\"app-side-nav\">\n            <!-- <a href=\"/\" @click=\"", "\">Home</a>         -->\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"bell-icon-sidenav\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"alert-icon-sidenav\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <sl-dropdown skidding=\"-109\" distance=\"10\">\n              <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 2rem; color: white;\"></sl-icon>\n              </a>\n              <sl-menu class=\"left-menu\">            \n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n            <sl-dropdown skidding=\"-171\" distance=\"10\" class=\"dropdowns-left\">\n              <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n                <sl-avatar image=", ">\n              </a>\n              <sl-menu class=\"left-menu\">            \n                ", "\n                  </sl-menu-item>\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                    <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                      Manage Account\n                  </sl-menu-item>\n                  ", "\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                      Sign Out\n                  </sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n          </nav>\n        </div>\n      </div>\n    </sl-drawer>\n    "]);
+  const data = _taggedTemplateLiteral(["\n    <style>      \n      * {\n        box-sizing: border-box;\n      }\n      .app-header {\n        background: rgb(94,85,107);\n        position: fixed;\n        top: 0;\n        right: 0;\n        left: 0;\n        height: var(--app-header-height);\n        color: #fff;\n        display: flex;\n        justify-content: flex-end;\n        z-index: 9;\n        box-shadow: 4px 0px 10px rgba(0,0,0,0.2);\n        align-items: center;\n      }\n\n      .app-header-main {\n        flex-grow: 1;\n        display: flex;\n        align-items: center;\n      }\n\n      .app-header-main::slotted(h1){\n        color: #fff;\n      }\n\n      .app-logo a {\n        color: #fff;\n        text-decoration: none;\n        font-weight: bold;\n        font-size: 1.2em;\n        padding: .6em;\n        display: inline-block;        \n      }\n\n      .app-logo img {\n        width: 90px;\n      }\n      \n      .hamburger-btn::part(base) {\n        color: #fff;\n        font-size: 2.5em;\n      }\n\n      .app-top-nav {\n        display: flex;\n        height: 100%;\n        align-items: center;\n      }\n\n      .app-top-nav a {\n        display: inline-block;\n        padding: .8em;\n        text-decoration: none;\n        color: #fff;\n      }\n\n      sl-drawer::part(panel){\n        background-color: rgb(94,85,107);\n        --size: 20em;\n      }\n\n      sl-drawer::part(body){\n        padding: 0;\n        scrollbar-width: none; /* Firefox */\n        -ms-overflow-style: none;  /* IE 10+ */\n        &::-webkit-scrollbar {\n        width: 0px;\n        background: transparent; /* Chrome/Safari/Webkit */\n        }\n      }\n      \n      sl-drawer::part(overlay){\n        background: transparent;\n      }\n\n      sl-drawer::part(close-button){\n        color:white;\n      }\n\n      .sidenav-content{\n        display:flex; \n        flex-direction:column; \n        align-items:center; \n        height: 100%; \n        justify-content: space-between;\n      }\n\n      .accordion-container{\n        width: 100%;\n      }\n\n      .dashboard-button::part(content){\n        display:none;\n      }\n\n      .bottom-menus{\n        width: 100%;\n        padding: 5%;\n      }\n\n      .app-side-menu-items a {\n        display: block;\n        padding: .5em;\n        text-decoration: none;\n        font-size: 1.3em;\n        color: var(--app-header-txt-color);\n      }\n\n      .page-title {\n        color: var(--app-header-txt-color);\n        margin-right: 0.5em;\n        font-size: var(--app-header-title-font-size);\n      }\n\n      /* active nav links */\n      .app-top-nav a.active,\n      .app-side-menu-items a.active {\n        font-weight: bold;\n      }\n\n      #bell-icon, #bell-icon-sidenav, #alert-icon, #alert-icon-sidenav, .bi-bell{\n        color: gray;\n      }\n\n      sl-dropdown::part(panel){\n        background-color: rgb(94,85,107);\n        border: none;\n        max-height: 100vh;\n        border-radius:  0 0 5px 5px;\n      }\n\n      sl-menu.left-menu::part(base){\n        border: 1px solid #fff;\n        border-radius: 5px;\n      }\n\n      sl-menu-item::part(base){\n        color: #fff;\n      }\n\n      sl-menu-item::part(base):hover{\n        color: rgb(94,85,107);\n      } \n\n      sl-avatar::part(base){\n        --size: 2rem;\n        color: white;\n      }\n\n      sl-details::part(header){\n        padding: var(--sl-spacing-x-small);\n      }\n      \n      sl-details::part(content){\n        padding: 0;\n        \n        border-top: 1px solid white;\n      }\n\n      sl-details::part(summary):hover{\n        color: var(--base-color);\n      }\n\n      sl-details::part(base){\n        color: white;\n        background: var(--base-color);\n      }\n\n      sl-details::part(base):hover{\n        color: var(--base-color);\n        background: white;\n      }\n\n      .dropdown-icon{\n        font-size: 2rem;\n\n      }.settings-icon{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -15%; \n        margin-right:0;\n      }\n\n      .add-icon{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-place{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-device{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -5%; \n        margin-right:0;\n      }\n\n      .add-device{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: 0;\n      }\n\n      .signout-icon{\n        font-size: 2rem;\n        left: 10%;\n        margin-right:1.5rem;\n      }\n\n      .app-side-nav{\n        display:none;\n      }\n\n      .summary-icon::part(summary){\n        font-size: 2rem;\n      }\n\n      /* RESPONSIVE - MOBILE ------------------- */\n      @media all and (max-width: 768px){       \n        \n        .app-top-nav {\n          display: none;\n        }\n\n        .app-side-nav{\n          display:flex;\n          align-items: center;\n          justify-content: space-evenly;\n        }\n      }\n\n    </style>\n\n    <header class=\"app-header\" style=\"display:flex; justify-content: space-between; align-items:center;\">\n      <div class=\"left-navs\">\n        <sl-icon-button class=\"hamburger-btn\" name=\"list\" @click=\"", "\"></sl-icon-button>       \n      </div>\n      <div class=\"right-navs\">\n        <nav class=\"app-top-nav\">\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"bell-icon\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"alert-icon\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <sl-dropdown>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 1.9rem;\"></sl-icon>\n            </a>\n            <sl-menu>            \n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n          <sl-dropdown distance=\"0\" class=\"dropdowns\">\n            <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n              <sl-avatar image=", "></sl-avatar> ", "\n            </a>\n            <sl-menu>            \n            ", "\n              </sl-menu-item>\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                  Manage Account\n              </sl-menu-item>\n              ", "\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                  Sign Out\n              </sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n        </nav>\n      </div>\n    </header>\n    <sl-drawer class=\"app-side-menu\" placement=\"left\">\n      <div class=\"sidenav-content\">\n        <!-- <div class=\"top-menus\"> -->\n          <!-- <img class=\"app-side-menu-logo\" src=\"/images/logo.svg\"> -->\n          <!-- <nav class=\"app-side-menu-items\"> -->\n            <!-- <a href=\"/\" @click=\"", "\">Dashboard</a> -->\n            <!-- <a href=\"/hairdressers\" @click=\"", "\">Find a Hairdresser</a>\n            <a href=\"/haircute\" @click=\"", "\">Find a Haircut</a>\n            <a href=\"/favouriteHaircuts\" @click=\"", "\">Hairdressers</a>\n            <a href=\"/profile\" @click=\"", "\">Profile</a>\n            <a href=\"#\" @click=\"", "\">Sign Out</a> -->\n          <!-- </nav>   -->\n        <!-- </div> -->\n        <!--  -->\n        <div class=\"accordion-container\">\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n          <div class=\"accordion-menu\">\n            <sl-details class=\"dashboard-button\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">dashboard</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Dashboard</span></sl-details>\n            <sl-details class=\"details places-list\" summary=\"Places\" ><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">home</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Places</span></sl-details>\n            <sl-details class=\"details devices-list\" summary=\"Devices\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">sensors</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Devices</span></sl-details>\n            <sl-details class=\"details users-list\" summary=\"Users\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">account_circle</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Users</span></sl-details>\n          </div>\n          <style>\n            .details-group-example sl-details:not(:last-of-type) {\n              margin-bottom: var(--sl-spacing-xx-small);\n            }\n          </style>\n        </div>\n        <!--  -->\n        <div class=\"bottom-menus\">\n          <nav class=\"app-side-nav\">\n            <!-- <a href=\"/\" @click=\"", "\">Home</a>         -->\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"bell-icon-sidenav\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"alert-icon-sidenav\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <sl-dropdown skidding=\"-109\" distance=\"10\">\n              <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 2rem; color: white;\"></sl-icon>\n              </a>\n              <sl-menu class=\"left-menu\">            \n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n            <sl-dropdown skidding=\"-171\" distance=\"10\" class=\"dropdowns-left\">\n              <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n                <sl-avatar image=", ">\n              </a>\n              <sl-menu class=\"left-menu\">            \n                ", "\n                  </sl-menu-item>\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                    <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                      Manage Account\n                  </sl-menu-item>\n                  ", "\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                      Sign Out\n                  </sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n          </nav>\n        </div>\n      </div>\n    </sl-drawer>\n    "]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -10140,6 +10192,101 @@ class AccordionButton extends _litElement.LitElement {
 }
 
 customElements.define('aa-accordion-button', AccordionButton);
+},{"@polymer/lit-element":"../node_modules/@polymer/lit-element/lit-element.js","../Router":"Router.js","../Auth":"Auth.js","../App":"App.js"}],"components/signin-signup-panel.js":[function(require,module,exports) {
+"use strict";
+
+var _litElement = require("@polymer/lit-element");
+
+var _Router = require("../Router");
+
+var _Auth = _interopRequireDefault(require("../Auth"));
+
+var _App = _interopRequireDefault(require("../App"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _templateObject3() {
+  const data = _taggedTemplateLiteral(["\n            <img class=\"icon\" style=\"width: auto; height: 40px;\" src=", "></span>\n            "]);
+
+  _templateObject3 = function _templateObject3() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject2() {
+  const data = _taggedTemplateLiteral(["\n            <span class=\"material-icons icon\" style=\"font-size: 2rem;\">", "</span>\n            "]);
+
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject() {
+  const data = _taggedTemplateLiteral(["\n        <style>\n            .dialog-heading{\n                display: flex; \n                align-items: center; \n                justify-content: center; \n                font-size: 1.5rem; \n                font-weight: 400;\n            }\n        </style>\n\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n            <sl-dialog no-header=\"true\" slot=\"label\" class=\"dialog-width\" style=\"--width: 50vw;\">\n            <span class=\"dialog-heading\">Sign in</span>\n            <div class=\"page-content page-centered\">\n        <div class=\"signinup-box\">\n          <div class=\"material-icons\" style=\"font-size: 5rem;\">account_circle</div>          \n          <sl-form class=\"form-signup dark-theme\" @sl-submit=", ">          \n            <div class=\"input-group\">\n              <sl-input name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n            </div>\n            <sl-button class=\"submit-btn\" type=\"primary\" submit style=\"width: 100%;\">Sign In</sl-button>\n          </sl-form>\n          <p>No Account? <a href=\"/signup\" @click=", ">Sign Up</a></p>\n        </div>\n      </div>\n  <!-- <sl-button slot=\"footer\" type=\"primary\">Close</sl-button> -->\n</sl-dialog>\n\n<sl-button>Open Dialog</sl-button>\n\n\n\n        <!-- <style>\n            h3{\n                margin: 1rem;\n            }\n\n            .container{\n                position: relative;\n                border-bottom: 1px solid;\n                color: white;\n                background: var(--brand-color);\n                width: 100%;\n                height: 100%;\n                display: flex;\n                justify-content: flex-start;\n                align-items: center;\n            }\n\n            .container:hover{\n                color: var(--brand-color);\n                background: white;\n                border: 0 1px 1px 1px solid white;\n                cursor: pointer;\n            }\n\n            .icon{\n                padding-left: 2rem;\n                display: flex;\n                justify-content: center;\n                align-items: center;\n            }\n\n            .icon slot{\n                width: 2rem;\n            }\n\n            .active-indicator{\n                height: 100%; \n                width: 10px; \n                position: absolute; \n                right: 0;\n            }\n\n            .active-indicator.active{\n                background: white;\n            }\n        </style>\n\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n            <div class=\"container\" part=\"container\">\n            ", "\n            <h3>", "</h3>\n            <div class=\"active-indicator\" part=\"active-indicator\"></div>\n        </div> -->\n        "]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+// const template = document.createElement
+class SignInSignup extends _litElement.LitElement {
+  constructor() {
+    super();
+  } // element attributes
+
+
+  static get properties() {
+    return {
+      textContent: {
+        type: String
+      },
+      icon: {
+        type: String
+      },
+      path: {
+        type: String
+      },
+      active: {
+        type: String
+      }
+    };
+  }
+
+  firstUpdated() {
+    super.firstUpdated();
+    const dialog = this.shadowRoot.querySelector('.dialog-width');
+    const openButton = dialog.nextElementSibling; // const closeButton = dialog.querySelector('sl-button[slot="footer"]');
+
+    openButton.addEventListener('click', () => dialog.show()); // closeButton.addEventListener('click', () => dialog.hide());
+  }
+
+  signInSubmitHandler(e) {
+    e.preventDefault();
+    const formData = e.detail.formData;
+    const submitBtn = document.querySelector('.submit-btn');
+    submitBtn.setAttribute('loading', ''); // sign in using Auth    
+
+    _Auth.default.signIn(formData, () => {
+      submitBtn.removeAttribute('loading');
+    });
+  }
+
+  render() {
+    return (0, _litElement.html)(_templateObject(), this.signInSubmitHandler, _Router.anchorRoute, this.path === "icons" ? (0, _litElement.html)(_templateObject2(), this.icon) : (0, _litElement.html)(_templateObject3(), this.icon), this.textContent);
+  }
+
+}
+
+customElements.define('aa-signin-signup-panel', SignInSignup);
 },{"@polymer/lit-element":"../node_modules/@polymer/lit-element/lit-element.js","../Router":"Router.js","../Auth":"Auth.js","../App":"App.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
@@ -10221,6 +10368,8 @@ require("./components/va-app-header");
 
 require("./components/aa-accordion-button");
 
+require("./components/signin-signup-panel");
+
 require("./scss/master.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -10231,7 +10380,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 document.addEventListener('DOMContentLoaded', () => {
   _App.default.init();
 });
-},{"./App.js":"App.js","./components/va-app-header":"components/va-app-header.js","./components/aa-accordion-button":"components/aa-accordion-button.js","./scss/master.scss":"scss/master.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./App.js":"App.js","./components/va-app-header":"components/va-app-header.js","./components/aa-accordion-button":"components/aa-accordion-button.js","./components/signin-signup-panel":"components/signin-signup-panel.js","./scss/master.scss":"scss/master.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -10259,7 +10408,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63884" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51162" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
