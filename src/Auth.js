@@ -53,6 +53,7 @@ class Auth {
             Toast.show(`Problem signing in: ${err.message}`, 'error')
                 // run fail() functon if set
             if (typeof fail == 'function') fail()
+            return
         }
 
         // sign in success
@@ -84,7 +85,7 @@ class Auth {
             // no local token!
             Toast.show("Please sign in")
                 // redirect to sign in page      
-            gotoRoute('/signin')
+            gotoRoute('/')
             return
         }
 
@@ -106,7 +107,7 @@ class Auth {
             localStorage.removeItem('user')
             Toast.show("session expired, please sign in")
                 // redirect to sign in      
-            gotoRoute('/signin')
+            gotoRoute('/')
             return
         }
 
@@ -125,7 +126,7 @@ class Auth {
         localStorage.removeItem('accessToken')
         localStorage.removeItem('user')
             // redirect to sign in    
-        gotoRoute('/signin')
+        gotoRoute('/')
             // unset currentUser
         this.currentUser = null
     }

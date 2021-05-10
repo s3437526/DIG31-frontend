@@ -7,3 +7,4 @@ TODO
 - Menu buttons (icons) have tooltip that says "Home"
 - Empty all arrays when signing out
 - Add active button indication
+- Clear inputs after signin and signup
