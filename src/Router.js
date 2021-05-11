@@ -1,7 +1,7 @@
 // import views
 import homeView from './views/pages/home'
 // import fourOFourView from './views/pages/404'
-import signinView from './views/pages/signin'
+// import signinView from './views/pages/signin'
 import signupView from './views/pages/signup'
 // import profileView from './views/pages/profile'
 // import editProfileView from './views/pages/editProfile'
@@ -18,7 +18,7 @@ const routes = {
     // '/hairdressers': hairdresserssView,
     // '/favouriteHaircuts': favouriteHaircutsView,
     // '404': fourOFourView,
-    '/signin': signinView,
+    // '/signin': signinView,
     '/signup': signupView
         // '/profile': profileView,
         // '/editProfile': editProfileView

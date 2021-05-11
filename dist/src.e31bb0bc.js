@@ -7481,11 +7481,10 @@ let headers = {};
 class FetchAPI {
   // Get all places function using asynchronous fetch API call
   async getPlacesAsync() {
-    headers = {
-      "Authorization": "Bearer ".concat(localStorage.accessToken) //,
-      // "access": JSON.stringify(currentUser.accessLevel)
-
-    };
+    // headers = {
+    //     "Authorization": `Bearer ${localStorage.accessToken}` //,
+    //         // "access": JSON.stringify(currentUser.accessLevel)
+    // }
     let response = await fetch("".concat(_App.default.apiBase, "/place"), {
       method: 'GET',
       headers: {
@@ -7630,11 +7629,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 class Auth {
   constructor() {
     this.currentUser = {};
-  }
+  } // async getCurrentUser() {
+  //     return this.currentUser
+  // }
 
-  async getCurrentUser() {
-    return this.currentUser;
-  }
 
   async signUp(userData) {
     let fail = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -7699,6 +7697,7 @@ class Auth {
 
 
     (0, _Router.gotoRoute)('/');
+    window.location.reload();
   }
 
   async check(success) {
@@ -7729,6 +7728,7 @@ class Auth {
 
       localStorage.removeItem('accessToken');
       localStorage.removeItem('user');
+      localStorage.removeItem('accessLevel');
 
       _Toast.default.show("session expired, please sign in"); // redirect to sign in      
 
@@ -7751,9 +7751,11 @@ class Auth {
 
 
     localStorage.removeItem('accessToken');
-    localStorage.removeItem('user'); // redirect to sign in    
+    localStorage.removeItem('user');
+    localStorage.removeItem('accessLevel'); // redirect to sign in    
 
-    (0, _Router.gotoRoute)('/'); // unset currentUser
+    (0, _Router.gotoRoute)('/');
+    window.location.reload(); // unset currentUser
 
     this.currentUser = null;
   }
@@ -7827,7 +7829,7 @@ var _Utils = _interopRequireDefault(require("./../../Utils"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n      <va-app-header title=\"Sign in/Sign up\" user=", "></va-app-header>\n      <div class=\"page-content\">\n        <aa-signin-signup-dialog></aa-signin-signup-dialog>\n      </div>\n    "]);
+  const data = _taggedTemplateLiteral(["\n      <aa-signin-dialog></aa-signin-dialog>\n      <aa-signup-dialog></aa-signup-dialog>\n      <va-app-header title=\"Sign in/Sign up\" user=", "></va-app-header>\n      <div class=\"page-content\">\n        \n      </div>\n    "]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -7855,68 +7857,6 @@ class HomeView {
 }
 
 var _default = new HomeView();
-
-exports.default = _default;
-},{"./../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","./../../Router":"Router.js","./../../Auth":"Auth.js","./../../Utils":"Utils.js"}],"views/pages/signin.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _App = _interopRequireDefault(require("./../../App"));
-
-var _litHtml = require("lit-html");
-
-var _Router = require("./../../Router");
-
-var _Auth = _interopRequireDefault(require("./../../Auth"));
-
-var _Utils = _interopRequireDefault(require("./../../Utils"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _templateObject() {
-  const data = _taggedTemplateLiteral(["      \n      <div class=\"page-content page-centered\">\n        <div class=\"signinup-box\">\n          <img class=\"signinup-logo\" src=\"/images/logo.svg\">          \n          <sl-form class=\"form-signup dark-theme\" @sl-submit=", ">          \n            <div class=\"input-group\">\n              <sl-input name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n            </div>\n            <sl-button class=\"submit-btn\" type=\"primary\" submit style=\"width: 100%;\">Sign In</sl-button>\n          </sl-form>\n          <p>No Account? <a href=\"/signup\" @click=", ">Sign Up</a></p>\n        </div>\n      </div>\n    "]);
-
-  _templateObject = function _templateObject() {
-    return data;
-  };
-
-  return data;
-}
-
-function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-class SignInView {
-  init() {
-    console.log('SignInView.init');
-    document.title = 'Sign In';
-    this.render();
-
-    _Utils.default.pageIntroAnim();
-  }
-
-  signInSubmitHandler(e) {
-    e.preventDefault();
-    const formData = e.detail.formData;
-    const submitBtn = document.querySelector('.submit-btn');
-    submitBtn.setAttribute('loading', ''); // sign in using Auth    
-
-    _Auth.default.signIn(formData, () => {
-      submitBtn.removeAttribute('loading');
-    });
-  }
-
-  render() {
-    const template = (0, _litHtml.html)(_templateObject(), this.signInSubmitHandler, _Router.anchorRoute);
-    (0, _litHtml.render)(template, _App.default.rootEl);
-  }
-
-}
-
-var _default = new SignInView();
 
 exports.default = _default;
 },{"./../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","./../../Router":"Router.js","./../../Auth":"Auth.js","./../../Utils":"Utils.js"}],"views/pages/signup.js":[function(require,module,exports) {
@@ -8043,8 +7983,6 @@ exports.default = void 0;
 
 var _home = _interopRequireDefault(require("./views/pages/home"));
 
-var _signin = _interopRequireDefault(require("./views/pages/signin"));
-
 var _signup = _interopRequireDefault(require("./views/pages/signup"));
 
 var _guide = _interopRequireDefault(require("./views/pages/guide"));
@@ -8053,6 +7991,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // import views
 // import fourOFourView from './views/pages/404'
+// import signinView from './views/pages/signin'
 // import profileView from './views/pages/profile'
 // import editProfileView from './views/pages/editProfile'
 // import hairdresserssView from './views/pages/hairdressers'
@@ -8066,7 +8005,7 @@ const routes = {
   // '/hairdressers': hairdresserssView,
   // '/favouriteHaircuts': favouriteHaircutsView,
   // '404': fourOFourView,
-  '/signin': _signin.default,
+  // '/signin': signinView,
   '/signup': _signup.default // '/profile': profileView,
   // '/editProfile': editProfileView
 
@@ -8123,7 +8062,7 @@ function anchorRoute(e) {
   const pathname = e.target.closest('a').pathname;
   AppRouter.gotoRoute(pathname);
 }
-},{"./views/pages/home":"views/pages/home.js","./views/pages/signin":"views/pages/signin.js","./views/pages/signup":"views/pages/signup.js","./views/pages/guide":"views/pages/guide.js"}],"App.js":[function(require,module,exports) {
+},{"./views/pages/home":"views/pages/home.js","./views/pages/signup":"views/pages/signup.js","./views/pages/guide":"views/pages/guide.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10009,18 +9948,23 @@ customElements.define('va-app-header', class AppHeader extends _litElement.LitEl
   async firstUpdated() {
     super.firstUpdated();
     this.navActiveLinks();
-    const container = this.shadowRoot.querySelector('.accordion-menu'); // Close all other details when one is shown
+    const container = this.shadowRoot.querySelector('.accordion-menu'); // const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
+    // signinDialog.show()
+    // Close all other details when one is shown
 
     container.addEventListener('sl-show', event => {
       [...container.querySelectorAll('sl-details')].map(details => details.open = event.target === details);
     });
-    collections.places = await _FetchAPI.default.getPlacesAsync();
-    collections.items = await _FetchAPI.default.getItemsAsync();
-    collections.users = localStorage.accessLevel == 2 ? await _FetchAPI.default.getUsersAsync() : ""; // these HAVE to be streamlined...waaay to repetitive! Do if time permits, otherwise after unit completion!
 
-    this.renderPlacesButtons();
-    this.renderItemsButtons();
-    this.renderUsersButtons();
+    if (localStorage.accessLevel >= 1) {
+      collections.places = await _FetchAPI.default.getPlacesAsync();
+      collections.items = await _FetchAPI.default.getItemsAsync();
+      collections.users = localStorage.accessLevel == 2 ? await _FetchAPI.default.getUsersAsync() : ""; // these HAVE to be streamlined...waaay to repetitive! Do if time permits, otherwise after unit completion!
+
+      this.renderPlacesButtons();
+      this.renderItemsButtons();
+      this.renderUsersButtons();
+    }
   }
 
   async renderPlacesButtons() {
@@ -10192,7 +10136,7 @@ class AccordionButton extends _litElement.LitElement {
 }
 
 customElements.define('aa-accordion-button', AccordionButton);
-},{"@polymer/lit-element":"../node_modules/@polymer/lit-element/lit-element.js","../Router":"Router.js","../Auth":"Auth.js","../App":"App.js"}],"components/aa-signin-signup-dialog.js":[function(require,module,exports) {
+},{"@polymer/lit-element":"../node_modules/@polymer/lit-element/lit-element.js","../Router":"Router.js","../Auth":"Auth.js","../App":"App.js"}],"components/aa-signin-dialog.js":[function(require,module,exports) {
 "use strict";
 
 var _litElement = require("@polymer/lit-element");
@@ -10226,7 +10170,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n        <style>\n            .dialog-heading{\n                display: flex; \n                align-items: center; \n                justify-content: center; \n                font-size: 1.5rem; \n                font-weight: 900;\n                color: white;\n            }\n\n            .flex-center{\n                display:flex;\n                align-items: center;\n                justify-content: center;\n            }\n\n            sl-dialog::part(panel){\n                background: var(--dialog-background);\n            }\n\n            .pad-bottom{\n                padding-bottom: 20px;\n            }\n        </style>\n\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n            <sl-dialog no-header=\"true\" slot=\"label\" class=\"signin-dialog\" style=\"--width: 30vw;\">\n            <span class=\"dialog-heading\">Sign in</span>\n            <div class=\"page-content page-centered\">\n                <div class=\"signinup-box\">\n                <div class=\"flex-center\">\n                    <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">account_circle</div>          \n                </div>\n                <sl-form class=\"form-signup dark-theme\" @sl-submit=", ">          \n                    <div class=\"input-group\">\n                    <sl-input class=\"pad-bottom\" name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n                    </div>\n                    <div class=\"input-group\">\n                    <sl-input class=\"pad-bottom\" name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n                    </div>\n                    <sl-button class=\"submit-btn\" type=\"primary\" submit style=\"width: 100%;\">Sign In</sl-button>\n                </sl-form>\n                <p>No Account? <a href=\"/signup\" @click=", ">Sign Up</a></p>\n                </div>\n            </div>\n  <!-- <sl-button slot=\"footer\" type=\"primary\">Close</sl-button> -->\n</sl-dialog>\n\n<sl-button>Open Dialog</sl-button>\n\n\n\n        <!-- <style>\n            h3{\n                margin: 1rem;\n            }\n\n            .container{\n                position: relative;\n                border-bottom: 1px solid;\n                color: white;\n                background: var(--brand-color);\n                width: 100%;\n                height: 100%;\n                display: flex;\n                justify-content: flex-start;\n                align-items: center;\n            }\n\n            .container:hover{\n                color: var(--brand-color);\n                background: white;\n                border: 0 1px 1px 1px solid white;\n                cursor: pointer;\n            }\n\n            .icon{\n                padding-left: 2rem;\n                display: flex;\n                justify-content: center;\n                align-items: center;\n            }\n\n            .icon slot{\n                width: 2rem;\n            }\n\n            .active-indicator{\n                height: 100%; \n                width: 10px; \n                position: absolute; \n                right: 0;\n            }\n\n            .active-indicator.active{\n                background: white;\n            }\n        </style>\n\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n            <div class=\"container\" part=\"container\">\n            ", "\n            <h3>", "</h3>\n            <div class=\"active-indicator\" part=\"active-indicator\"></div>\n        </div> -->\n        "]);
+  const data = _taggedTemplateLiteral(["\n        <style>\n            .dialog-heading{\n                display: flex; \n                align-items: center; \n                justify-content: center; \n                font-size: 1.5rem; \n                font-weight: 900;\n                color: white;\n            }\n\n            .flex-center{\n                display:flex;\n                align-items: center;\n                justify-content: center;\n            }\n\n            sl-dialog::part(panel){\n                background: var(--dialog-background);\n            }\n\n            .pad-bottom{\n                padding-bottom: 20px;\n            }\n\n            .signin-dialog{\n                display: none;\n            }\n\n            .signup-dialog{\n                display:block;\n            }\n\n        </style>\n\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n            <!-- <sl-dialog no-header=\"true\" slot=\"label\" class=\"signin-dialog\" style=\"--width: 30vw;\">\n            <span class=\"dialog-heading\">Sign in</span>\n            <div class=\"page-content page-centered\">\n                <div class=\"signinup-box\">\n                <div class=\"flex-center\">\n                    <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">account_circle</div>          \n                </div>\n                <sl-form class=\"form-signup dark-theme\" @sl-submit=", ">          \n                    <div class=\"input-group\">\n                    <sl-input class=\"pad-bottom\" name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n                    </div>\n                    <div class=\"input-group\">\n                    <sl-input class=\"pad-bottom\" name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n                    </div>\n                    <sl-button class=\"submit-btn\" type=\"primary\" submit style=\"width: 100%;\">Sign In</sl-button>\n                </sl-form>\n                <p>No Account? <span class=\"toggle-dialogs\">Sign Up</span></p>\n                </div>\n            </div>\n            </sl-dialog> -->\n            <sl-dialog no-header=\"true\" slot=\"label\" class=\"signup-dialog\" style=\"--width: 30vw;\">\n            <span class=\"dialog-heading\">Sign up</span>\n            <div class=\"page-content page-centered\">\n                <div class=\"signupup-box\">\n                    <div class=\"flex-center\">\n                        <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">account_circle</div>          \n                    </div>\n                    <sl-form class=\"form-signup\" @sl-submit=", ">\n                        <div class=\"input-group\">\n                            <sl-input name=\"firstName\" type=\"text\" placeholder=\"First Name\" required></sl-input>\n                        </div>\n                        <div class=\"input-group\">\n                            <sl-input name=\"lastName\" type=\"text\" placeholder=\"Last Name\" required></sl-input>\n                        </div>\n                        <div class=\"input-group\">\n                            <sl-input name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n                        </div>\n                        <div class=\"input-group\">\n                            <sl-input name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n                        </div>            \n                        <div class=\"input-group\">\n                            <sl-select name=\"accessLevel\" placeholder=\"I am a ...\">\n                                <sl-menu-item value=\"1\">Customer</sl-menu-item>\n                                <sl-menu-item value=\"2\">Hairdresser</sl-menu-item>\n                            </sl-select>\n                        </div>         \n                        <sl-button type=\"primary\" class=\"submit-btn\" submit style=\"width: 100%;\">Sign Up</sl-button>\n                    </sl-form>\n                    <p>No Account? <span class=\"toggle-dialogs\">Sign Up</span></p>\n                </div>\n            </div>\n            </sl-dialog>\n\n\n\n\n        <!-- <style>\n            h3{\n                margin: 1rem;\n            }\n\n            .container{\n                position: relative;\n                border-bottom: 1px solid;\n                color: white;\n                background: var(--brand-color);\n                width: 100%;\n                height: 100%;\n                display: flex;\n                justify-content: flex-start;\n                align-items: center;\n            }\n\n            .container:hover{\n                color: var(--brand-color);\n                background: white;\n                border: 0 1px 1px 1px solid white;\n                cursor: pointer;\n            }\n\n            .icon{\n                padding-left: 2rem;\n                display: flex;\n                justify-content: center;\n                align-items: center;\n            }\n\n            .icon slot{\n                width: 2rem;\n            }\n\n            .active-indicator{\n                height: 100%; \n                width: 10px; \n                position: absolute; \n                right: 0;\n            }\n\n            .active-indicator.active{\n                background: white;\n            }\n        </style>\n\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n            <div class=\"container\" part=\"container\">\n            ", "\n            <h3>", "</h3>\n            <div class=\"active-indicator\" part=\"active-indicator\"></div>\n        </div> -->\n\n<!-- \n\n\n        <style>\n            .dialog-heading{\n                display: flex; \n                align-items: center; \n                justify-content: center; \n                font-size: 1.5rem; \n                font-weight: 900;\n                color: white;\n            }\n\n            /* .dialog__body::part(body){\n                display:none;\n            } */\n\n            .flex-center{\n                display:flex;\n                align-items: center;\n                justify-content: center;\n            }\n\n            sl-dialog::part(panel){\n                background: var(--dialog-background);\n            }\n\n            .pad-bottom{\n                padding-bottom: 20px;\n            }\n        </style>\n\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n            <sl-dialog no-header=\"true\" slot=\"label\" class=\"signup-dialog\" style=\"--width: 30vw;\">\n            <span class=\"dialog-heading\">Sign up</span>\n            <div class=\"page-content page-centered\">\n                <div class=\"signupup-box\">\n                    <div class=\"flex-center\">\n                        <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">account_circle</div>          \n                    </div>\n                    <sl-form class=\"form-signup\" @sl-submit=", ">\n                        <div class=\"input-group\">\n                            <sl-input name=\"firstName\" type=\"text\" placeholder=\"First Name\" required></sl-input>\n                        </div>\n                        <div class=\"input-group\">\n                            <sl-input name=\"lastName\" type=\"text\" placeholder=\"Last Name\" required></sl-input>\n                        </div>\n                        <div class=\"input-group\">\n                            <sl-input name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n                        </div>\n                        <div class=\"input-group\">\n                            <sl-input name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n                        </div>            \n                        <div class=\"input-group\">\n                            <sl-select name=\"accessLevel\" placeholder=\"I am a ...\">\n                                <sl-menu-item value=\"1\">Customer</sl-menu-item>\n                                <sl-menu-item value=\"2\">Hairdresser</sl-menu-item>\n                            </sl-select>\n                        </div>         \n                        <sl-button type=\"primary\" class=\"submit-btn\" submit style=\"width: 100%;\">Sign Up</sl-button>\n                    </sl-form>\n                    <p>No Account? <span class=\"toggle-dialogs\">Sign Up</span></p>\n                </div>\n            </div>\n</sl-dialog> -->\n        "]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -10238,7 +10182,7 @@ function _templateObject() {
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 // const template = document.createElement
-class SignInSignup extends _litElement.LitElement {
+class SignIn extends _litElement.LitElement {
   constructor() {
     super();
   } // element attributes
@@ -10263,37 +10207,168 @@ class SignInSignup extends _litElement.LitElement {
 
   firstUpdated() {
     super.firstUpdated();
-    const signinDIalog = this.shadowRoot.querySelector('.signin-dialog');
-    const openButton = signinDIalog.nextElementSibling; // const closeButton = signinDIalog.querySelector('sl-button[slot="footer"]');
+    const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
+    const signupDialog = this.shadowRoot.querySelector('.signup-dialog'); // const openButton = signinDialog.nextElementSibling;
+    // const closeButton = signinDialog.querySelector('sl-button[slot="footer"]');
+    // openButton.addEventListener('click', () => signinDialog.show());
+    // closeButton.addEventListener('click', () => signinDialog.hide());
 
-    openButton.addEventListener('click', () => signinDIalog.show()); // closeButton.addEventListener('click', () => signinDIalog.hide());
+    signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault()); // console.log(`Current user is: ${Auth.currentUser._id}`)
 
-    signinDIalog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
-    console.log("Current user is: ".concat(_Auth.default.currentUser));
-    _Auth.default.currentUser != {} ? signinDIalog.show() : "";
+    if (typeof _Auth.default.currentUser.accessLevel === 'undefined') signinDialog.show(); // keep?
+
+    const toggleDialogs = this.shadowRoot.querySelector('.toggle-dialogs');
+    toggleDialogs.addEventListener('click', () => {
+      // signinDialog.hide()
+      // // console.log("Hiding sigin dialog")
+      // signupDialog.show()
+      signinDialog.open() ? signinDialog.hide() : signinDialog.show();
+      signupDialog.open() ? signupDialog.hide() : signupDialog.show();
+    });
   }
 
   signInSubmitHandler(e) {
     e.preventDefault();
-    const signinDIalog = this.shadowRoot.querySelector('.signin-dialog');
+    const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
     const formData = e.detail.formData;
     const submitBtn = this.shadowRoot.querySelector('.submit-btn');
     submitBtn.setAttribute('loading', ''); // sign in using Auth    
 
     _Auth.default.signIn(formData, () => {
       submitBtn.removeAttribute('loading');
-    }); // signinDIalog.hide()
-    // submitBtn.removeAttribute('loading')
+    });
 
+    console.log(localStorage.accessLevel);
+
+    if (localStorage.accessLevel >= 1) {
+      console.log("Valid id");
+      signinDialog.hide();
+      submitBtn.removeAttribute('loading'); // this.hide()
+    }
   }
 
   render() {
-    return (0, _litElement.html)(_templateObject(), this.signInSubmitHandler, _Router.anchorRoute, this.path === "icons" ? (0, _litElement.html)(_templateObject2(), this.icon) : (0, _litElement.html)(_templateObject3(), this.icon), this.textContent);
+    return (0, _litElement.html)(_templateObject(), this.signInSubmitHandler, this.signUpSubmitHandler, this.path === "icons" ? (0, _litElement.html)(_templateObject2(), this.icon) : (0, _litElement.html)(_templateObject3(), this.icon), this.textContent, this.signUpSubmitHandler);
   }
 
 }
 
-customElements.define('aa-signin-signup-dialog', SignInSignup);
+customElements.define('aa-signin-dialog', SignIn);
+},{"@polymer/lit-element":"../node_modules/@polymer/lit-element/lit-element.js","../Router":"Router.js","../Auth":"Auth.js","../App":"App.js"}],"components/aa-signup-dialog.js":[function(require,module,exports) {
+"use strict";
+
+var _litElement = require("@polymer/lit-element");
+
+var _Router = require("../Router");
+
+var _Auth = _interopRequireDefault(require("../Auth"));
+
+var _App = _interopRequireDefault(require("../App"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _templateObject3() {
+  const data = _taggedTemplateLiteral(["\n            <img class=\"icon\" style=\"width: auto; height: 40px;\" src=", "></span>\n            "]);
+
+  _templateObject3 = function _templateObject3() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject2() {
+  const data = _taggedTemplateLiteral(["\n            <span class=\"material-icons icon\" style=\"font-size: 2rem;\">", "</span>\n            "]);
+
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject() {
+  const data = _taggedTemplateLiteral(["\n        <style>\n            .dialog-heading{\n                display: flex; \n                align-items: center; \n                justify-content: center; \n                font-size: 1.5rem; \n                font-weight: 900;\n                color: white;\n            }\n\n            .flex-center{\n                display:flex;\n                align-items: center;\n                justify-content: center;\n            }\n\n            sl-dialog::part(panel){\n                background: var(--dialog-background);\n            }\n\n            .pad-bottom{\n                padding-bottom: 20px;\n            }\n        </style>\n\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n            <sl-dialog no-header=\"true\" slot=\"label\" class=\"signup-dialog\" style=\"--width: 30vw;\">\n            <span class=\"dialog-heading\">Sign up</span>\n            <div class=\"page-content page-centered\">\n                <div class=\"signupup-box\">\n                <div class=\"flex-center\">\n                    <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">account_circle</div>          \n                </div>\n                <sl-form class=\"form-signup\" @sl-submit=", ">\n                    <div class=\"input-group\">\n                    <sl-input name=\"firstName\" type=\"text\" placeholder=\"First Name\" required></sl-input>\n                    </div>\n                    <div class=\"input-group\">\n                    <sl-input name=\"lastName\" type=\"text\" placeholder=\"Last Name\" required></sl-input>\n                    </div>\n                    <div class=\"input-group\">\n                    <sl-input name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n                    </div>\n                    <div class=\"input-group\">\n                    <sl-input name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n                    </div>            \n                    <div class=\"input-group\">\n                    <sl-select name=\"accessLevel\" placeholder=\"I am a ...\">\n                        <sl-menu-item value=\"1\">Customer</sl-menu-item>\n                        <sl-menu-item value=\"2\">Hairdresser</sl-menu-item>\n                    </sl-select>\n                    </div>         \n                    <sl-button type=\"primary\" class=\"submit-btn\" submit style=\"width: 100%;\">Sign Up</sl-button>\n                </sl-form>\n                <p>No Account? <span class=\"toggle-dialogs\">Sign Up</span></p>\n                </div>\n            </div>\n</sl-dialog>\n\n\n\n\n        <!-- <style>\n            h3{\n                margin: 1rem;\n            }\n\n            .container{\n                position: relative;\n                border-bottom: 1px solid;\n                color: white;\n                background: var(--brand-color);\n                width: 100%;\n                height: 100%;\n                display: flex;\n                justify-content: flex-start;\n                align-items: center;\n            }\n\n            .container:hover{\n                color: var(--brand-color);\n                background: white;\n                border: 0 1px 1px 1px solid white;\n                cursor: pointer;\n            }\n\n            .icon{\n                padding-left: 2rem;\n                display: flex;\n                justify-content: center;\n                align-items: center;\n            }\n\n            .icon slot{\n                width: 2rem;\n            }\n\n            .active-indicator{\n                height: 100%; \n                width: 10px; \n                position: absolute; \n                right: 0;\n            }\n\n            .active-indicator.active{\n                background: white;\n            }\n        </style>\n\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n            <div class=\"container\" part=\"container\">\n            ", "\n            <h3>", "</h3>\n            <div class=\"active-indicator\" part=\"active-indicator\"></div>\n        </div> -->\n        "]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+// const template = document.createElement
+class Signup extends _litElement.LitElement {
+  constructor() {
+    super();
+  } // element attributes
+
+
+  static get properties() {
+    return {
+      textContent: {
+        type: String
+      },
+      icon: {
+        type: String
+      },
+      path: {
+        type: String
+      },
+      active: {
+        type: String
+      }
+    };
+  }
+
+  firstUpdated() {
+    super.firstUpdated();
+    const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
+    const signinDialog = this.shadowRoot.querySelector('.signin-dialog'); // const openButton = signupDialog.nextElementSibling;
+    // const closeButton = signupDialog.querySelector('sl-button[slot="footer"]');
+    // openButton.addEventListener('click', () => signupDialog.show());
+    // closeButton.addEventListener('click', () => signupDialog.hide());
+
+    signupDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault()); // console.log(`Current user is: ${Auth.currentUser._id}`)
+    // if (typeof Auth.currentUser.accessLevel === 'undefined') signupDialog.show() // keep?
+
+    const toggleDialogs = this.shadowRoot.querySelector('.toggle-dialogs');
+    toggleDialogs.addEventListener('click', () => {
+      signupDialog.hide();
+      console.log("Hiding signup dialog");
+      signinDialog.show();
+    });
+  }
+
+  signupSubmitHandler(e) {
+    e.preventDefault();
+    const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
+    const formData = e.detail.formData;
+    const submitBtn = this.shadowRoot.querySelector('.submit-btn');
+    submitBtn.setAttribute('loading', ''); // sign in using Auth    
+
+    _Auth.default.signup(formData, () => {
+      submitBtn.removeAttribute('loading');
+    });
+
+    console.log(localStorage.accessLevel);
+
+    if (localStorage.accessLevel >= 1) {
+      console.log("Valid id");
+      signupDialog.hide();
+      submitBtn.removeAttribute('loading'); // this.hide()
+    }
+  }
+
+  render() {
+    return (0, _litElement.html)(_templateObject(), this.signUpSubmitHandler, this.path === "icons" ? (0, _litElement.html)(_templateObject2(), this.icon) : (0, _litElement.html)(_templateObject3(), this.icon), this.textContent);
+  }
+
+}
+
+customElements.define('aa-signup-dialog', Signup);
 },{"@polymer/lit-element":"../node_modules/@polymer/lit-element/lit-element.js","../Router":"Router.js","../Auth":"Auth.js","../App":"App.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
@@ -10375,7 +10450,9 @@ require("./components/va-app-header");
 
 require("./components/aa-accordion-button");
 
-require("./components/aa-signin-signup-dialog");
+require("./components/aa-signin-dialog");
+
+require("./components/aa-signup-dialog");
 
 require("./scss/master.scss");
 
@@ -10387,7 +10464,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 document.addEventListener('DOMContentLoaded', () => {
   _App.default.init();
 });
-},{"./App.js":"App.js","./components/va-app-header":"components/va-app-header.js","./components/aa-accordion-button":"components/aa-accordion-button.js","./components/aa-signin-signup-dialog":"components/aa-signin-signup-dialog.js","./scss/master.scss":"scss/master.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./App.js":"App.js","./components/va-app-header":"components/va-app-header.js","./components/aa-accordion-button":"components/aa-accordion-button.js","./components/aa-signin-dialog":"components/aa-signin-dialog.js","./components/aa-signup-dialog":"components/aa-signup-dialog.js","./scss/master.scss":"scss/master.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -10415,7 +10492,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58963" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50161" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

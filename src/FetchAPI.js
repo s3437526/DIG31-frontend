@@ -8,13 +8,13 @@ class FetchAPI {
     // Get all places function using asynchronous fetch API call
     async getPlacesAsync() {
 
-        headers = {
-            "Authorization": `Bearer ${localStorage.accessToken}` //,
-                // "access": JSON.stringify(currentUser.accessLevel)
-        }
+        // headers = {
+        //     "Authorization": `Bearer ${localStorage.accessToken}` //,
+        //         // "access": JSON.stringify(currentUser.accessLevel)
+        // }
         let response = await fetch(`${App.apiBase}/place`, {
                 method: 'GET',
-                headers: { "Authorization": `Bearer ${localStorage.accessToken}` }
+                headers: { "Authorization": `Bearer ${localStorage.accessToken}`}
             })
             // Handle result of API call - if unsuccessful, throw error with customised message
         if (!response.ok) {

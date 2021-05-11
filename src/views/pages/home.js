@@ -14,9 +14,11 @@ class HomeView {
 
     render() {
         const template = html `
+      <aa-signin-dialog></aa-signin-dialog>
+      <aa-signup-dialog></aa-signup-dialog>
       <va-app-header title="Sign in/Sign up" user=${JSON.stringify(Auth.currentUser)}></va-app-header>
       <div class="page-content">
-        <aa-signin-signup-dialog></aa-signin-signup-dialog>
+        
       </div>
     `
         render(template, App.rootEl)

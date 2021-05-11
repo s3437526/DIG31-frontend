@@ -4,7 +4,7 @@ import Auth from '../Auth'
 import App from '../App'
 
 // const template = document.createElement
-class SignInSignup extends LitElement {
+class Signup extends LitElement {
     constructor() {
         super()
     }
@@ -29,30 +29,43 @@ class SignInSignup extends LitElement {
 
     firstUpdated() {
         super.firstUpdated()
-        const signinDIalog = this.shadowRoot.querySelector('.signin-dialog');
-        const openButton = signinDIalog.nextElementSibling;
-        // const closeButton = signinDIalog.querySelector('sl-button[slot="footer"]');
+        const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
+        const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
+        // const openButton = signupDialog.nextElementSibling;
+        // const closeButton = signupDialog.querySelector('sl-button[slot="footer"]');
 
-        openButton.addEventListener('click', () => signinDIalog.show());
-        // closeButton.addEventListener('click', () => signinDIalog.hide());
-        signinDIalog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
-        console.log(`Current user is: ${Auth.currentUser}`)
+        // openButton.addEventListener('click', () => signupDialog.show());
+        // closeButton.addEventListener('click', () => signupDialog.hide());
+        signupDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
+        // console.log(`Current user is: ${Auth.currentUser._id}`)
 
-        Auth.currentUser != {} ? signinDIalog.show() : ""
+        // if (typeof Auth.currentUser.accessLevel === 'undefined') signupDialog.show() // keep?
+
+        const toggleDialogs = this.shadowRoot.querySelector('.toggle-dialogs')
+        toggleDialogs.addEventListener('click', () => {
+            signupDialog.hide()
+            console.log("Hiding signup dialog")
+            signinDialog.show()
+        })
     }
 
-    signInSubmitHandler(e) {
+    signupSubmitHandler(e) {
         e.preventDefault()
-        const signinDIalog = this.shadowRoot.querySelector('.signin-dialog');
+        const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
         const formData = e.detail.formData
         const submitBtn = this.shadowRoot.querySelector('.submit-btn')
         submitBtn.setAttribute('loading', '')
             // sign in using Auth    
-        Auth.signIn(formData, () => {
-                submitBtn.removeAttribute('loading')
-            })
-            // signinDIalog.hide()
-            // submitBtn.removeAttribute('loading')
+        Auth.signup(formData, () => {
+            submitBtn.removeAttribute('loading')
+        })
+        console.log(localStorage.accessLevel)
+        if (localStorage.accessLevel >= 1) {
+            console.log("Valid id")
+            signupDialog.hide()
+            submitBtn.removeAttribute('loading')
+                // this.hide()
+        }
     }
 
     render() {
@@ -83,29 +96,39 @@ class SignInSignup extends LitElement {
         </style>
 
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-            <sl-dialog no-header="true" slot="label" class="signin-dialog" style="--width: 30vw;">
-            <span class="dialog-heading">Sign in</span>
+            <sl-dialog no-header="true" slot="label" class="signup-dialog" style="--width: 30vw;">
+            <span class="dialog-heading">Sign up</span>
             <div class="page-content page-centered">
-                <div class="signinup-box">
+                <div class="signupup-box">
                 <div class="flex-center">
                     <div class="material-icons" style="font-size: 8rem; margin: 1rem; color: white;">account_circle</div>          
                 </div>
-                <sl-form class="form-signup dark-theme" @sl-submit=${this.signInSubmitHandler}>          
+                <sl-form class="form-signup" @sl-submit=${this.signUpSubmitHandler}>
                     <div class="input-group">
-                    <sl-input class="pad-bottom" name="email" type="email" placeholder="Email" required></sl-input>
+                    <sl-input name="firstName" type="text" placeholder="First Name" required></sl-input>
                     </div>
                     <div class="input-group">
-                    <sl-input class="pad-bottom" name="password" type="password" placeholder="Password" required toggle-password></sl-input>
+                    <sl-input name="lastName" type="text" placeholder="Last Name" required></sl-input>
                     </div>
-                    <sl-button class="submit-btn" type="primary" submit style="width: 100%;">Sign In</sl-button>
+                    <div class="input-group">
+                    <sl-input name="email" type="email" placeholder="Email" required></sl-input>
+                    </div>
+                    <div class="input-group">
+                    <sl-input name="password" type="password" placeholder="Password" required toggle-password></sl-input>
+                    </div>            
+                    <div class="input-group">
+                    <sl-select name="accessLevel" placeholder="I am a ...">
+                        <sl-menu-item value="1">Customer</sl-menu-item>
+                        <sl-menu-item value="2">Hairdresser</sl-menu-item>
+                    </sl-select>
+                    </div>         
+                    <sl-button type="primary" class="submit-btn" submit style="width: 100%;">Sign Up</sl-button>
                 </sl-form>
-                <p>No Account? <a href="/signup" @click=${anchorRoute}>Sign Up</a></p>
+                <p>No Account? <span class="toggle-dialogs">Sign Up</span></p>
                 </div>
             </div>
-  <!-- <sl-button slot="footer" type="primary">Close</sl-button> -->
 </sl-dialog>
 
-<sl-button>Open Dialog</sl-button>
 
 
 
@@ -170,4 +193,4 @@ class SignInSignup extends LitElement {
     }
 }
 
-customElements.define('aa-signin-signup-dialog', SignInSignup)
+customElements.define('aa-signup-dialog', Signup)

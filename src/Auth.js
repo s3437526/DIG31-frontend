@@ -11,9 +11,9 @@ class Auth {
         this.currentUser = {}
     }
 
-    async getCurrentUser() {
-        return this.currentUser
-    }
+    // async getCurrentUser() {
+    //     return this.currentUser
+    // }
 
     async signUp(userData, fail = false) {
         const response = await fetch(`${App.apiBase}/user`, {
@@ -73,6 +73,7 @@ class Auth {
             // localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
             // redirect to home
         gotoRoute('/')
+        window.location.reload()
     }
 
 
@@ -105,6 +106,7 @@ class Auth {
                 // delete local token
             localStorage.removeItem('accessToken')
             localStorage.removeItem('user')
+            localStorage.removeItem('accessLevel')
             Toast.show("session expired, please sign in")
                 // redirect to sign in      
             gotoRoute('/')
@@ -125,8 +127,10 @@ class Auth {
             // delete local token
         localStorage.removeItem('accessToken')
         localStorage.removeItem('user')
+        localStorage.removeItem('accessLevel')
             // redirect to sign in    
         gotoRoute('/')
+        window.location.reload()
             // unset currentUser
         this.currentUser = null
     }

@@ -26,20 +26,23 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 super.firstUpdated()
                 this.navActiveLinks()
                 const container = this.shadowRoot.querySelector('.accordion-menu');
-
+                // const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
+                // signinDialog.show()
                 // Close all other details when one is shown
                 container.addEventListener('sl-show', event => {
                     [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));
                 });
 
-                collections.places = await FetchAPI.getPlacesAsync()
-                collections.items = await FetchAPI.getItemsAsync()
-                collections.users = localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
+                if (localStorage.accessLevel >= 1) {
+                    collections.places = await FetchAPI.getPlacesAsync()
+                    collections.items = await FetchAPI.getItemsAsync()
+                    collections.users = localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
 
-                // these HAVE to be streamlined...waaay to repetitive! Do if time permits, otherwise after unit completion!
-                this.renderPlacesButtons()
-                this.renderItemsButtons()
-                this.renderUsersButtons()
+                    // these HAVE to be streamlined...waaay to repetitive! Do if time permits, otherwise after unit completion!
+                    this.renderPlacesButtons()
+                    this.renderItemsButtons()
+                    this.renderUsersButtons()
+                }
             }
 
             async renderPlacesButtons() {
