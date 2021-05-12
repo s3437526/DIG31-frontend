@@ -26,8 +26,14 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 super.firstUpdated()
                 this.navActiveLinks()
                 const container = this.shadowRoot.querySelector('.accordion-menu');
-                // const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
+                const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
+                const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
                 // signinDialog.show()
+                
+                if (typeof Auth.currentUser.accessLevel === 'undefined') signinDialog.show()
+                signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
+                signupDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
+
                 // Close all other details when one is shown
                 container.addEventListener('sl-show', event => {
                     [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));
@@ -42,7 +48,28 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                     this.renderPlacesButtons()
                     this.renderItemsButtons()
                     this.renderUsersButtons()
+
+                    const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
+                    signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
+            
+                    if (this.show) signinDialog.show()
                 }
+
+                const toggleDialogs = this.shadowRoot.querySelectorAll('.toggle-dialogs')
+                toggleDialogs.forEach(toggleDialog => {
+                  toggleDialog.addEventListener('click', (e) => {
+        
+                    if (e.target.textContent === "Sign Up") {
+                      signinDialog.hide()
+                      signupDialog.show()
+                    }
+                    else{
+                      signupDialog.hide()
+                      signinDialog.show()
+                    }
+                    console.log(e.target.textContent)
+                  })
+                })
             }
 
             async renderPlacesButtons() {
@@ -127,8 +154,25 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 })
             }
 
-            render() {
-                    return html `
+            signInSubmitHandler(e) {
+              e.preventDefault()
+              const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
+              const formData = e.detail.formData
+              const submitBtn = this.shadowRoot.querySelector('.submit-btn')
+              submitBtn.setAttribute('loading', '')
+                  // sign in using Auth    
+              Auth.signIn(formData, () => {
+                  submitBtn.removeAttribute('loading')
+              })
+              console.log(localStorage.accessLevel)
+              if (localStorage.accessLevel >= 1) {
+                  console.log("Valid id")
+                  signinDialog.hide()
+                  submitBtn.removeAttribute('loading')
+              }
+          }
+    render() {
+    return html `
     <style>      
       * {
         box-sizing: border-box;
@@ -374,8 +418,97 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         }
       }
 
-    </style>
+      .dialog-heading{
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                font-size: 1.5rem; 
+                font-weight: 900;
+                color: white;
+            }
 
+            .flex-center{
+                display:flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            sl-dialog::part(panel){
+                background: var(--dialog-background);
+            }
+
+            .pad-bottom{
+                padding-bottom: 20px;
+            }
+
+            .toggle-dialogs{
+              cursor: pointer;
+              color: var(--brand-color);
+              text-decoration: underline;
+            }
+
+            .toggle-dialogs:hover{
+              color: white;
+            }
+
+    </style>  
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <aa-signin-dialog></aa-signin-dialog>
+    <sl-dialog no-header="true" slot="label" class="signin-dialog" style="--width: 30vw;">
+    <span class="dialog-heading">Sign In</span>
+    <div class="page-content page-centered">
+        <div class="signinup-box">
+        <div class="flex-center">
+            <div class="material-icons" style="font-size: 8rem; margin: 1rem; color: white;">account_circle</div>          
+        </div>
+        <sl-form class="form-signup dark-theme" @sl-submit=${this.signInSubmitHandler}>          
+            <div class="input-group">
+            <sl-input class="pad-bottom" name="email" type="email" placeholder="Email" required></sl-input>
+            </div>
+            <div class="input-group">
+            <sl-input class="pad-bottom" name="password" type="password" placeholder="Password" required toggle-password></sl-input>
+            </div>
+            <sl-button class="submit-btn" type="primary" submit style="width: 100%;">Sign In</sl-button>
+        </sl-form>
+        <p>No Account? <span class="toggle-dialogs">Sign Up</span></p>
+        </div>
+    </div>
+    </sl-dialog>
+            
+    <aa-signup-dialog></aa-signup-dialog>
+    <sl-dialog no-header="true" slot="label" class="signup-dialog" style="--width: 30vw;">
+    <span class="dialog-heading">Sign up</span>
+    <div class="page-content page-centered">
+        <div class="signupup-box">
+        <div class="flex-center">
+            <div class="material-icons" style="font-size: 8rem; margin: 1rem; color: white;">account_circle</div>          
+        </div>
+        <sl-form class="form-signup" @sl-submit=${this.signUpSubmitHandler}>
+            <div class="input-group">
+            <sl-input class="pad-bottom" name="firstName" type="text" placeholder="First Name" required></sl-input>
+            </div>
+            <div class="input-group">
+            <sl-input class="pad-bottom" name="lastName" type="text" placeholder="Last Name" required></sl-input>
+            </div>
+            <div class="input-group">
+            <sl-input class="pad-bottom" name="email" type="email" placeholder="Email" required></sl-input>
+            </div>
+            <div class="input-group">
+            <sl-input class="pad-bottom" name="password" type="password" placeholder="Password" required toggle-password></sl-input>
+            </div>            
+            <div class="input-group">
+            <sl-select class="pad-bottom" name="accessLevel" placeholder="I am a ...">
+                <sl-menu-item value="1">Customer</sl-menu-item>
+                <sl-menu-item value="2">Hairdresser</sl-menu-item>
+            </sl-select>
+            </div>         
+            <sl-button type="primary" class="submit-btn" submit style="width: 100%;">Sign Up</sl-button>
+        </sl-form>
+        <p>Have an account? <span class="toggle-dialogs">Sign In</span></p>
+        </div>
+    </div>
+    </sl-dialog>
     <header class="app-header" style="display:flex; justify-content: space-between; align-items:center;">
       <div class="left-navs">
         <sl-icon-button class="hamburger-btn" name="list" @click="${this.hamburgerClick}"></sl-icon-button>       
@@ -549,5 +682,4 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
     </sl-drawer>
     `
   }
-
 })
