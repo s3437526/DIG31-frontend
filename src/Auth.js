@@ -21,7 +21,8 @@ class Auth {
             body: userData
         })
 
-        // if response not ok
+        console.log(JSON.stringify(userData))
+            // if response not ok
         if (!response.ok) {
             // console log error
             const err = await response.json()

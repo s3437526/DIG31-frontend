@@ -8,5 +8,7 @@ TODO
 - Empty all arrays when signing out
 - Fix active button indication
 - Clear inputs after signin and signup
-- If user is not signed in then you get "failed to get places" etc error due to authentication (token) checking on signin
-- Secure top menus when not signed in
+- Add imageURL and bio for user registration
+- Signup doesn't work because it needs to correlate toggle buttons to schema-approved values
+- Signin doesn't work because the sender form object isn't consistently sent to the submit handler and errors out with undefined
+-  Hide signup form after sining up

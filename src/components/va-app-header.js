@@ -29,7 +29,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
                 const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
                 // signinDialog.show()
-                
+
                 if (typeof Auth.currentUser.accessLevel === 'undefined') signinDialog.show()
                 signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
                 signupDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
@@ -51,24 +51,23 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
 
                     const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
                     signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
-            
-                    if (this.show) signinDialog.show()
+
+                    // if (this.show) signinDialog.show()
                 }
 
                 const toggleDialogs = this.shadowRoot.querySelectorAll('.toggle-dialogs')
                 toggleDialogs.forEach(toggleDialog => {
-                  toggleDialog.addEventListener('click', (e) => {
-        
-                    if (e.target.textContent === "Sign Up") {
-                      signinDialog.hide()
-                      signupDialog.show()
-                    }
-                    else{
-                      signupDialog.hide()
-                      signinDialog.show()
-                    }
-                    console.log(e.target.textContent)
-                  })
+                    toggleDialog.addEventListener('click', (e) => {
+
+                        if (e.target.textContent === "Sign Up") {
+                            signinDialog.hide()
+                            signupDialog.show()
+                        } else {
+                            signupDialog.hide()
+                            signinDialog.show()
+                        }
+                        // console.log(e.target.textContent)
+                    })
                 })
             }
 
@@ -155,24 +154,36 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
             }
 
             signInSubmitHandler(e) {
-              e.preventDefault()
-              const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
-              const formData = e.detail.formData
-              const submitBtn = this.shadowRoot.querySelector('.submit-btn')
-              submitBtn.setAttribute('loading', '')
-                  // sign in using Auth    
-              Auth.signIn(formData, () => {
-                  submitBtn.removeAttribute('loading')
-              })
-              console.log(localStorage.accessLevel)
-              if (localStorage.accessLevel >= 1) {
-                  console.log("Valid id")
-                  signinDialog.hide()
-                  submitBtn.removeAttribute('loading')
-              }
-          }
-    render() {
-    return html `
+                e.preventDefault()
+                const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
+                const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
+                const formData = e.detail.formData
+                const submitBtn = this.shadowRoot.querySelector('.submit-btn')
+                console.log("button clicked")
+                console.log(e.target)
+                console.log(`Form data is: ${JSON.stringify(e.detail.formData)}`)
+                if (e.target.childNodes[13].textContent === "Sign Up") {
+                    // sign up using Auth
+                    Auth.signUp(formData, () => {
+                        submitBtn.removeAttribute('loading')
+                        console.log(formData)
+                    })
+                } else if (e.target.childNodes[5].innerText === "Sign In") {
+                    submitBtn.setAttribute('loading', '')
+                        // sign in using Auth    
+                    Auth.signIn(formData, () => {
+                        submitBtn.removeAttribute('loading')
+                        console.log(formData)
+                    })
+                    console.log(localStorage.accessLevel)
+                    if (localStorage.accessLevel >= 1) {
+                        signinDialog.hide()
+                        submitBtn.removeAttribute('loading')
+                    }
+                }
+            }
+            render() {
+                    return html `
     <style>      
       * {
         box-sizing: border-box;
@@ -253,13 +264,13 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
       }
 
       sl-drawer::part(close-button){
-        color:white;
+        color: white;
       }
 
       .sidenav-content{
-        display:flex; 
-        flex-direction:column; 
-        align-items:center; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
         height: 100%; 
         justify-content: space-between;
       }
@@ -269,7 +280,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
       }
 
       .dashboard-button::part(content){
-        display:none;
+        display: none;
       }
 
       .bottom-menus{
@@ -451,6 +462,17 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
               color: white;
             }
 
+            .toggle-text{
+              margin: 0;
+              color: white;
+            }
+
+            .toggle-switch{
+             --width: 60px; --height: 30px; --thumb-size: 28px;
+             color: white;
+             margin: 10px 0;
+            }
+
     </style>  
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -484,25 +506,38 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         <div class="flex-center">
             <div class="material-icons" style="font-size: 8rem; margin: 1rem; color: white;">account_circle</div>          
         </div>
-        <sl-form class="form-signup" @sl-submit=${this.signUpSubmitHandler}>
+        <sl-form class="form-signup" @sl-submit=${this.signInSubmitHandler}>
             <div class="input-group">
-            <sl-input class="pad-bottom" name="firstName" type="text" placeholder="First Name" required></sl-input>
+              <sl-input class="pad-bottom" name="firstName" type="text" placeholder="First Name" required></sl-input>
             </div>
             <div class="input-group">
-            <sl-input class="pad-bottom" name="lastName" type="text" placeholder="Last Name" required></sl-input>
+              <sl-input class="pad-bottom" name="lastName" type="text" placeholder="Last Name" required></sl-input>
             </div>
             <div class="input-group">
-            <sl-input class="pad-bottom" name="email" type="email" placeholder="Email" required></sl-input>
+            <sl-input class="pad-bottom" name="username" type="text" placeholder="Username" required></sl-input>
             </div>
             <div class="input-group">
-            <sl-input class="pad-bottom" name="password" type="password" placeholder="Password" required toggle-password></sl-input>
-            </div>            
+              <sl-input class="pad-bottom" name="email" type="email" placeholder="Email" required></sl-input>
+            </div>
             <div class="input-group">
-            <sl-select class="pad-bottom" name="accessLevel" placeholder="I am a ...">
-                <sl-menu-item value="1">Customer</sl-menu-item>
-                <sl-menu-item value="2">Hairdresser</sl-menu-item>
-            </sl-select>
-            </div>         
+              <sl-input class="pad-bottom" name="password" type="password" placeholder="Password" required toggle-password></sl-input>
+            </div>      
+            ${Auth.currentUser.accessLevel == 2 ? html`
+            <div class="input-group">
+            <p class="toggle-text">User type (regular/admin)</p>
+              <sl-switch class="toggle-switch"></sl-switch>      
+            </div>
+            <div class="input-group">
+            <sl-input class="pad-bottom" name="accessLevel" type="number" value="2" required></sl-input>
+            </div>
+            <div class="input-group">
+            <p class="toggle-text">User status (inactive/active)</p>
+              <sl-switch class="toggle-switch" checked></sl-switch>      
+            </div>
+            <div class="input-group">
+            <sl-input class="pad-bottom" name="status" type="number" value='1' required></sl-input>
+            </div>
+            `: ""}
             <sl-button type="primary" class="submit-btn" submit style="width: 100%;">Sign Up</sl-button>
         </sl-form>
         <p>Have an account? <span class="toggle-dialogs">Sign In</span></p>
