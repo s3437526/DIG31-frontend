@@ -2,7 +2,7 @@
 import homeView from './views/pages/home'
 import fourOFourView from './views/pages/404'
 // import signinView from './views/pages/signin'
-import signupView from './views/pages/signup'
+// import signupView from './views/pages/signup'
 // import profileView from './views/pages/profile'
 // import editProfileView from './views/pages/editProfile'
 import guideView from './views/pages/guide'
@@ -19,7 +19,7 @@ const routes = {
     // '/favouriteHaircuts': favouriteHaircutsView,
     '404': fourOFourView,
     // '/signin': signinView,
-    '/signup': signupView
+    // '/signup': signupView
         // '/profile': profileView,
         // '/editProfile': editProfileView
 }

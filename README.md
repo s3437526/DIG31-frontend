@@ -11,4 +11,6 @@ TODO
 - Add imageURL and bio for user registration
 - Signup doesn't work because it needs to correlate toggle buttons to schema-approved values
 - Signin doesn't work because the sender form object isn't consistently sent to the submit handler and errors out with undefined
--  Hide signup form after sining up
+- Hide signup form after sining up
+- Test creating user with admin signed in
+- Convert admin toggles to actual form values

@@ -7636,28 +7636,32 @@ class Auth {
 
   async signUp(userData) {
     let fail = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    let pass = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     const response = await fetch("".concat(_App.default.apiBase, "/user"), {
       method: 'POST',
       body: userData
     });
-    console.log(JSON.stringify(userData)); // if response not ok
+    console.log("Auth.js signup method receiving user data as: ".concat(JSON.stringify(userData))); // if response not ok
 
     if (!response.ok) {
       // console log error
       const err = await response.json();
       if (err) console.log(err); // show error      
 
-      _Toast.default.show("Problem getting user: ".concat(response.status)); // run fail() functon if set
+      _Toast.default.show("Problem creating user: ".concat(response.status)); // run fail() functon if set
 
 
       if (typeof fail == 'function') fail();
-    } /// sign up success - show toast and redirect to sign in page
+    } else if (response.ok) {
+      /// sign up success - show toast and redirect to sign in page
+      _Toast.default.show('Account created, please sign in');
 
+      pass(); // redirect to signin
 
-    _Toast.default.show('Account created, please sign in'); // redirect to signin
-
-
-    (0, _Router.gotoRoute)('/signin');
+      (0, _Router.gotoRoute)('/');
+    } else {// show error      
+      // Toast.show(`Problem getting user: ${response.status}`)
+    }
   }
 
   async signIn(userData) {
@@ -7903,69 +7907,7 @@ class FourOFourView {
 var _default = new FourOFourView();
 
 exports.default = _default;
-},{"./../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js"}],"views/pages/signup.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _App = _interopRequireDefault(require("./../../App"));
-
-var _Auth = _interopRequireDefault(require("./../../Auth"));
-
-var _litHtml = require("lit-html");
-
-var _Router = require("./../../Router");
-
-var _Utils = _interopRequireDefault(require("./../../Utils"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _templateObject() {
-  const data = _taggedTemplateLiteral(["      \n      <div class=\"page-content page-centered\">      \n        <div class=\"signinup-box\">\n        <img class=\"signinup-logo\" src=\"/images/logo.svg\">\n          <h1>Sign Up</h1>\n          <sl-form class=\"form-signup\" @sl-submit=", ">\n            <div class=\"input-group\">\n              <sl-input name=\"firstName\" type=\"text\" placeholder=\"First Name\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input name=\"lastName\" type=\"text\" placeholder=\"Last Name\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n            </div>            \n            <div class=\"input-group\">\n              <sl-select name=\"accessLevel\" placeholder=\"I am a ...\">\n                <sl-menu-item value=\"1\">Customer</sl-menu-item>\n                <sl-menu-item value=\"2\">Hairdresser</sl-menu-item>\n              </sl-select>\n            </div>         \n            <sl-button type=\"primary\" class=\"submit-btn\" submit style=\"width: 100%;\">Sign Up</sl-button>\n          </sl-form>\n          <p>Have an account? <a href=\"/signin\" @click=", ">Sign In</a></p>\n        </div>\n      </div>\n    "]);
-
-  _templateObject = function _templateObject() {
-    return data;
-  };
-
-  return data;
-}
-
-function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-class SignUpView {
-  init() {
-    console.log('SignUpView.init');
-    document.title = 'Sign In';
-    this.render();
-
-    _Utils.default.pageIntroAnim();
-  }
-
-  signUpSubmitHandler(e) {
-    e.preventDefault();
-    const submitBtn = document.querySelector('.submit-btn');
-    submitBtn.setAttribute('loading', '');
-    const formData = e.detail.formData; // sign up using Auth
-
-    _Auth.default.signUp(formData, () => {
-      submitBtn.removeAttribute('loading');
-    });
-  }
-
-  render() {
-    const template = (0, _litHtml.html)(_templateObject(), this.signUpSubmitHandler, _Router.anchorRoute);
-    (0, _litHtml.render)(template, _App.default.rootEl);
-  }
-
-}
-
-var _default = new SignUpView();
-
-exports.default = _default;
-},{"./../../App":"App.js","./../../Auth":"Auth.js","lit-html":"../node_modules/lit-html/lit-html.js","./../../Router":"Router.js","./../../Utils":"Utils.js"}],"views/pages/guide.js":[function(require,module,exports) {
+},{"./../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js"}],"views/pages/guide.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8029,14 +7971,13 @@ var _home = _interopRequireDefault(require("./views/pages/home"));
 
 var _ = _interopRequireDefault(require("./views/pages/404"));
 
-var _signup = _interopRequireDefault(require("./views/pages/signup"));
-
 var _guide = _interopRequireDefault(require("./views/pages/guide"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // import views
 // import signinView from './views/pages/signin'
+// import signupView from './views/pages/signup'
 // import profileView from './views/pages/profile'
 // import editProfileView from './views/pages/editProfile'
 // import hairdresserssView from './views/pages/hairdressers'
@@ -8049,9 +7990,9 @@ const routes = {
   // '/haircuts': haircutsView,
   // '/hairdressers': hairdresserssView,
   // '/favouriteHaircuts': favouriteHaircutsView,
-  '404': _.default,
-  // '/signin': signinView,
-  '/signup': _signup.default // '/profile': profileView,
+  '404': _.default // '/signin': signinView,
+  // '/signup': signupView
+  // '/profile': profileView,
   // '/editProfile': editProfileView
 
 };
@@ -8107,7 +8048,7 @@ function anchorRoute(e) {
   const pathname = e.target.closest('a').pathname;
   AppRouter.gotoRoute(pathname);
 }
-},{"./views/pages/home":"views/pages/home.js","./views/pages/404":"views/pages/404.js","./views/pages/signup":"views/pages/signup.js","./views/pages/guide":"views/pages/guide.js"}],"App.js":[function(require,module,exports) {
+},{"./views/pages/home":"views/pages/home.js","./views/pages/404":"views/pages/404.js","./views/pages/guide":"views/pages/guide.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9914,8 +9855,18 @@ var _FetchAPI = _interopRequireDefault(require("../FetchAPI"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _templateObject6() {
+function _templateObject7() {
   const data = _taggedTemplateLiteral(["\n                  <sl-menu-divider></sl-menu-divider>\n                    <sl-menu-item @click=\"", "\">\n                      <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"house-door\"></sl-icon>\n                      <sl-icon class=\"settings-icon\" slot=\"prefix\" name=\"plus\"></sl-icon>\n                        Register Place\n                    </sl-menu-item>\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"house-door\"></sl-icon>\n                    <sl-icon class=\"manage-place\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                      Manage Place\n                  </sl-menu-item>\n                  <sl-menu-divider></sl-menu-divider>\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"broadcast\"></sl-icon>\n                    <sl-icon class=\"manage-device\" slot=\"prefix\" name=\"plus\"></sl-icon>\n                      Register Device\n                  </sl-menu-item>\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"broadcast\"></sl-icon>\n                    <sl-icon class=\"add-device\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                      Manage Device\n                  </sl-menu-item>\n                  <sl-menu-divider></sl-menu-divider>\n                  "]);
+
+  _templateObject7 = function _templateObject7() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject6() {
+  const data = _taggedTemplateLiteral(["\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                    <sl-icon class=\"settings-icon\" slot=\"prefix\" name=\"plus\"></sl-icon>\n                      Register User\n                  "]);
 
   _templateObject6 = function _templateObject6() {
     return data;
@@ -9925,7 +9876,7 @@ function _templateObject6() {
 }
 
 function _templateObject5() {
-  const data = _taggedTemplateLiteral(["\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                    <sl-icon class=\"settings-icon\" slot=\"prefix\" name=\"plus\"></sl-icon>\n                      Register User\n                  "]);
+  const data = _taggedTemplateLiteral(["<sl-details class=\"details users-list\" summary=\"Users\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">account_circle</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Users</span></sl-details>"]);
 
   _templateObject5 = function _templateObject5() {
     return data;
@@ -9945,7 +9896,7 @@ function _templateObject4() {
 }
 
 function _templateObject3() {
-  const data = _taggedTemplateLiteral(["\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                <sl-icon class=\"settings-icon\" slot=\"prefix\" name=\"plus\"></sl-icon>\n                  Register User\n              "]);
+  const data = _taggedTemplateLiteral(["\n              <sl-menu-item class=\"register-user\" id=\"register-user\">\n                <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                <sl-icon class=\"settings-icon\" slot=\"prefix\" name=\"plus\"></sl-icon>\n                  Register User\n              "]);
 
   _templateObject3 = function _templateObject3() {
     return data;
@@ -9955,7 +9906,7 @@ function _templateObject3() {
 }
 
 function _templateObject2() {
-  const data = _taggedTemplateLiteral(["\n            <div class=\"input-group\">\n            <p class=\"toggle-text\">User type (regular/admin)</p>\n              <sl-switch class=\"toggle-switch\"></sl-switch>      \n            </div>\n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"accessLevel\" type=\"number\" value=\"2\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n            <p class=\"toggle-text\">User status (inactive/active)</p>\n              <sl-switch class=\"toggle-switch\" checked></sl-switch>      \n            </div>\n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"status\" type=\"number\" value='1' required></sl-input>\n            </div>\n            "]);
+  const data = _taggedTemplateLiteral(["\n            <div class=\"input-group\">\n            <p class=\"toggle-text\">User type (regular/admin)</p>\n              <sl-switch class=\"toggle-switch\"></sl-switch>      \n            </div>\n            <div class=\"input-group\">\n            <p class=\"toggle-text\">User status (inactive/active)</p>\n              <sl-switch class=\"toggle-switch\" checked></sl-switch>      \n            </div>\n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"accessLevel\" type=\"number\" value=\"1\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"imageURL\" type=\"text\" value=\"\"></sl-input>\n            </div>\n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"status\" type=\"number\" value='1' required></sl-input>\n            </div>\n            "]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -9965,7 +9916,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n    <style>      \n      * {\n        box-sizing: border-box;\n      }\n      .app-header {\n        background: rgb(94,85,107);\n        position: fixed;\n        top: 0;\n        right: 0;\n        left: 0;\n        height: var(--app-header-height);\n        color: #fff;\n        display: flex;\n        justify-content: flex-end;\n        z-index: 9;\n        box-shadow: 4px 0px 10px rgba(0,0,0,0.2);\n        align-items: center;\n      }\n\n      .app-header-main {\n        flex-grow: 1;\n        display: flex;\n        align-items: center;\n      }\n\n      .app-header-main::slotted(h1){\n        color: #fff;\n      }\n\n      .app-logo a {\n        color: #fff;\n        text-decoration: none;\n        font-weight: bold;\n        font-size: 1.2em;\n        padding: .6em;\n        display: inline-block;        \n      }\n\n      .app-logo img {\n        width: 90px;\n      }\n      \n      .hamburger-btn::part(base) {\n        color: #fff;\n        font-size: 2.5em;\n      }\n\n      .app-top-nav {\n        display: flex;\n        height: 100%;\n        align-items: center;\n      }\n\n      .app-top-nav a {\n        display: inline-block;\n        padding: .8em;\n        text-decoration: none;\n        color: #fff;\n      }\n\n      sl-drawer::part(panel){\n        background-color: rgb(94,85,107);\n        --size: 20em;\n      }\n\n      sl-drawer::part(body){\n        padding: 0;\n        scrollbar-width: none; /* Firefox */\n        -ms-overflow-style: none;  /* IE 10+ */\n        &::-webkit-scrollbar {\n        width: 0px;\n        background: transparent; /* Chrome/Safari/Webkit */\n        }\n      }\n      \n      sl-drawer::part(overlay){\n        background: transparent;\n      }\n\n      sl-drawer::part(close-button){\n        color: white;\n      }\n\n      .sidenav-content{\n        display: flex; \n        flex-direction: column; \n        align-items: center; \n        height: 100%; \n        justify-content: space-between;\n      }\n\n      .accordion-container{\n        width: 100%;\n      }\n\n      .dashboard-button::part(content){\n        display: none;\n      }\n\n      .bottom-menus{\n        width: 100%;\n        padding: 5%;\n      }\n\n      .app-side-menu-items a {\n        display: block;\n        padding: .5em;\n        text-decoration: none;\n        font-size: 1.3em;\n        color: var(--app-header-txt-color);\n      }\n\n      .page-title {\n        color: var(--app-header-txt-color);\n        margin-right: 0.5em;\n        font-size: var(--app-header-title-font-size);\n      }\n\n      /* active nav links */\n      .app-top-nav a.active,\n      .app-side-menu-items a.active {\n        font-weight: bold;\n      }\n\n      #bell-icon, #bell-icon-sidenav, #alert-icon, #alert-icon-sidenav, .bi-bell{\n        color: gray;\n      }\n\n      sl-dropdown::part(panel){\n        background-color: rgb(94,85,107);\n        border: none;\n        max-height: 100vh;\n        border-radius:  0 0 5px 5px;\n      }\n\n      sl-menu.left-menu::part(base){\n        border: 1px solid #fff;\n        border-radius: 5px;\n      }\n\n      sl-menu-item::part(base){\n        color: #fff;\n      }\n\n      sl-menu-item::part(base):hover{\n        color: rgb(94,85,107);\n      } \n\n      sl-avatar::part(base){\n        --size: 2rem;\n        color: white;\n      }\n\n      sl-details::part(header){\n        padding: var(--sl-spacing-x-small);\n      }\n      \n      sl-details::part(content){\n        padding: 0;\n        \n        border-top: 1px solid white;\n      }\n\n      sl-details::part(summary):hover{\n        color: var(--base-color);\n      }\n\n      sl-details::part(base){\n        color: white;\n        background: var(--base-color);\n      }\n\n      sl-details::part(base):hover{\n        color: var(--base-color);\n        background: white;\n      }\n\n      .dropdown-icon{\n        font-size: 2rem;\n\n      }.settings-icon{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -15%; \n        margin-right:0;\n      }\n\n      .add-icon{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-place{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-device{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -5%; \n        margin-right:0;\n      }\n\n      .add-device{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: 0;\n      }\n\n      .signout-icon{\n        font-size: 2rem;\n        left: 10%;\n        margin-right:1.5rem;\n      }\n\n      .app-side-nav{\n        display:none;\n      }\n\n      .summary-icon::part(summary){\n        font-size: 2rem;\n      }\n\n      /* RESPONSIVE - MOBILE ------------------- */\n      @media all and (max-width: 768px){       \n        \n        .app-top-nav {\n          display: none;\n        }\n\n        .app-side-nav{\n          display:flex;\n          align-items: center;\n          justify-content: space-evenly;\n        }\n      }\n\n      .dialog-heading{\n                display: flex; \n                align-items: center; \n                justify-content: center; \n                font-size: 1.5rem; \n                font-weight: 900;\n                color: white;\n            }\n\n            .flex-center{\n                display:flex;\n                align-items: center;\n                justify-content: center;\n            }\n\n            sl-dialog::part(panel){\n                background: var(--dialog-background);\n            }\n\n            .pad-bottom{\n                padding-bottom: 20px;\n            }\n\n            .toggle-dialogs{\n              cursor: pointer;\n              color: var(--brand-color);\n              text-decoration: underline;\n            }\n\n            .toggle-dialogs:hover{\n              color: white;\n            }\n\n            .toggle-text{\n              margin: 0;\n              color: white;\n            }\n\n            .toggle-switch{\n             --width: 60px; --height: 30px; --thumb-size: 28px;\n             color: white;\n             margin: 10px 0;\n            }\n\n    </style>  \n\n    <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n    <aa-signin-dialog></aa-signin-dialog>\n    <sl-dialog no-header=\"true\" slot=\"label\" class=\"signin-dialog\" style=\"--width: 30vw;\">\n    <span class=\"dialog-heading\">Sign In</span>\n    <div class=\"page-content page-centered\">\n        <div class=\"signinup-box\">\n        <div class=\"flex-center\">\n            <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">account_circle</div>          \n        </div>\n        <sl-form class=\"form-signup dark-theme\" @sl-submit=", ">          \n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n            </div>\n            <sl-button class=\"submit-btn\" type=\"primary\" submit style=\"width: 100%;\">Sign In</sl-button>\n        </sl-form>\n        <p>No Account? <span class=\"toggle-dialogs\">Sign Up</span></p>\n        </div>\n    </div>\n    </sl-dialog>\n            \n    <aa-signup-dialog></aa-signup-dialog>\n    <sl-dialog no-header=\"true\" slot=\"label\" class=\"signup-dialog\" style=\"--width: 30vw;\">\n    <span class=\"dialog-heading\">Sign up</span>\n    <div class=\"page-content page-centered\">\n        <div class=\"signupup-box\">\n        <div class=\"flex-center\">\n            <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">account_circle</div>          \n        </div>\n        <sl-form class=\"form-signup\" @sl-submit=", ">\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"firstName\" type=\"text\" placeholder=\"First Name\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"lastName\" type=\"text\" placeholder=\"Last Name\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"username\" type=\"text\" placeholder=\"Username\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n            </div>      \n            ", "\n            <sl-button type=\"primary\" class=\"submit-btn\" submit style=\"width: 100%;\">Sign Up</sl-button>\n        </sl-form>\n        <p>Have an account? <span class=\"toggle-dialogs\">Sign In</span></p>\n        </div>\n    </div>\n    </sl-dialog>\n    <header class=\"app-header\" style=\"display:flex; justify-content: space-between; align-items:center;\">\n      <div class=\"left-navs\">\n        <sl-icon-button class=\"hamburger-btn\" name=\"list\" @click=\"", "\"></sl-icon-button>       \n      </div>\n      <div class=\"right-navs\">\n        <nav class=\"app-top-nav\">\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"bell-icon\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"alert-icon\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <sl-dropdown>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 1.9rem;\"></sl-icon>\n            </a>\n            <sl-menu>            \n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n          <sl-dropdown distance=\"0\" class=\"dropdowns\">\n            <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n              <sl-avatar image=", "></sl-avatar> ", "\n            </a>\n            <sl-menu>            \n            ", "\n              </sl-menu-item>\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                  Manage Account\n              </sl-menu-item>\n              ", "\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                  Sign Out\n              </sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n        </nav>\n      </div>\n    </header>\n    <sl-drawer class=\"app-side-menu\" placement=\"left\">\n      <div class=\"sidenav-content\">\n        <!-- <div class=\"top-menus\"> -->\n          <!-- <img class=\"app-side-menu-logo\" src=\"/images/logo.svg\"> -->\n          <!-- <nav class=\"app-side-menu-items\"> -->\n            <!-- <a href=\"/\" @click=\"", "\">Dashboard</a> -->\n            <!-- <a href=\"/hairdressers\" @click=\"", "\">Find a Hairdresser</a>\n            <a href=\"/haircute\" @click=\"", "\">Find a Haircut</a>\n            <a href=\"/favouriteHaircuts\" @click=\"", "\">Hairdressers</a>\n            <a href=\"/profile\" @click=\"", "\">Profile</a>\n            <a href=\"#\" @click=\"", "\">Sign Out</a> -->\n          <!-- </nav>   -->\n        <!-- </div> -->\n        <!--  -->\n        <div class=\"accordion-container\">\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n          <div class=\"accordion-menu\">\n            <sl-details class=\"dashboard-button\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">dashboard</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Dashboard</span></sl-details>\n            <sl-details class=\"details places-list\" summary=\"Places\" ><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">home</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Places</span></sl-details>\n            <sl-details class=\"details devices-list\" summary=\"Devices\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">sensors</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Devices</span></sl-details>\n            <sl-details class=\"details users-list\" summary=\"Users\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">account_circle</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Users</span></sl-details>\n          </div>\n          <style>\n            .details-group-example sl-details:not(:last-of-type) {\n              margin-bottom: var(--sl-spacing-xx-small);\n            }\n          </style>\n        </div>\n        <!--  -->\n        <div class=\"bottom-menus\">\n          <nav class=\"app-side-nav\">\n            <!-- <a href=\"/\" @click=\"", "\">Home</a>         -->\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"bell-icon-sidenav\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"alert-icon-sidenav\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <sl-dropdown skidding=\"-109\" distance=\"10\">\n              <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 2rem; color: white;\"></sl-icon>\n              </a>\n              <sl-menu class=\"left-menu\">            \n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n            <sl-dropdown skidding=\"-171\" distance=\"10\" class=\"dropdowns-left\">\n              <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n                <sl-avatar image=", ">\n              </a>\n              <sl-menu class=\"left-menu\">            \n                ", "\n                  </sl-menu-item>\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                    <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                      Manage Account\n                  </sl-menu-item>\n                  ", "\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                      Sign Out\n                  </sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n          </nav>\n        </div>\n      </div>\n    </sl-drawer>\n    "]);
+  const data = _taggedTemplateLiteral(["\n    <style>      \n      * {\n        box-sizing: border-box;\n      }\n      .app-header {\n        background: rgb(94,85,107);\n        position: fixed;\n        top: 0;\n        right: 0;\n        left: 0;\n        height: var(--app-header-height);\n        color: #fff;\n        display: flex;\n        justify-content: flex-end;\n        z-index: 9;\n        box-shadow: 4px 0px 10px rgba(0,0,0,0.2);\n        align-items: center;\n      }\n\n      .app-header-main {\n        flex-grow: 1;\n        display: flex;\n        align-items: center;\n      }\n\n      .app-header-main::slotted(h1){\n        color: #fff;\n      }\n\n      .app-logo a {\n        color: #fff;\n        text-decoration: none;\n        font-weight: bold;\n        font-size: 1.2em;\n        padding: .6em;\n        display: inline-block;        \n      }\n\n      .app-logo img {\n        width: 90px;\n      }\n      \n      .hamburger-btn::part(base) {\n        color: #fff;\n        font-size: 2.5em;\n      }\n\n      .app-top-nav {\n        display: flex;\n        height: 100%;\n        align-items: center;\n      }\n\n      .app-top-nav a {\n        display: inline-block;\n        padding: .8em;\n        text-decoration: none;\n        color: #fff;\n      }\n\n      sl-drawer::part(panel){\n        background-color: rgb(94,85,107);\n        --size: 20em;\n      }\n\n      sl-drawer::part(body){\n        padding: 0;\n        scrollbar-width: none; /* Firefox */\n        -ms-overflow-style: none;  /* IE 10+ */\n        &::-webkit-scrollbar {\n        width: 0px;\n        background: transparent; /* Chrome/Safari/Webkit */\n        }\n      }\n      \n      sl-drawer::part(overlay){\n        background: transparent;\n      }\n\n      sl-drawer::part(close-button){\n        color: white;\n      }\n\n      .sidenav-content{\n        display: flex; \n        flex-direction: column; \n        align-items: center; \n        height: 100%; \n        justify-content: space-between;\n      }\n\n      .accordion-container{\n        width: 100%;\n      }\n\n      .dashboard-button::part(content){\n        display: none;\n      }\n\n      .bottom-menus{\n        width: 100%;\n        padding: 5%;\n      }\n\n      .app-side-menu-items a {\n        display: block;\n        padding: .5em;\n        text-decoration: none;\n        font-size: 1.3em;\n        color: var(--app-header-txt-color);\n      }\n\n      .page-title {\n        color: var(--app-header-txt-color);\n        margin-right: 0.5em;\n        font-size: var(--app-header-title-font-size);\n      }\n\n      /* active nav links */\n      .app-top-nav a.active,\n      .app-side-menu-items a.active {\n        font-weight: bold;\n      }\n\n      #bell-icon, #bell-icon-sidenav, #alert-icon, #alert-icon-sidenav, .bi-bell{\n        color: gray;\n      }\n\n      sl-dropdown::part(panel){\n        background-color: rgb(94,85,107);\n        border: none;\n        max-height: 100vh;\n        border-radius:  0 0 5px 5px;\n      }\n\n      sl-menu.left-menu::part(base){\n        border: 1px solid #fff;\n        border-radius: 5px;\n      }\n\n      sl-menu-item::part(base){\n        color: #fff;\n      }\n\n      sl-menu-item::part(base):hover{\n        color: rgb(94,85,107);\n      } \n\n      sl-avatar::part(base){\n        --size: 2rem;\n        color: white;\n      }\n\n      sl-details::part(header){\n        padding: var(--sl-spacing-x-small);\n      }\n      \n      sl-details::part(content){\n        padding: 0;\n        \n        border-top: 1px solid white;\n      }\n\n      sl-details::part(summary):hover{\n        color: var(--base-color);\n      }\n\n      sl-details::part(base){\n        color: white;\n        background: var(--base-color);\n      }\n\n      sl-details::part(base):hover{\n        color: var(--base-color);\n        background: white;\n      }\n\n      .dropdown-icon{\n        font-size: 2rem;\n\n      }.settings-icon{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -15%; \n        margin-right:0;\n      }\n\n      .add-icon{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-place{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-device{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -5%; \n        margin-right:0;\n      }\n\n      .add-device{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: 0;\n      }\n\n      .signout-icon{\n        font-size: 2rem;\n        left: 10%;\n        margin-right:1.5rem;\n      }\n\n      .app-side-nav{\n        display:none;\n      }\n\n      .summary-icon::part(summary){\n        font-size: 2rem;\n      }\n\n      /* RESPONSIVE - MOBILE ------------------- */\n      @media all and (max-width: 768px){       \n        \n        .app-top-nav {\n          display: none;\n        }\n\n        .app-side-nav{\n          display:flex;\n          align-items: center;\n          justify-content: space-evenly;\n        }\n      }\n\n      .dialog-heading{\n                display: flex; \n                align-items: center; \n                justify-content: center; \n                font-size: 1.5rem; \n                font-weight: 900;\n                color: white;\n            }\n\n            .flex-center{\n                display:flex;\n                align-items: center;\n                justify-content: center;\n            }\n\n            sl-dialog::part(panel){\n                background: var(--dialog-background);\n            }\n\n            .pad-bottom{\n                padding-bottom: 20px;\n            }\n\n            .toggle-dialogs{\n              cursor: pointer;\n              color: var(--brand-color);\n              text-decoration: underline;\n            }\n\n            .toggle-dialogs:hover{\n              color: white;\n            }\n\n            .toggle-text{\n              margin: 0;\n              color: white;\n            }\n\n            .toggle-switch{\n             --width: 60px; --height: 30px; --thumb-size: 28px;\n             color: white;\n             margin: 10px 0;\n            }\n\n    </style>  \n    <!-- Sign in dialog -->\n    <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n    <sl-dialog no-header=\"true\" slot=\"label\" class=\"signin-dialog\" style=\"--width: 30vw;\">\n    <span class=\"dialog-heading\">Sign In</span>\n    <div class=\"page-content page-centered\">\n        <div class=\"signinup-box\">\n        <div class=\"flex-center\">\n            <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">account_circle</div>          \n        </div>\n        <sl-form class=\"form-signup dark-theme\" @sl-submit=", ">          \n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n            </div>\n            <sl-button class=\"submit-btn\" type=\"primary\" submit style=\"width: 100%;\">Sign In</sl-button>\n        </sl-form>\n        <p>No Account? <span class=\"toggle-dialogs\">Sign Up</span></p>\n        </div>\n    </div>\n    </sl-dialog>\n    <!-- Sign up dialog -->\n    <sl-dialog no-header=\"true\" slot=\"label\" class=\"signup-dialog\" style=\"--width: 30vw;\">\n    <span class=\"dialog-heading\">Sign up</span>\n    <div class=\"page-content page-centered\">\n        <div class=\"signupup-box\">\n        <div class=\"flex-center\">\n            <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">account_circle</div>          \n        </div>\n        <sl-form class=\"form-signup\" @sl-submit=", ">\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"firstName\" type=\"text\" placeholder=\"First Name\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"lastName\" type=\"text\" placeholder=\"Last Name\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"username\" type=\"text\" placeholder=\"Username\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n            </div>      \n            ", "\n            <sl-button type=\"primary\" class=\"submit-btn\" submit style=\"width: 100%;\">Sign Up</sl-button>\n        </sl-form>\n        <p>Have an account? <span class=\"toggle-dialogs\">Sign In</span></p>\n        </div>\n    </div>\n    </sl-dialog>\n    <!-- Hamburger -->\n    <header class=\"app-header\" style=\"display:flex; justify-content: space-between; align-items:center;\">\n      <div class=\"left-navs\">\n        <sl-icon-button class=\"hamburger-btn\" name=\"list\" @click=\"", "\"></sl-icon-button>       \n      </div>\n      <!-- Main (top) menus -->\n      <div class=\"right-navs\">\n        <nav class=\"app-top-nav\">\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"bell-icon\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"alert-icon\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <sl-dropdown>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 1.9rem;\"></sl-icon>\n            </a>\n            <sl-menu>            \n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n          <sl-dropdown distance=\"0\" class=\"dropdowns\">\n            <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n              <sl-avatar image=", "></sl-avatar> ", "\n            </a>\n            <sl-menu>            \n            ", "\n              </sl-menu-item>\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                  Manage Account\n              </sl-menu-item>\n              ", "\n              <sl-menu-item @click=\"", "\">\n                <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                  Sign Out\n              </sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n        </nav>\n      </div>\n    </header>\n    <sl-drawer class=\"app-side-menu\" placement=\"left\">\n      <div class=\"sidenav-content\">\n        <!-- <div class=\"top-menus\"> -->\n          <!-- <img class=\"app-side-menu-logo\" src=\"/images/logo.svg\"> -->\n          <!-- <nav class=\"app-side-menu-items\"> -->\n            <!-- <a href=\"/\" @click=\"", "\">Dashboard</a> -->\n            <!-- <a href=\"/hairdressers\" @click=\"", "\">Find a Hairdresser</a>\n            <a href=\"/haircute\" @click=\"", "\">Find a Haircut</a>\n            <a href=\"/favouriteHaircuts\" @click=\"", "\">Hairdressers</a>\n            <a href=\"/profile\" @click=\"", "\">Profile</a>\n            <a href=\"#\" @click=\"", "\">Sign Out</a> -->\n          <!-- </nav>   -->\n        <!-- </div> -->\n\n        <!-- accordion (details) container to list all entities categorically -->\n        <div class=\"accordion-container\">\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n          <div class=\"accordion-menu\">\n            <sl-details class=\"dashboard-button\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">dashboard</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Dashboard</span></sl-details>\n            <sl-details class=\"details places-list\" summary=\"Places\" ><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">home</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Places</span></sl-details>\n            <sl-details class=\"details devices-list\" summary=\"Devices\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">sensors</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Devices</span></sl-details>\n            ", "\n          </div>\n          <style>\n            .details-group-example sl-details:not(:last-of-type) {\n              margin-bottom: var(--sl-spacing-xx-small);\n            }\n          </style>\n        </div>\n        <!--  -->\n        <div class=\"bottom-menus\">\n          <nav class=\"app-side-nav\">\n            <!-- <a href=\"/\" @click=\"", "\">Home</a>         -->\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"bell-icon-sidenav\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"alert-icon-sidenav\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <sl-dropdown skidding=\"-109\" distance=\"10\">\n              <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 2rem; color: white;\"></sl-icon>\n              </a>\n              <sl-menu class=\"left-menu\">            \n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n                <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n            <sl-dropdown skidding=\"-171\" distance=\"10\" class=\"dropdowns-left\">\n              <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n                <sl-avatar image=", ">\n              </a>\n              <sl-menu class=\"left-menu\">            \n                ", "\n                  </sl-menu-item>\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                    <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                      Manage Account\n                  </sl-menu-item>\n                  ", "\n                  <sl-menu-item @click=\"", "\">\n                    <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                      Sign Out\n                  </sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n          </nav>\n        </div>\n      </div>\n    </sl-drawer>\n    "]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -10005,15 +9956,31 @@ customElements.define('va-app-header', class AppHeader extends _litElement.LitEl
     this.navActiveLinks();
     const container = this.shadowRoot.querySelector('.accordion-menu');
     const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
-    const signupDialog = this.shadowRoot.querySelector('.signup-dialog'); // signinDialog.show()
+    const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
+    const menuItems = this.shadowRoot.querySelectorAll('sl-menu-item'); // set click event listener for menu items
+
+    menuItems.forEach(menuItem => {
+      menuItem.addEventListener('click', e => {
+        console.log("Target clicked was: ".concat(e.target.id));
+
+        if (e.target.id === 'register-user') {
+          signupDialog.show();
+        }
+      });
+    }); // if user is not signed in do not allow them to cancel the dialogs, otherwise
+    // a signed in user is creating a new user and should be able to dismiss it
 
     if (typeof _Auth.default.currentUser.accessLevel === 'undefined') signinDialog.show();
-    signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
-    signupDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault()); // Close all other details when one is shown
+
+    if (!localStorage.accessLevel >= 1) {
+      signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
+      signupDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
+    } // Close all other details when one is shown
+
 
     container.addEventListener('sl-show', event => {
       [...container.querySelectorAll('sl-details')].map(details => details.open = event.target === details);
-    });
+    }); // if user is signed in then load all the collections for rendering
 
     if (localStorage.accessLevel >= 1) {
       collections.places = await _FetchAPI.default.getPlacesAsync();
@@ -10022,10 +9989,11 @@ customElements.define('va-app-header', class AppHeader extends _litElement.LitEl
 
       this.renderPlacesButtons();
       this.renderItemsButtons();
-      this.renderUsersButtons();
+      localStorage.accessLevel == 2 ? this.renderUsersButtons() : "";
       const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
-      signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault()); // if (this.show) signinDialog.show()
-    }
+      signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
+    } // switch between sign in and sign up dialogs based on user selection and supplied target
+
 
     const toggleDialogs = this.shadowRoot.querySelectorAll('.toggle-dialogs');
     toggleDialogs.forEach(toggleDialog => {
@@ -10036,8 +10004,7 @@ customElements.define('va-app-header', class AppHeader extends _litElement.LitEl
         } else {
           signupDialog.hide();
           signinDialog.show();
-        } // console.log(e.target.textContent)
-
+        }
       });
     });
   }
@@ -10123,27 +10090,22 @@ customElements.define('va-app-header', class AppHeader extends _litElement.LitEl
   }
 
   signInSubmitHandler(e) {
-    e.preventDefault();
+    e.preventDefault(); // determine which dialog is sending the submit call to be able to carry out appropriate post method
+
     const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
     const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
     const formData = e.detail.formData;
-    const submitBtn = this.shadowRoot.querySelector('.submit-btn');
-    console.log("button clicked");
-    console.log(e.target);
-    console.log("Form data is: ".concat(JSON.stringify(e.detail.formData)));
+    const submitBtn = this.shadowRoot.querySelector('.submit-btn'); // console.log("button clicked")
+    // console.log(e.target.innerText)
+    // console.log(`Form data is: ${JSON.stringify(e.detail.formData)}`)
 
-    if (e.target.childNodes[13].textContent === "Sign Up") {
-      // sign up using Auth
-      _Auth.default.signUp(formData, () => {
-        submitBtn.removeAttribute('loading');
-        console.log(formData);
-      });
-    } else if (e.target.childNodes[5].innerText === "Sign In") {
+    console.log(e.target);
+
+    if (e.target.innerText === "Sign In") {
       submitBtn.setAttribute('loading', ''); // sign in using Auth    
 
       _Auth.default.signIn(formData, () => {
         submitBtn.removeAttribute('loading');
-        console.log(formData);
       });
 
       console.log(localStorage.accessLevel);
@@ -10151,12 +10113,36 @@ customElements.define('va-app-header', class AppHeader extends _litElement.LitEl
       if (localStorage.accessLevel >= 1) {
         signinDialog.hide();
         submitBtn.removeAttribute('loading');
-      }
+      } // sign up user
+
+    } else {
+      // if its not an admin then append default user values
+      if (localStorage.accessLevel != 2) {
+        formData.append('accessLevel', '1');
+        formData.append('imageURL', "");
+      } // if user creating account is admin then convert toggle buttons to input values
+      else {} // sign up using Auth
+
+
+      _Auth.default.signUp(formData, () => {
+        submitBtn.removeAttribute('loading');
+      }, () => {
+        signupDialog.hide();
+        submitBtn.removeAttribute('loading'); // if the person registered the new user is signed in then don't prompt them to log in
+
+        if (!localStorage.accessLevel >= 1) signinDialog.show(); // If the user is admin then refresh their users list
+
+        if (localStorage.accessLevel == 2) {
+          _FetchAPI.default.getUsersAsync();
+
+          this.renderUsersButtons();
+        }
+      });
     }
   }
 
   render() {
-    return (0, _litElement.html)(_templateObject(), this.signInSubmitHandler, this.signInSubmitHandler, _Auth.default.currentUser.accessLevel == 2 ? (0, _litElement.html)(_templateObject2()) : "", this.hamburgerClick, e => e.preventDefault(), e => e.preventDefault(), e => e.preventDefault(), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile'), e => e.preventDefault(), this.user && this.user.imageURL ? "".concat(_App.default.apiBase, "/images/").concat(this.user.imageURL) : "", this.user && this.user.firstName, _Auth.default.currentUser.accessLevel == 2 ? (0, _litElement.html)(_templateObject3(), () => (0, _Router.gotoRoute)('/profile')) : "", () => (0, _Router.gotoRoute)('/editProfile'), _Auth.default.currentUser.accessLevel == 2 ? (0, _litElement.html)(_templateObject4(), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile'), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile')) : "", () => _Auth.default.signOut(), this.menuClick, this.menuClick, this.menuClick, this.menuClick, this.menuClick, () => _Auth.default.signOut(), _Router.anchorRoute, e => e.preventDefault(), e => e.preventDefault(), e => e.preventDefault(), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile'), e => e.preventDefault(), this.user && this.user.avatar ? "".concat(_App.default.apiBase, "/images/").concat(this.user.avatar) : "", _Auth.default.currentUser.accessLevel == 2 ? (0, _litElement.html)(_templateObject5(), () => (0, _Router.gotoRoute)('/profile')) : "", () => (0, _Router.gotoRoute)('/editProfile'), _Auth.default.currentUser.accessLevel == 2 ? (0, _litElement.html)(_templateObject6(), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile'), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile')) : "", () => _Auth.default.signOut());
+    return (0, _litElement.html)(_templateObject(), this.signInSubmitHandler, this.signInSubmitHandler, _Auth.default.currentUser.accessLevel == 2 ? (0, _litElement.html)(_templateObject2()) : "", this.hamburgerClick, e => e.preventDefault(), e => e.preventDefault(), e => e.preventDefault(), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile'), e => e.preventDefault(), this.user && this.user.imageURL ? "".concat(_App.default.apiBase, "/images/").concat(this.user.imageURL) : "", this.user && this.user.firstName, _Auth.default.currentUser.accessLevel == 2 ? (0, _litElement.html)(_templateObject3()) : "", () => (0, _Router.gotoRoute)('/editProfile'), _Auth.default.currentUser.accessLevel == 2 ? (0, _litElement.html)(_templateObject4(), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile'), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile')) : "", () => _Auth.default.signOut(), this.menuClick, this.menuClick, this.menuClick, this.menuClick, this.menuClick, () => _Auth.default.signOut(), localStorage.accessLevel == 2 ? (0, _litElement.html)(_templateObject5()) : "", _Router.anchorRoute, e => e.preventDefault(), e => e.preventDefault(), e => e.preventDefault(), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile'), e => e.preventDefault(), this.user && this.user.avatar ? "".concat(_App.default.apiBase, "/images/").concat(this.user.avatar) : "", _Auth.default.currentUser.accessLevel == 2 ? (0, _litElement.html)(_templateObject6(), () => (0, _Router.gotoRoute)('/profile')) : "", () => (0, _Router.gotoRoute)('/editProfile'), _Auth.default.currentUser.accessLevel == 2 ? (0, _litElement.html)(_templateObject7(), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile'), () => (0, _Router.gotoRoute)('/profile'), () => (0, _Router.gotoRoute)('/editProfile')) : "", () => _Auth.default.signOut());
   }
 
 });
@@ -10244,442 +10230,7 @@ class AccordionButton extends _litElement.LitElement {
 }
 
 customElements.define('aa-accordion-button', AccordionButton);
-},{"@polymer/lit-element":"../node_modules/@polymer/lit-element/lit-element.js","../Router":"Router.js","../Auth":"Auth.js","../App":"App.js"}],"components/aa-signin-dialog.js":[function(require,module,exports) {
-// import { LitElement, html, css } from "@polymer/lit-element";
-// import { anchorRoute, gotoRoute } from '../Router'
-// import Auth from '../Auth'
-// import App from '../App'
-// // const template = document.createElement
-// class SignIn extends LitElement {
-//     constructor() {
-//         super()
-//     }
-//     // element attributes
-//     static get properties() {
-//         return {
-//             textContent: {
-//                 type: String
-//             },
-//             icon: {
-//                 type: String
-//             },
-//             path: {
-//                 type: String
-//             },
-//             show: {
-//                 type: String
-//             }
-//         }
-//     }
-//     firstUpdated() {
-//         super.firstUpdated()
-//         const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
-//         // const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
-//         // const openButton = signinDialog.nextElementSibling;
-//         // const closeButton = signinDialog.querySelector('sl-button[slot="footer"]');
-//         // openButton.addEventListener('click', () => signinDialog.show());
-//         // closeButton.addEventListener('click', () => signinDialog.hide());
-//         signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
-//         // console.log(`Current user is: ${Auth.currentUser._id}`)
-//         if (this.show) signinDialog.show() // keep?
-//     console.log(`JS section... Signed user is: ${this.show}`)
-//         // const toggleDialogs = this.shadowRoot.querySelector('.toggle-dialogs')
-//         // toggleDialogs.addEventListener('click', () => {
-//            // // signinDialog.hide()
-//            // // // console.log("Hiding sigin dialog")
-//             //// signupDialog.show()
-//             // signinDialog.open() ? signinDialog.hide() : signinDialog.show()
-//             // signupDialog.open() ? signupDialog.hide() : signupDialog.show()
-//         //// })
-//     }
-//     signInSubmitHandler(e) {
-//         e.preventDefault()
-//         const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
-//         const formData = e.detail.formData
-//         const submitBtn = this.shadowRoot.querySelector('.submit-btn')
-//         submitBtn.setAttribute('loading', '')
-//             // sign in using Auth    
-//         Auth.signIn(formData, () => {
-//             submitBtn.removeAttribute('loading')
-//         })
-//         console.log(localStorage.accessLevel)
-//         if (localStorage.accessLevel >= 1) {
-//             console.log("Valid id")
-//             signinDialog.hide()
-//             submitBtn.removeAttribute('loading')
-//             // this.show = false
-//                 // this.hide()
-//         }
-//     }
-//     render() {
-//             return html `
-//         <style>
-//             .dialog-heading{
-//                 display: flex; 
-//                 align-items: center; 
-//                 justify-content: center; 
-//                 font-size: 1.5rem; 
-//                 font-weight: 900;
-//                 color: white;
-//             }
-//             .flex-center{
-//                 display:flex;
-//                 align-items: center;
-//                 justify-content: center;
-//             }
-//             sl-dialog::part(panel){
-//                 background: var(--dialog-background);
-//             }
-//             .pad-bottom{
-//                 padding-bottom: 20px;
-//             }
-//             /* .signin-dialog{
-//                 display: block;
-//             }
-//             .signup-dialog{
-//                 display:block;
-//             } */
-//         </style>
-// ${    console.log(`HTML section... Signed user is: ${this.show}`)}
-//         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-//             <sl-dialog no-header="true" slot="label" class="signin-dialog" style="--width: 30vw;">
-//             <span class="dialog-heading">Sign in</span>
-//             <div class="page-content page-centered">
-//                 <div class="signinup-box">
-//                 <div class="flex-center">
-//                     <div class="material-icons" style="font-size: 8rem; margin: 1rem; color: white;">account_circle</div>          
-//                 </div>
-//                 <sl-form class="form-signup dark-theme" @sl-submit=${this.signInSubmitHandler}>          
-//                     <div class="input-group">
-//                     <sl-input class="pad-bottom" name="email" type="email" placeholder="Email" required></sl-input>
-//                     </div>
-//                     <div class="input-group">
-//                     <sl-input class="pad-bottom" name="password" type="password" placeholder="Password" required toggle-password></sl-input>
-//                     </div>
-//                     <sl-button class="submit-btn" type="primary" submit style="width: 100%;">Sign In</sl-button>
-//                 </sl-form>
-//                 <p>No Account? <span class="toggle-dialogs">Sign Up</span></p>
-//                 </div>
-//             </div>
-//             </sl-dialog>
-//             <!-- <sl-dialog no-header="true" slot="label" class="signup-dialog" style="--width: 30vw;">
-//             <span class="dialog-heading">Sign up</span>
-//             <div class="page-content page-centered">
-//                 <div class="signupup-box">
-//                     <div class="flex-center">
-//                         <div class="material-icons" style="font-size: 8rem; margin: 1rem; color: white;">account_circle</div>          
-//                     </div>
-//                     <sl-form class="form-signup" @sl-submit=${this.signUpSubmitHandler}>
-//                         <div class="input-group">
-//                             <sl-input name="firstName" type="text" placeholder="First Name" required></sl-input>
-//                         </div>
-//                         <div class="input-group">
-//                             <sl-input name="lastName" type="text" placeholder="Last Name" required></sl-input>
-//                         </div>
-//                         <div class="input-group">
-//                             <sl-input name="email" type="email" placeholder="Email" required></sl-input>
-//                         </div>
-//                         <div class="input-group">
-//                             <sl-input name="password" type="password" placeholder="Password" required toggle-password></sl-input>
-//                         </div>            
-//                         <div class="input-group">
-//                             <sl-select name="accessLevel" placeholder="I am a ...">
-//                                 <sl-menu-item value="1">Customer</sl-menu-item>
-//                                 <sl-menu-item value="2">Hairdresser</sl-menu-item>
-//                             </sl-select>
-//                         </div>         
-//                         <sl-button type="primary" class="submit-btn" submit style="width: 100%;">Sign Up</sl-button>
-//                     </sl-form>
-//                     <p>No Account? <span class="toggle-dialogs">Sign Up</span></p>
-//                 </div>
-//             </div>
-//             </sl-dialog> -->
-//         <!-- <style>
-//             h3{
-//                 margin: 1rem;
-//             }
-//             .container{
-//                 position: relative;
-//                 border-bottom: 1px solid;
-//                 color: white;
-//                 background: var(--brand-color);
-//                 width: 100%;
-//                 height: 100%;
-//                 display: flex;
-//                 justify-content: flex-start;
-//                 align-items: center;
-//             }
-//             .container:hover{
-//                 color: var(--brand-color);
-//                 background: white;
-//                 border: 0 1px 1px 1px solid white;
-//                 cursor: pointer;
-//             }
-//             .icon{
-//                 padding-left: 2rem;
-//                 display: flex;
-//                 justify-content: center;
-//                 align-items: center;
-//             }
-//             .icon slot{
-//                 width: 2rem;
-//             }
-//             .active-indicator{
-//                 height: 100%; 
-//                 width: 10px; 
-//                 position: absolute; 
-//                 right: 0;
-//             }
-//             .active-indicator.active{
-//                 background: white;
-//             }
-//         </style>
-//         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-//             <div class="container" part="container">
-//             ${this.path === "icons" ? html`
-//             <span class="material-icons icon" style="font-size: 2rem;">${this.icon}</span>
-//             `: html`
-//             <img class="icon" style="width: auto; height: 40px;" src=${this.icon}></span>
-//             `}
-//             <h3>${this.textContent}</h3>
-//             <div class="active-indicator" part="active-indicator"></div>
-//         </div> -->
-// <!-- 
-//         <style>
-//             .dialog-heading{
-//                 display: flex; 
-//                 align-items: center; 
-//                 justify-content: center; 
-//                 font-size: 1.5rem; 
-//                 font-weight: 900;
-//                 color: white;
-//             }
-//             /* .dialog__body::part(body){
-//                 display:none;
-//             } */
-//             .flex-center{
-//                 display:flex;
-//                 align-items: center;
-//                 justify-content: center;
-//             }
-//             sl-dialog::part(panel){
-//                 background: var(--dialog-background);
-//             }
-//             .pad-bottom{
-//                 padding-bottom: 20px;
-//             }
-//         </style>
-//         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-//             <sl-dialog no-header="true" slot="label" class="signup-dialog" style="--width: 30vw;">
-//             <span class="dialog-heading">Sign up</span>
-//             <div class="page-content page-centered">
-//                 <div class="signupup-box">
-//                     <div class="flex-center">
-//                         <div class="material-icons" style="font-size: 8rem; margin: 1rem; color: white;">account_circle</div>          
-//                     </div>
-//                     <sl-form class="form-signup" @sl-submit=${this.signUpSubmitHandler}>
-//                         <div class="input-group">
-//                             <sl-input name="firstName" type="text" placeholder="First Name" required></sl-input>
-//                         </div>
-//                         <div class="input-group">
-//                             <sl-input name="lastName" type="text" placeholder="Last Name" required></sl-input>
-//                         </div>
-//                         <div class="input-group">
-//                             <sl-input name="email" type="email" placeholder="Email" required></sl-input>
-//                         </div>
-//                         <div class="input-group">
-//                             <sl-input name="password" type="password" placeholder="Password" required toggle-password></sl-input>
-//                         </div>            
-//                         <div class="input-group">
-//                             <sl-select name="accessLevel" placeholder="I am a ...">
-//                                 <sl-menu-item value="1">Customer</sl-menu-item>
-//                                 <sl-menu-item value="2">Hairdresser</sl-menu-item>
-//                             </sl-select>
-//                         </div>         
-//                         <sl-button type="primary" class="submit-btn" submit style="width: 100%;">Sign Up</sl-button>
-//                     </sl-form>
-//                     <p>No Account? <span class="toggle-dialogs">Sign Up</span></p>
-//                 </div>
-//             </div>
-// </sl-dialog> -->
-//         `
-//     }
-// }
-// customElements.define('aa-signin-dialog', SignIn)
-},{}],"components/aa-signup-dialog.js":[function(require,module,exports) {
-// import { LitElement, html, css } from "@polymer/lit-element";
-// import { anchorRoute, gotoRoute } from '../Router'
-// import Auth from '../Auth'
-// import App from '../App'
-// // const template = document.createElement
-// class Signup extends LitElement {
-//     constructor() {
-//         super()
-//     }
-//     // element attributes
-//     static get properties() {
-//         return {
-//             textContent: {
-//                 type: String
-//             },
-//             icon: {
-//                 type: String
-//             },
-//             path: {
-//                 type: String
-//             },
-//             active: {
-//                 type: String
-//             }
-//         }
-//     }
-//     firstUpdated() {
-//         super.firstUpdated()
-//         const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
-//         const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
-//         // const openButton = signupDialog.nextElementSibling;
-//         // const closeButton = signupDialog.querySelector('sl-button[slot="footer"]');
-//         // openButton.addEventListener('click', () => signupDialog.show());
-//         // closeButton.addEventListener('click', () => signupDialog.hide());
-//         signupDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
-//         // console.log(`Current user is: ${Auth.currentUser._id}`)
-//         // if (typeof Auth.currentUser.accessLevel === 'undefined') signupDialog.show() // keep?
-//         const toggleDialogs = this.shadowRoot.querySelector('.toggle-dialogs')
-//         toggleDialogs.addEventListener('click', () => {
-//             signupDialog.hide()
-//             console.log("Hiding signup dialog")
-//             signinDialog.show()
-//         })
-//     }
-//     signupSubmitHandler(e) {
-//         e.preventDefault()
-//         const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
-//         const formData = e.detail.formData
-//         const submitBtn = this.shadowRoot.querySelector('.submit-btn')
-//         submitBtn.setAttribute('loading', '')
-//             // sign in using Auth    
-//         Auth.signup(formData, () => {
-//             submitBtn.removeAttribute('loading')
-//         })
-//         console.log(localStorage.accessLevel)
-//         if (localStorage.accessLevel >= 1) {
-//             console.log("Valid id")
-//             signupDialog.hide()
-//             submitBtn.removeAttribute('loading')
-//                 // this.hide()
-//         }
-//     }
-//     render() {
-//             return html `
-//         <style>
-//             .dialog-heading{
-//                 display: flex; 
-//                 align-items: center; 
-//                 justify-content: center; 
-//                 font-size: 1.5rem; 
-//                 font-weight: 900;
-//                 color: white;
-//             }
-//             .flex-center{
-//                 display:flex;
-//                 align-items: center;
-//                 justify-content: center;
-//             }
-//             sl-dialog::part(panel){
-//                 background: var(--dialog-background);
-//             }
-//             .pad-bottom{
-//                 padding-bottom: 20px;
-//             }
-//         </style>
-//         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-//             <sl-dialog no-header="true" slot="label" class="signup-dialog" style="--width: 30vw;">
-//             <span class="dialog-heading">Sign up</span>
-//             <div class="page-content page-centered">
-//                 <div class="signupup-box">
-//                 <div class="flex-center">
-//                     <div class="material-icons" style="font-size: 8rem; margin: 1rem; color: white;">account_circle</div>          
-//                 </div>
-//                 <sl-form class="form-signup" @sl-submit=${this.signUpSubmitHandler}>
-//                     <div class="input-group">
-//                     <sl-input name="firstName" type="text" placeholder="First Name" required></sl-input>
-//                     </div>
-//                     <div class="input-group">
-//                     <sl-input name="lastName" type="text" placeholder="Last Name" required></sl-input>
-//                     </div>
-//                     <div class="input-group">
-//                     <sl-input name="email" type="email" placeholder="Email" required></sl-input>
-//                     </div>
-//                     <div class="input-group">
-//                     <sl-input name="password" type="password" placeholder="Password" required toggle-password></sl-input>
-//                     </div>            
-//                     <div class="input-group">
-//                     <sl-select name="accessLevel" placeholder="I am a ...">
-//                         <sl-menu-item value="1">Customer</sl-menu-item>
-//                         <sl-menu-item value="2">Hairdresser</sl-menu-item>
-//                     </sl-select>
-//                     </div>         
-//                     <sl-button type="primary" class="submit-btn" submit style="width: 100%;">Sign Up</sl-button>
-//                 </sl-form>
-//                 <p>No Account? <span class="toggle-dialogs">Sign Up</span></p>
-//                 </div>
-//             </div>
-// </sl-dialog>
-//         <!-- <style>
-//             h3{
-//                 margin: 1rem;
-//             }
-//             .container{
-//                 position: relative;
-//                 border-bottom: 1px solid;
-//                 color: white;
-//                 background: var(--brand-color);
-//                 width: 100%;
-//                 height: 100%;
-//                 display: flex;
-//                 justify-content: flex-start;
-//                 align-items: center;
-//             }
-//             .container:hover{
-//                 color: var(--brand-color);
-//                 background: white;
-//                 border: 0 1px 1px 1px solid white;
-//                 cursor: pointer;
-//             }
-//             .icon{
-//                 padding-left: 2rem;
-//                 display: flex;
-//                 justify-content: center;
-//                 align-items: center;
-//             }
-//             .icon slot{
-//                 width: 2rem;
-//             }
-//             .active-indicator{
-//                 height: 100%; 
-//                 width: 10px; 
-//                 position: absolute; 
-//                 right: 0;
-//             }
-//             .active-indicator.active{
-//                 background: white;
-//             }
-//         </style>
-//         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-//             <div class="container" part="container">
-//             ${this.path === "icons" ? html`
-//             <span class="material-icons icon" style="font-size: 2rem;">${this.icon}</span>
-//             `: html`
-//             <img class="icon" style="width: auto; height: 40px;" src=${this.icon}></span>
-//             `}
-//             <h3>${this.textContent}</h3>
-//             <div class="active-indicator" part="active-indicator"></div>
-//         </div> -->
-//         `
-//     }
-// }
-// customElements.define('aa-signup-dialog', Signup)
-},{}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"@polymer/lit-element":"../node_modules/@polymer/lit-element/lit-element.js","../Router":"Router.js","../Auth":"Auth.js","../App":"App.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -10760,10 +10311,6 @@ require("./components/va-app-header");
 
 require("./components/aa-accordion-button");
 
-require("./components/aa-signin-dialog");
-
-require("./components/aa-signup-dialog");
-
 require("./scss/master.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -10774,7 +10321,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 document.addEventListener('DOMContentLoaded', () => {
   _App.default.init();
 });
-},{"./App.js":"App.js","./components/va-app-header":"components/va-app-header.js","./components/aa-accordion-button":"components/aa-accordion-button.js","./components/aa-signin-dialog":"components/aa-signin-dialog.js","./components/aa-signup-dialog":"components/aa-signup-dialog.js","./scss/master.scss":"scss/master.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./App.js":"App.js","./components/va-app-header":"components/va-app-header.js","./components/aa-accordion-button":"components/aa-accordion-button.js","./scss/master.scss":"scss/master.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -10802,7 +10349,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51125" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55683" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
