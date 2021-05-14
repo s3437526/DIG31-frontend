@@ -4,18 +4,18 @@ import { gotoRoute, anchorRoute } from '../../Router'
 import Auth from '../../Auth'
 import Utils from '../../Utils'
 
-class HairdressersView {
+class DevicesView {
     init() {
-        document.title = 'Hairdressers'
+        document.title = 'Devices'
         this.render()
         Utils.pageIntroAnim()
     }
 
     render() {
         const template = html `
-      <va-app-header title="Hairdressers" user="${JSON.stringify(Auth.currentUser)}"></va-app-header>
+      <va-app-header title="Devices" user="${JSON.stringify(Auth.currentUser)}"></va-app-header>
       <div class="page-content">        
-        <h1>Hairdressers</h1>
+        <h1>Devices</h1>
         <p>Page content ...</p>
         
       </div>      
@@ -25,4 +25,4 @@ class HairdressersView {
 }
 
 
-export default new HairdressersView()
+export default new DevicesView()

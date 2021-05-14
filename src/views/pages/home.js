@@ -18,7 +18,7 @@ class HomeView {
       <aa-signup-dialog></aa-signup-dialog> -->
       <va-app-header title="Sign in/Sign up" user=${JSON.stringify(Auth.currentUser)}></va-app-header>
       <div class="page-content">
-        
+
       </div>
     `
         render(template, App.rootEl)

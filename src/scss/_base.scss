@@ -94,6 +94,21 @@ a {
     &.no-pad {
         padding: 0;
     }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+aa-panel-template {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 95%;
+    width: 98%;
+}
+
+aa-panel-template::part(container) {
+    // background-color: orange;
 }
 
 .page-centered {
@@ -123,6 +138,17 @@ a {
         width: 100%;
         height: auto;
     }
+}
+
+.panel-background {
+    // position: relative;
+    // color: white;
+    // background: var(--panel-color);
+    // width: 95%;
+    // height: 95%;
+    // border-radius: 10px;
+    // border: 1px solid #707070;
+    // box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.65);
 }
 
 // RESPONSIVE - MOBILE -------------------

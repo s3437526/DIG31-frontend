@@ -34,9 +34,12 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 menuItems.forEach(menuItem => {
                     menuItem.addEventListener('click', (e) => {
                         console.log(`Target clicked was: ${e.target.id}`)
-                        if (e.target.id === 'register-user') {
+                        if (e.target.id === 'register-user' || e.target.id === 'regsiter-user-side') {
                             signupDialog.show()
                         }
+                        // else if(e.target.id === 'manage-account' || e.target.id === 'manage-account-side'){
+
+                        // }
                     })
                 })
 
@@ -208,10 +211,6 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                             // If the user is admin then refresh their users list
                         if (localStorage.accessLevel == 2) {
                             window.location.reload()
-                                //     FetchAPI.getUsersAsync()
-                                //     this.renderUsersButtons()
-                                //     console.log("Refreshing users collection...")
-                                //     console.log(e.target)
                         }
                     })
                 }
@@ -604,7 +603,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                   Register User
               ` : ``}
               </sl-menu-item>
-              <sl-menu-item @click="${() => gotoRoute('/editProfile')}">
+              <sl-menu-item class="manage-account" id="manage-account" @click="${() => gotoRoute('/users')}">
                 <sl-icon class="dropdown-icon" slot="prefix" name="person"></sl-icon>
                 <sl-icon class="add-icon" slot="prefix" name="gear-fill"></sl-icon>
                   Manage Account
@@ -685,13 +684,13 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
               </a>
               <sl-menu class="left-menu">            
                 ${Auth.currentUser.accessLevel == 2 ? html`
-                  <sl-menu-item @click="${() => gotoRoute('/profile')}">
+                  <sl-menu-item class="register-user" id="register-user-side">
                     <sl-icon class="dropdown-icon" slot="prefix" name="person"></sl-icon>
                     <sl-icon class="settings-icon" slot="prefix" name="plus"></sl-icon>
                       Register User
                   ` : ``}
                   </sl-menu-item>
-                  <sl-menu-item @click="${() => gotoRoute('/editProfile')}">
+                  <sl-menu-item class="manage-account" id="manage-account-side" @click="${() => gotoRoute('/users')}">
                     <sl-icon class="dropdown-icon" slot="prefix" name="person"></sl-icon>
                     <sl-icon class="add-icon" slot="prefix" name="gear-fill"></sl-icon>
                       Manage Account

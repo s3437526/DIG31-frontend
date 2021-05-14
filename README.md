@@ -16,3 +16,4 @@ TODO
 - Fix focus on sign up and sign in dialogs
 - Condense and streamline all code especially in va-app-header
 - Dynamically append dialogs to the top of the page (over the navbar) (week 9 lecure 51mins though - lit-html) and remove on close instead of rendering in body
+- Add username to user collections
