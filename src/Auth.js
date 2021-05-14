@@ -22,20 +22,22 @@ class Auth {
         })
 
         console.log(`Auth.js signup method receiving user data as: ${JSON.stringify(userData)}`)
-        // if response not ok
+            // if response not ok
         if (!response.ok) {
             // console log error
             const err = await response.json()
             if (err) console.log(err)
-            // show error      
+                // show error      
             Toast.show(`Problem creating user: ${response.status}`)
-            // run fail() functon if set
+                // run fail() functon if set
             if (typeof fail == 'function') fail()
         } else if (response.ok) {
             /// sign up success - show toast and redirect to sign in page
-            Toast.show('Account created, please sign in')
+            localStorage.accessLevel >= 1 ?
+                Toast.show('Account created') :
+                Toast.show('Account created, please sign in')
             pass()
-            // redirect to signin
+                // redirect to signin
             gotoRoute('/')
         } else {
             // show error      
@@ -55,9 +57,9 @@ class Auth {
             // console log error
             const err = await response.json()
             if (err) console.log(err)
-            // show error      
+                // show error      
             Toast.show(`Problem signing in: ${err.message}`, 'error')
-            // run fail() functon if set
+                // run fail() functon if set
             if (typeof fail == 'function') fail()
             return
         }
@@ -65,19 +67,19 @@ class Auth {
         // sign in success
         const data = await response.json()
         Toast.show(`Welcome  ${data.user.firstName}`)
-        // save access token (jwt) to local storage
+            // save access token (jwt) to local storage
         localStorage.setItem('accessToken', data.accessToken)
-        // set current user
+            // set current user
         this.currentUser = data.user
         localStorage.setItem('accessLevel', data.user.accessLevel)
 
         // Initialise router and load all relevant entities
         Router.init()
-        // await FetchAPI.getPlacesAsync()
-        // await FetchAPI.getItemsAsync()
-        // console.log(`Localstorage user is: ${this.currentUser.accessLevel}`)
-        // localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
-        // redirect to home
+            // await FetchAPI.getPlacesAsync()
+            // await FetchAPI.getItemsAsync()
+            // console.log(`Localstorage user is: ${this.currentUser.accessLevel}`)
+            // localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
+            // redirect to home
         gotoRoute('/')
         window.location.reload()
     }
@@ -91,7 +93,7 @@ class Auth {
         if (!localStorage.accessToken) {
             // no local token!
             Toast.show("Please sign in")
-            // redirect to sign in page      
+                // redirect to sign in page      
             gotoRoute('/')
             return
         }
@@ -109,35 +111,35 @@ class Auth {
             // console log error
             const err = await response.json()
             if (err) console.log(err)
-            // delete local token
+                // delete local token
             localStorage.removeItem('accessToken')
             localStorage.removeItem('user')
             localStorage.removeItem('accessLevel')
             Toast.show("session expired, please sign in")
-            // redirect to sign in      
+                // redirect to sign in      
             gotoRoute('/')
             return
         }
 
         // token is valid!
         const data = await response.json()
-        // console.log(data)
-        // set currentUser obj
+            // console.log(data)
+            // set currentUser obj
         this.currentUser = data.user
-        // run success
+            // run success
         success()
     }
 
     signOut() {
         Toast.show("You are signed out")
-        // delete local token
+            // delete local token
         localStorage.removeItem('accessToken')
         localStorage.removeItem('user')
         localStorage.removeItem('accessLevel')
-        // redirect to sign in    
+            // redirect to sign in    
         gotoRoute('/')
         window.location.reload()
-        // unset currentUser
+            // unset currentUser
         this.currentUser = null
     }
 }

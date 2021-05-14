@@ -7,216 +7,217 @@ import FetchAPI from '../FetchAPI'
 let places, items, users = [{}]
 let collections = [{ places, items, users }]
 customElements.define('va-app-header', class AppHeader extends LitElement {
-  constructor() {
-    super()
-  }
+            constructor() {
+                super()
+            }
 
-  static get properties() {
-    return {
-      title: {
-        type: String
-      },
-      user: {
-        type: Object
-      }
-    }
-  }
+            static get properties() {
+                return {
+                    title: {
+                        type: String
+                    },
+                    user: {
+                        type: Object
+                    }
+                }
+            }
 
-  async firstUpdated() {
-    super.firstUpdated()
-    this.navActiveLinks()
-    const container = this.shadowRoot.querySelector('.accordion-menu');
-    const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
-    const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
-    const menuItems = this.shadowRoot.querySelectorAll('sl-menu-item')
+            async firstUpdated() {
+                super.firstUpdated()
+                this.navActiveLinks()
+                const container = this.shadowRoot.querySelector('.accordion-menu');
+                const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
+                const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
+                const menuItems = this.shadowRoot.querySelectorAll('sl-menu-item')
 
-    // set click event listener for menu items
-    menuItems.forEach(menuItem => {
-      menuItem.addEventListener('click', (e) => {
-        console.log(`Target clicked was: ${e.target.id}`)
-        if(e.target.id === 'register-user'){
-          signupDialog.show()
-        }
-      }) 
-    })
+                // set click event listener for menu items
+                menuItems.forEach(menuItem => {
+                    menuItem.addEventListener('click', (e) => {
+                        console.log(`Target clicked was: ${e.target.id}`)
+                        if (e.target.id === 'register-user') {
+                            signupDialog.show()
+                        }
+                    })
+                })
 
-    // if user is not signed in do not allow them to cancel the dialogs, otherwise
-    // a signed in user is creating a new user and should be able to dismiss it
-    if (typeof Auth.currentUser.accessLevel === 'undefined') signinDialog.show()
-    if (!localStorage.accessLevel >= 1){
-      signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
-      signupDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
-    } 
+                // if user is not signed in do not allow them to cancel the dialogs, otherwise
+                // a signed in user is creating a new user and should be able to dismiss it
+                if (typeof Auth.currentUser.accessLevel === 'undefined') signinDialog.show()
+                if (!localStorage.accessLevel >= 1) {
+                    signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault())
+                    signupDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault())
+                }
 
-    // Close all other details when one is shown
-    container.addEventListener('sl-show', event => {
-      [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));
-    });
+                // Close all other details when one is shown
+                container.addEventListener('sl-show', event => {
+                    [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));
+                });
 
-    // if user is signed in then load all the collections for rendering
-    if (localStorage.accessLevel >= 1) {
-      collections.places = await FetchAPI.getPlacesAsync()
-      collections.items = await FetchAPI.getItemsAsync()
-      collections.users = localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
+                // if user is signed in then load all the collections for rendering
+                if (localStorage.accessLevel >= 1) {
+                    collections.places = await FetchAPI.getPlacesAsync()
+                    collections.items = await FetchAPI.getItemsAsync()
+                    collections.users = localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
 
-      // these HAVE to be streamlined...waaay to repetitive! Do if time permits, otherwise after unit completion!
-      this.renderPlacesButtons()
-      this.renderItemsButtons()
-      localStorage.accessLevel == 2 ? this.renderUsersButtons() : ""
+                    // these HAVE to be streamlined...waaay to repetitive! Do if time permits, otherwise after unit completion!
+                    this.renderPlacesButtons()
+                    this.renderItemsButtons()
+                    localStorage.accessLevel == 2 ? this.renderUsersButtons() : ""
 
-      const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
-      signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault());
-    }
+                    const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
+                    signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault())
+                }
 
-    // switch between sign in and sign up dialogs based on user selection and supplied target
-    const toggleDialogs = this.shadowRoot.querySelectorAll('.toggle-dialogs')
-    toggleDialogs.forEach(toggleDialog => {
-      toggleDialog.addEventListener('click', (e) => {
+                // switch between sign in and sign up dialogs based on user selection and supplied target
+                const toggleDialogs = this.shadowRoot.querySelectorAll('.toggle-dialogs')
+                toggleDialogs.forEach(toggleDialog => {
+                    toggleDialog.addEventListener('click', (e) => {
+                        if (e.target.textContent === "Sign Up") {
+                            signinDialog.hide()
+                            signupDialog.show()
+                        } else {
+                            signupDialog.hide()
+                            signinDialog.show()
+                        }
+                    })
+                })
+            }
 
-        if (e.target.textContent === "Sign Up") {
-          signinDialog.hide()
-          signupDialog.show()
-        } else {
-          signupDialog.hide()
-          signinDialog.show()
-        }
-      })
-    })
-  }
+            async renderPlacesButtons() {
+                let list = this.shadowRoot.querySelector('.places-list')
+                collections.places.forEach(entity => {
+                    let itemElement = document.createElement('aa-accordion-button')
+                    itemElement.setAttribute('icon', entity.locationType.iconURL)
+                    itemElement.setAttribute('path', "icons")
+                    itemElement.append(entity.placeName)
+                    list.appendChild(itemElement)
+                    itemElement.addEventListener('click', () => {
+                        console.log(entity)
+                    })
+                })
+            }
 
-  async renderPlacesButtons() {
-    let list = this.shadowRoot.querySelector('.places-list')
-    collections.places.forEach(entity => {
-      let itemElement = document.createElement('aa-accordion-button')
-      itemElement.setAttribute('icon', entity.locationType.iconURL)
-      itemElement.setAttribute('path', "icons")
-      itemElement.append(entity.placeName)
-      list.appendChild(itemElement)
-      itemElement.addEventListener('click', () => {
-        console.log(entity)
-      })
-    })
-  }
+            async renderItemsButtons() {
+                let list = this.shadowRoot.querySelector('.devices-list')
+                collections.items.forEach(entity => {
+                    let itemElement = document.createElement('aa-accordion-button')
+                    itemElement.setAttribute('icon', `${entity.type.iconURL}`)
+                    itemElement.setAttribute('path', "icons")
+                    itemElement.append(entity.name)
+                    list.appendChild(itemElement)
+                    itemElement.addEventListener('click', () => {
+                        console.log(entity)
+                    })
+                })
+            }
 
-  async renderItemsButtons() {
-    let list = this.shadowRoot.querySelector('.devices-list')
-    collections.items.forEach(entity => {
-      let itemElement = document.createElement('aa-accordion-button')
-      itemElement.setAttribute('icon', `${entity.type.iconURL}`)
-      itemElement.setAttribute('path', "icons")
-      itemElement.append(entity.name)
-      list.appendChild(itemElement)
-      itemElement.addEventListener('click', () => {
-        console.log(entity)
-      })
-    })
-  }
+            renderImage(itemElement, entity) {
+                itemElement.setAttribute('icon', `${App.apiBase}/images/${entity.imageURL}`)
+                itemElement.setAttribute('path', "Images")
+            }
 
-  renderImage(itemElement, entity) {
-    itemElement.setAttribute('icon', `${App.apiBase}/images/${entity.imageURL}`)
-    itemElement.setAttribute('path', "Images")
-  }
+            renderIcon(itemElement) {
+                itemElement.setAttribute('icon', `account_circle`)
+                itemElement.setAttribute('path', "icons")
+            }
 
-  renderIcon(itemElement) {
-    itemElement.setAttribute('icon', `account_circle`)
-    itemElement.setAttribute('path', "icons")
-  }
+            async renderUsersButtons() {
+                let list = this.shadowRoot.querySelector('.users-list')
+                collections.users.forEach(entity => {
+                    let itemElement = document.createElement('aa-accordion-button')
+                    entity && entity.imageURL != "" ?
+                        this.renderImage(itemElement, entity) :
+                        this.renderIcon(itemElement)
+                    itemElement.append(entity.firstName, " ", entity.lastName)
+                    list.appendChild(itemElement)
+                    itemElement.addEventListener('click', () => {
+                        console.log(entity)
+                    })
+                })
+            }
 
-  async renderUsersButtons() {
-    let list = this.shadowRoot.querySelector('.users-list')
-    collections.users.forEach(entity => {
-      let itemElement = document.createElement('aa-accordion-button')
-      entity && entity.imageURL != "" ?
-        this.renderImage(itemElement, entity) :
-        this.renderIcon(itemElement)
-      itemElement.append(entity.firstName, " ", entity.lastName)
-      list.appendChild(itemElement)
+            navActiveLinks() {
+                const currentPath = window.location.pathname
+                const navLinks = this.shadowRoot.querySelectorAll('.app-top-nav a, .app-side-menu-items a')
+                navLinks.forEach(navLink => {
+                    if (navLink.href.slice(-1) == '#') return
+                    if (navLink.pathname === currentPath) {
+                        navLink.classList.add('active')
+                    }
+                })
+            }
 
-      itemElement.addEventListener('click', () => {
-        console.log(entity)
-      })
-    })
-  }
+            hamburgerClick() {
+                const appMenu = this.shadowRoot.querySelector('.app-side-menu')
+                appMenu.show()
+            }
 
-  navActiveLinks() {
-    const currentPath = window.location.pathname
-    const navLinks = this.shadowRoot.querySelectorAll('.app-top-nav a, .app-side-menu-items a')
-    navLinks.forEach(navLink => {
-      if (navLink.href.slice(-1) == '#') return
-      if (navLink.pathname === currentPath) {
-        navLink.classList.add('active')
-      }
-    })
-  }
+            menuClick(e) {
+                e.preventDefault()
+                const pathname = e.target.closest('a').pathname
+                const appSideMenu = this.shadowRoot.querySelector('.app-side-menu')
+                    // hide appMenu
+                appSideMenu.hide()
+                appSideMenu.addEventListener('sl-after-hide', () => {
+                    // goto route after menu is hidden
+                    gotoRoute(pathname)
+                })
+            }
 
-  hamburgerClick() {
-    const appMenu = this.shadowRoot.querySelector('.app-side-menu')
-    appMenu.show()
-  }
-
-  menuClick(e) {
-    e.preventDefault()
-    const pathname = e.target.closest('a').pathname
-    const appSideMenu = this.shadowRoot.querySelector('.app-side-menu')
-    // hide appMenu
-    appSideMenu.hide()
-    appSideMenu.addEventListener('sl-after-hide', () => {
-      // goto route after menu is hidden
-      gotoRoute(pathname)
-    })
-  }
-
-  signInSubmitHandler(e) {
-    e.preventDefault()
-    // determine which dialog is sending the submit call to be able to carry out appropriate post method
-    const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
-    const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
-    const formData = e.detail.formData
-    const submitBtn = this.shadowRoot.querySelector('.submit-btn')
-    // console.log("button clicked")
-    // console.log(e.target.innerText)
-    // console.log(`Form data is: ${JSON.stringify(e.detail.formData)}`)
-    console.log(e.target)
-    if (e.target.innerText === "Sign In") {
-      submitBtn.setAttribute('loading', '')
-      // sign in using Auth    
-      Auth.signIn(formData, () => {
-        submitBtn.removeAttribute('loading')
-      })
-      console.log(localStorage.accessLevel)
-      if (localStorage.accessLevel >= 1) {
-        signinDialog.hide()
-        submitBtn.removeAttribute('loading')
-      }
-      // sign up user
-    } else {
-      // if its not an admin then append default user values
-      if(localStorage.accessLevel != 2){
-        formData.append('accessLevel', '1')
-        formData.append('imageURL', "")
-      }
-      // if user creating account is admin then convert toggle buttons to input values
-      else{
-        
-      }
-      // sign up using Auth
-      Auth.signUp(formData, () => {
-        submitBtn.removeAttribute('loading')
-      }, () => {
-        signupDialog.hide()
-        submitBtn.removeAttribute('loading')
-        // if the person registered the new user is signed in then don't prompt them to log in
-        if(!localStorage.accessLevel >= 1) signinDialog.show()
-        // If the user is admin then refresh their users list
-        if(localStorage.accessLevel == 2) {
-          FetchAPI.getUsersAsync()
-          this.renderUsersButtons()
-        }
-      })
-    }
-  }
-  render() {
-    return html`
+            signInSubmitHandler(e) {
+                e.preventDefault()
+                    // determine which dialog is sending the submit call to be able to carry out appropriate post method
+                const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
+                const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
+                const formData = e.detail.formData
+                const submitBtn = this.shadowRoot.querySelector('.submit-btn')
+                console.log(e.target)
+                if (e.target.innerText === "Sign In") {
+                    submitBtn.setAttribute('loading', '')
+                        // sign in using Auth    
+                    Auth.signIn(formData, () => {
+                        submitBtn.removeAttribute('loading')
+                    })
+                    console.log(localStorage.accessLevel)
+                    if (localStorage.accessLevel >= 1) {
+                        signinDialog.hide()
+                        submitBtn.removeAttribute('loading')
+                    }
+                    // sign up user
+                } else {
+                    // if its not an admin then append default user values
+                    if (localStorage.accessLevel != 2) {
+                        formData.append('accessLevel', 1)
+                        formData.append('status', true)
+                        formData.append('imageURL', "")
+                    }
+                    // if user creating account is admin then convert toggle buttons to input values and append them to the form data
+                    else {
+                        formData.append('status', this.shadowRoot.querySelector('#user-status-toggle').checked)
+                        formData.append('accessLevel', this.shadowRoot.querySelector('#access-level-toggle').checked ? 2 : 1)
+                        formData.append('imageURL', "")
+                    }
+                    // sign up using Auth
+                    Auth.signUp(formData, () => {
+                        submitBtn.removeAttribute('loading')
+                    }, () => {
+                        signupDialog.hide()
+                        submitBtn.removeAttribute('loading')
+                            // if the person who registered the new user is signed in then don't prompt them to log in
+                        if (!localStorage.accessLevel >= 1) signinDialog.show()
+                            // If the user is admin then refresh their users list
+                        if (localStorage.accessLevel == 2) {
+                            window.location.reload()
+                                //     FetchAPI.getUsersAsync()
+                                //     this.renderUsersButtons()
+                                //     console.log("Refreshing users collection...")
+                                //     console.log(e.target)
+                        }
+                    })
+                }
+            }
+            render() {
+                    return html `
     <style>      
       * {
         box-sizing: border-box;
@@ -556,21 +557,11 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
             ${Auth.currentUser.accessLevel == 2 ? html`
             <div class="input-group">
             <p class="toggle-text">User type (regular/admin)</p>
-              <sl-switch class="toggle-switch"></sl-switch>      
+              <sl-switch class="toggle-switch" id="access-level-toggle"></sl-switch>      
             </div>
             <div class="input-group">
             <p class="toggle-text">User status (inactive/active)</p>
-              <sl-switch class="toggle-switch" checked></sl-switch>      
-            </div>
-            <div class="input-group">
-            <sl-input class="pad-bottom" name="accessLevel" type="number" value="1" required></sl-input>
-            </div>
-            <div class="input-group">
-            <sl-input class="pad-bottom" name="imageURL" type="text" value=""></sl-input>
-            </div>
-            <div class="input-group">
-            <sl-input class="pad-bottom" name="status" type="number" value='1' required></sl-input>
-            </div>
+              <sl-switch class="toggle-switch"  id="user-status-toggle" checked></sl-switch>
             `:``}
             <sl-button type="primary" class="submit-btn" submit style="width: 100%;">Sign Up</sl-button>
         </sl-form>
@@ -654,18 +645,6 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
     </header>
     <sl-drawer class="app-side-menu" placement="left">
       <div class="sidenav-content">
-        <!-- <div class="top-menus"> -->
-          <!-- <img class="app-side-menu-logo" src="/images/logo.svg"> -->
-          <!-- <nav class="app-side-menu-items"> -->
-            <!-- <a href="/" @click="${this.menuClick}">Dashboard</a> -->
-            <!-- <a href="/hairdressers" @click="${this.menuClick}">Find a Hairdresser</a>
-            <a href="/haircute" @click="${this.menuClick}">Find a Haircut</a>
-            <a href="/favouriteHaircuts" @click="${this.menuClick}">Hairdressers</a>
-            <a href="/profile" @click="${this.menuClick}">Profile</a>
-            <a href="#" @click="${() => Auth.signOut()}">Sign Out</a> -->
-          <!-- </nav>   -->
-        <!-- </div> -->
-
         <!-- accordion (details) container to list all entities categorically -->
         <div class="accordion-container">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -755,3 +734,15 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
     `
   }
 })
+
+      
+// </div>
+// <div class="input-group">
+// <sl-input class="pad-bottom" name="accessLevel" type="number" value="1" required></sl-input>
+// </div>
+// <div class="input-group">
+// <sl-input class="pad-bottom" name="imageURL" type="text" value=""></sl-input>
+// </div>
+// <div class="input-group">
+// <sl-input class="pad-bottom" name="status" type="number" value='1' required></sl-input>
+// </div>

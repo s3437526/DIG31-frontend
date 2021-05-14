@@ -1,6 +1,7 @@
 # DIG31-frontend
 Front end development for DIG31
 
+npm install
 npm install --save lit-element lit-html
 
 TODO
@@ -9,8 +10,9 @@ TODO
 - Fix active button indication
 - Clear inputs after signin and signup
 - Add imageURL and bio for user registration
-- Signup doesn't work because it needs to correlate toggle buttons to schema-approved values
-- Signin doesn't work because the sender form object isn't consistently sent to the submit handler and errors out with undefined
-- Hide signup form after sining up
-- Test creating user with admin signed in
+- Add image upload
 - Convert admin toggles to actual form values
+- Disable overflow (scroll bar) on signup and sign in pages but allow scrolling
+- Fix focus on sign up and sign in dialogs
+- Condense and streamline all code especially in va-app-header
+- Dynamically append dialogs to the top of the page (over the navbar) (week 9 lecure 51mins though - lit-html) and remove on close instead of rendering in body
