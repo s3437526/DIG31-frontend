@@ -1,8 +1,8 @@
 // import views
 import homeView from './views/pages/home'
 import fourOFourView from './views/pages/404'
-// import signinView from './views/pages/signin'
-// import signupView from './views/pages/signup'
+import placesView from './views/pages/places'
+import devicesView from './views/pages/devices'
 // import profileView from './views/pages/profile'
 // import editProfileView from './views/pages/editProfile'
 import guideView from './views/pages/guide'
@@ -14,10 +14,10 @@ const routes = {
     '/guide': guideView,
     '/users': usersView,
     '404': fourOFourView,
-    // '/signin': signinView,
-    // '/signup': signupView
-    // '/profile': profileView,
-    // '/editProfile': editProfileView
+    '/places': placesView,
+    '/devices': devicesView
+        // '/profile': profileView,
+        // '/editProfile': editProfileView
 }
 
 class Router {

@@ -615,7 +615,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                   <sl-icon class="settings-icon" slot="prefix" name="plus"></sl-icon>
                     Register Place
                 </sl-menu-item>
-              <sl-menu-item @click="${() => gotoRoute('/editProfile')}">
+              <sl-menu-item @click="${() => gotoRoute('/places')}">
                 <sl-icon class="dropdown-icon" slot="prefix" name="house-door"></sl-icon>
                 <sl-icon class="manage-place" slot="prefix" name="gear-fill"></sl-icon>
                   Manage Place
@@ -626,7 +626,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 <sl-icon class="manage-device" slot="prefix" name="plus"></sl-icon>
                   Register Device
               </sl-menu-item>
-              <sl-menu-item @click="${() => gotoRoute('/editProfile')}">
+              <sl-menu-item @click="${() => gotoRoute('/devices')}">
                 <sl-icon class="dropdown-icon" slot="prefix" name="broadcast"></sl-icon>
                 <sl-icon class="add-device" slot="prefix" name="gear-fill"></sl-icon>
                   Manage Device
@@ -648,7 +648,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         <div class="accordion-container">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
           <div class="accordion-menu">
-            <sl-details class="dashboard-button"><span slot="summary" class="material-icons" style="font-size: 40px;">dashboard</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Dashboard</span></sl-details>
+            <sl-details class="dashboard-button" @click="${() => gotoRoute('/')}"><span slot="summary" class="material-icons" style="font-size: 40px;">dashboard</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Dashboard</span></sl-details>
             <sl-details class="details places-list" summary="Places" ><span slot="summary" class="material-icons" style="font-size: 40px;">home</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Places</span></sl-details>
             <sl-details class="details devices-list" summary="Devices"><span slot="summary" class="material-icons" style="font-size: 40px;">sensors</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Devices</span></sl-details>
             ${localStorage.accessLevel == 2 ? html `<sl-details class="details users-list" summary="Users"><span slot="summary" class="material-icons" style="font-size: 40px;">account_circle</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Users</span></sl-details>`:``}
@@ -702,7 +702,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                       <sl-icon class="settings-icon" slot="prefix" name="plus"></sl-icon>
                         Register Place
                     </sl-menu-item>
-                  <sl-menu-item @click="${() => gotoRoute('/editProfile')}">
+                  <sl-menu-item @click="${() => gotoRoute('/places')}">
                     <sl-icon class="dropdown-icon" slot="prefix" name="house-door"></sl-icon>
                     <sl-icon class="manage-place" slot="prefix" name="gear-fill"></sl-icon>
                       Manage Place
@@ -713,7 +713,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                     <sl-icon class="manage-device" slot="prefix" name="plus"></sl-icon>
                       Register Device
                   </sl-menu-item>
-                  <sl-menu-item @click="${() => gotoRoute('/editProfile')}">
+                  <sl-menu-item @click="${() => gotoRoute('/devices')}">
                     <sl-icon class="dropdown-icon" slot="prefix" name="broadcast"></sl-icon>
                     <sl-icon class="add-device" slot="prefix" name="gear-fill"></sl-icon>
                       Manage Device
