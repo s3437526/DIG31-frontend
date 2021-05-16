@@ -94,8 +94,8 @@ class DevicesView {
           padding: 0.5rem 0;
         }
 
-        .col1{
-        }
+        /* .col1{
+        } */
 
         .col2{
           justify-content: flex-start;
@@ -103,17 +103,15 @@ class DevicesView {
         }
 
         .col3{
-
+          justify-content: flex-start;
         }
 
         .col4{
-          /* justify-content: flex-end; */
-          /* height: 100%;
-          width: 100%; */
+          /* justify-content: flex-start; */
         }
 
         .col5{
-
+          /* justify-content: flex-start; */
         }
 
         .col6{

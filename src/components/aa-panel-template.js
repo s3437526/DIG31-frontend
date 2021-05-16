@@ -29,10 +29,6 @@ class PanelTemplate extends LitElement {
 
     firstUpdated() {
         super.firstUpdated()
-            // let button = this.shadowRoot.querySelector('.container')
-            // button.addEventListener('click', () => {
-            //     this.shadowRoot.querySelector('.active-indicator').classList.toggle('active')
-            // })
     }
 
     render() {
@@ -69,6 +65,7 @@ class PanelTemplate extends LitElement {
 
             .body{
                 height: 100%;
+                /* overflow-y: scroll; */
             }
 
         </style>

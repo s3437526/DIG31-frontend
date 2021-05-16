@@ -33,7 +33,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 // set click event listener for menu items
                 menuItems.forEach(menuItem => {
                     menuItem.addEventListener('click', (e) => {
-                        console.log(`Target clicked was: ${e.target.id}`)
+                        // console.log(`Target clicked was: ${e.target.id}`)
                         if (e.target.id === 'register-user' || e.target.id === 'regsiter-user-side') {
                             signupDialog.show()
                         }
@@ -733,15 +733,3 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
     `
   }
 })
-
-      
-// </div>
-// <div class="input-group">
-// <sl-input class="pad-bottom" name="accessLevel" type="number" value="1" required></sl-input>
-// </div>
-// <div class="input-group">
-// <sl-input class="pad-bottom" name="imageURL" type="text" value=""></sl-input>
-// </div>
-// <div class="input-group">
-// <sl-input class="pad-bottom" name="status" type="number" value='1' required></sl-input>
-// </div>

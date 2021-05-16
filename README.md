@@ -9,6 +9,11 @@ Notes to user/guide page:
 - Any user can sign up - in the future, a user who is NOT signed and is signing up on behalf of themselves will be created inactive and will require an admin to make them active. This is for security purposes.
 - An authenticated/signed in user can create accounts on behalf of others. They will be active by default.
 - Only admins can make other accounts active - in fact, only admins can view other user accounts.
+- Currently the best demo for dynamic data loading from backend into the charts on the dashboard is on the second chart - the pie chart. It demonstrates the display of most active devices. This will be further refined when more meaningful metrics are determined for display and will be further optimised to run more dynamically. At this point this is a proof of concept.
+- 
+- Clicking each dashblard item will launch the dialog for direct interation with the item
+- 
+- Best responsive demonstration is on dashboard page
 - 
 
 TODO
@@ -31,3 +36,8 @@ TODO
 - Implement notifications and warnings menu items
 - Add GSAP animation to device status lights
 - Incorporate push pin with toggle animation
+- Fix responsive layouts for panel views e.g. devices, users, places
+- Transfer all get (user, place, item) calls and data structures to feed into va-app-header for more global availability
+- Add random colours to each entity type, ensuring no existing close colours exist already (for chart display)
+- Change arrays of durations and activity history to external logs?
+- 
