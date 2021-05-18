@@ -21,8 +21,8 @@ class Auth {
             body: userData
         })
 
-        console.log(`Auth.js signup method receiving user data as: ${JSON.stringify(userData)}`)
-            // if response not ok
+        // console.log(`Auth.js signup method receiving user data as: ${JSON.stringify(userData)}`)
+        // if response not ok
         if (!response.ok) {
             // console log error
             const err = await response.json()
@@ -75,11 +75,6 @@ class Auth {
 
         // Initialise router and load all relevant entities
         Router.init()
-            // await FetchAPI.getPlacesAsync()
-            // await FetchAPI.getItemsAsync()
-            // console.log(`Localstorage user is: ${this.currentUser.accessLevel}`)
-            // localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
-            // redirect to home
         gotoRoute('/')
         window.location.reload()
     }

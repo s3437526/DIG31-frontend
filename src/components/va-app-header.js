@@ -4,8 +4,8 @@ import Auth from './../Auth'
 import App from './../App'
 import FetchAPI from '../FetchAPI'
 
-let places, items, users = [{}]
-let collections = [{ places, items, users }]
+let places, items, users, locations = [{}]
+let collections = [{ places, items, users, locations }]
 customElements.define('va-app-header', class AppHeader extends LitElement {
             constructor() {
                 super()
@@ -25,10 +25,13 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
             async firstUpdated() {
                 super.firstUpdated()
                 this.navActiveLinks()
-                const container = this.shadowRoot.querySelector('.accordion-menu');
-                const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
-                const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
+                const container = this.shadowRoot.querySelector('.accordion-menu')
+                const signinDialog = this.shadowRoot.querySelector('.signin-dialog')
+                const signupDialog = this.shadowRoot.querySelector('.signup-dialog')
+                const registerPlaceDialog = this.shadowRoot.querySelector('.register-place-dialog')
                 const menuItems = this.shadowRoot.querySelectorAll('sl-menu-item')
+                const registerPlaceDropdown = this.shadowRoot.querySelector('#register-place-dropdown')
+                const registerDeviceDialog = this.shadowRoot.querySelector('#register-device-dialog')
 
                 // set click event listener for menu items
                 menuItems.forEach(menuItem => {
@@ -36,12 +39,19 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                         // console.log(`Target clicked was: ${e.target.id}`)
                         if (e.target.id === 'register-user' || e.target.id === 'regsiter-user-side') {
                             signupDialog.show()
+                        } else if (e.target.id === 'register-place' || e.target.id === 'regsiter-place-side') {
+                            registerPlaceDialog.show()
+                        } else if (e.target.id === 'register-device' || e.target.id === 'regsiter-device-side') {
+                            registerDeviceDialog.show()
                         }
-                        // else if(e.target.id === 'manage-account' || e.target.id === 'manage-account-side'){
-
-                        // }
                     })
                 })
+
+                // const emailInput = this.shadowRoot.querySelector('.email-input')
+                // signinDialog.addEventListener('sl-initial-focus', event => {
+                //     event.preventDefault();
+                //     input.focus({ preventScroll: true });
+                // });
 
                 // if user is not signed in do not allow them to cancel the dialogs, otherwise
                 // a signed in user is creating a new user and should be able to dismiss it
@@ -61,12 +71,12 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                     collections.places = await FetchAPI.getPlacesAsync()
                     collections.items = await FetchAPI.getItemsAsync()
                     collections.users = localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
+                    collections.locations = localStorage.accessLevel == 2 ? await FetchAPI.getLocationsAsync() : ""
 
                     // these HAVE to be streamlined...waaay to repetitive! Do if time permits, otherwise after unit completion!
                     this.renderPlacesButtons()
                     this.renderItemsButtons()
                     localStorage.accessLevel == 2 ? this.renderUsersButtons() : ""
-
                     const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
                     signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault())
                 }
@@ -79,11 +89,27 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                             signinDialog.hide()
                             signupDialog.show()
                         } else {
-                            signupDialog.hide()
-                            signinDialog.show()
+                            localStorage.accessLevel >= 1 ? "" :
+                                () => {
+                                    signupDialog.hide()
+                                    signinDialog.show()
+                                }
                         }
                     })
                 })
+
+                // register place dropdown items
+                localStorage.accessLevel >= 1 ? collections.locations.forEach(location => {
+                    let dropdown = document.createElement('sl-menu-item')
+                    dropdown.innerHTML = location.locationType
+                    dropdown.classList.add('register-place-dropdown-item')
+                    dropdown.setAttribute('id', location._id)
+                    dropdown.setAttribute('value', location.locationType)
+                    registerPlaceDropdown.appendChild(dropdown)
+
+                    console.log(location)
+
+                }) : ""
             }
 
             async renderPlacesButtons() {
@@ -170,18 +196,18 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
             signInSubmitHandler(e) {
                 e.preventDefault()
                     // determine which dialog is sending the submit call to be able to carry out appropriate post method
-                const signinDialog = this.shadowRoot.querySelector('.signin-dialog');
-                const signupDialog = this.shadowRoot.querySelector('.signup-dialog');
+                const signinDialog = this.shadowRoot.querySelector('.signin-dialog')
+                const signupDialog = this.shadowRoot.querySelector('.signup-dialog')
                 const formData = e.detail.formData
                 const submitBtn = this.shadowRoot.querySelector('.submit-btn')
-                console.log(e.target)
+                    // console.log(e.target)
                 if (e.target.innerText === "Sign In") {
                     submitBtn.setAttribute('loading', '')
                         // sign in using Auth    
                     Auth.signIn(formData, () => {
-                        submitBtn.removeAttribute('loading')
-                    })
-                    console.log(localStorage.accessLevel)
+                            submitBtn.removeAttribute('loading')
+                        })
+                        // console.log(localStorage.accessLevel)
                     if (localStorage.accessLevel >= 1) {
                         signinDialog.hide()
                         submitBtn.removeAttribute('loading')
@@ -215,6 +241,50 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                     })
                 }
             }
+
+            registerPlaceSubmitHandler(e) {
+                e.preventDefault()
+                const formData = e.detail.formData
+                const submitBtn = this.shadowRoot.querySelector('.submit-btn')
+                const cancelBtn = this.shadowRoot.querySelector('.cancel-btn')
+                const registerPlaceDialog = this.shadowRoot.querySelector('.register-place-dialog')
+                const objectId = this.shadowRoot.querySelector('.register-place-dropdown-item').id
+
+                formData.append("locationType", objectId)
+                FetchAPI.postPlaceAsync(formData)
+
+                console.log("Place registered...???")
+
+                console.log(e.target.innerText)
+                    // if successful, hide dialog, if not, keep it open and show toast - otherwise keep dialog open
+
+                window.location.reload()
+
+                // console.log(formData)
+                for (var pair of formData.entries()) {
+                    console.log(pair[0] + ', ' + pair[1]);
+                }
+                // if (e.target.innerText === "Cancel") {
+                //     registerPlaceDialog.hide() // doesn't work at this stage...
+                // }
+
+            }
+
+            registerDeviceSubmitHandler(e) {
+                e.preventDefault()
+                const formData = e.detail.formData
+                const submitBtn = this.shadowRoot.querySelector('.submit-btn')
+                const cancelBtn = this.shadowRoot.querySelector('.cancel-btn')
+                const registerPlaceDialog = this.shadowRoot.querySelector('.register-device-dialog')
+                console.log("Device registered...")
+
+                console.log(e.target.innerText)
+                if (e.target.innerText === "Cancel") {
+                    registerPlaceDialog.hide()
+                }
+
+            }
+
             render() {
                     return html `
     <style>      
@@ -357,13 +427,13 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         border-radius: 5px;
       }
 
-      sl-menu-item::part(base){
+      .menu-items::part(base){
         color: #fff;
       }
 
-      sl-menu-item::part(base):hover{
+      .menu-items::part(base):hover{
         color: rgb(94,85,107);
-      } 
+      }
 
       sl-avatar::part(base){
         --size: 2rem;
@@ -506,6 +576,12 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
              margin: 10px 0;
             }
 
+            .register-place-dropdown-item::part(base){
+              /* background: orange; */
+            }
+
+            /* .select__menu */
+
     </style>  
     <!-- Sign in dialog -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -518,7 +594,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         </div>
         <sl-form class="form-signup dark-theme" @sl-submit=${this.signInSubmitHandler}>          
             <div class="input-group">
-            <sl-input class="pad-bottom" name="email" type="email" placeholder="Email" required></sl-input>
+            <sl-input class="pad-bottom email-input" name="email" type="email" placeholder="Email" required></sl-input>
             </div>
             <div class="input-group">
             <sl-input class="pad-bottom" name="password" type="password" placeholder="Password" required toggle-password></sl-input>
@@ -568,6 +644,30 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         </div>
     </div>
     </sl-dialog>
+    <!-- Register device menu -->
+
+    <!-- Register place menu -->
+    <sl-dialog no-header="true" slot="label" class="register-place-dialog" style="--width: 30vw;">
+      <span class="dialog-heading">Register Place</span>
+      <div class="page-content page-centered">
+          <!-- <div class="signinup-box"> -->
+          <div class="flex-center">
+              <div class="material-icons" style="font-size: 8rem; margin: 1rem; color: white;">home</div>          
+          </div>
+          <sl-form class="form-register-place dark-theme" @sl-submit=${this.registerPlaceSubmitHandler}>
+              <div class="input-group pad-bottom">
+                <sl-input name="placeName" type="text" placeholder="Place name... e.g. Master Bedroom" required></sl-input>
+              </div>
+              <div class="input-group pad-bottom">
+              <sl-select id="register-place-dropdown" name="location" placeholder="Select location...">
+              </sl-select>
+            </div>      
+              <sl-button class="cancel-btn cancel pad-bottom" type="primary" submit style="width: 100%;">Cancel</sl-button>
+              <sl-button class="submit-btn register-place" type="primary" submit style="width: 100%;">Register</sl-button>
+          </sl-form>
+          <!-- </div> -->
+      </div>
+    </sl-dialog>
     <!-- Hamburger -->
     <header class="app-header" style="display:flex; justify-content: space-between; align-items:center;">
       <div class="left-navs">
@@ -597,43 +697,43 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
             </a>
             <sl-menu>            
             ${Auth.currentUser.accessLevel == 2 ? html`
-              <sl-menu-item class="register-user" id="register-user">
+              <sl-menu-item class="register-user menu-items" id="register-user">
                 <sl-icon class="dropdown-icon" slot="prefix" name="person"></sl-icon>
                 <sl-icon class="settings-icon" slot="prefix" name="plus"></sl-icon>
                   Register User
               ` : ``}
               </sl-menu-item>
-              <sl-menu-item class="manage-account" id="manage-account" @click="${() => gotoRoute('/users')}">
+              <sl-menu-item class="manage-account menu-items" id="manage-account" @click="${() => gotoRoute('/users')}">
                 <sl-icon class="dropdown-icon" slot="prefix" name="person"></sl-icon>
                 <sl-icon class="add-icon" slot="prefix" name="gear-fill"></sl-icon>
                   Manage Account
               </sl-menu-item>
               ${Auth.currentUser.accessLevel == 2 ? html`
               <sl-menu-divider></sl-menu-divider>
-                <sl-menu-item @click="${() => gotoRoute('/profile')}">
+                <sl-menu-item class="register-place menu-items" id="register-place">
                   <sl-icon class="dropdown-icon" slot="prefix" name="house-door"></sl-icon>
                   <sl-icon class="settings-icon" slot="prefix" name="plus"></sl-icon>
                     Register Place
                 </sl-menu-item>
-              <sl-menu-item @click="${() => gotoRoute('/places')}">
+              <sl-menu-item class="menu-items" @click="${() => gotoRoute('/places')}">
                 <sl-icon class="dropdown-icon" slot="prefix" name="house-door"></sl-icon>
                 <sl-icon class="manage-place" slot="prefix" name="gear-fill"></sl-icon>
                   Manage Place
               </sl-menu-item>
               <sl-menu-divider></sl-menu-divider>
-              <sl-menu-item @click="${() => gotoRoute('/profile')}">
+              <sl-menu-item class="menu-items" @click="${() => gotoRoute('/profile')}">
                 <sl-icon class="dropdown-icon" slot="prefix" name="broadcast"></sl-icon>
                 <sl-icon class="manage-device" slot="prefix" name="plus"></sl-icon>
                   Register Device
               </sl-menu-item>
-              <sl-menu-item @click="${() => gotoRoute('/devices')}">
+              <sl-menu-item class="menu-items" @click="${() => gotoRoute('/devices')}">
                 <sl-icon class="dropdown-icon" slot="prefix" name="broadcast"></sl-icon>
                 <sl-icon class="add-device" slot="prefix" name="gear-fill"></sl-icon>
                   Manage Device
               </sl-menu-item>
               <sl-menu-divider></sl-menu-divider>
               ` : ``}
-              <sl-menu-item @click="${() => Auth.signOut()}">
+              <sl-menu-item class="menu-items" @click="${() => Auth.signOut()}">
                 <sl-icon class="signout-icon" slot="prefix" name="box-arrow-right"></sl-icon>
                   Sign Out
               </sl-menu-item>
@@ -674,8 +774,8 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 <sl-icon slot="icon" name="gear-fill" style="font-size: 2rem; color: white;"></sl-icon>
               </a>
               <sl-menu class="left-menu">            
-                <sl-menu-item @click="${() => gotoRoute('/profile')}"><sl-icon class="dropdown-icon" slot="prefix" name="wifi"></sl-icon>System Status</sl-menu-item>
-                <sl-menu-item @click="${() => gotoRoute('/editProfile')}"><sl-icon class="dropdown-icon" slot="prefix" name="list-ul"></sl-icon>Logs</sl-menu-item>
+                <sl-menu-item class="menu-items" @click="${() => gotoRoute('/profile')}"><sl-icon class="dropdown-icon" slot="prefix" name="wifi"></sl-icon>System Status</sl-menu-item>
+                <sl-menu-item class="menu-items" @click="${() => gotoRoute('/editProfile')}"><sl-icon class="dropdown-icon" slot="prefix" name="list-ul"></sl-icon>Logs</sl-menu-item>
               </sl-menu>
             </sl-dropdown>
             <sl-dropdown skidding="-171" distance="10" class="dropdowns-left">
@@ -684,43 +784,43 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
               </a>
               <sl-menu class="left-menu">            
                 ${Auth.currentUser.accessLevel == 2 ? html`
-                  <sl-menu-item class="register-user" id="register-user-side">
+                  <sl-menu-item class="register-user menu-items" id="register-user-side">
                     <sl-icon class="dropdown-icon" slot="prefix" name="person"></sl-icon>
                     <sl-icon class="settings-icon" slot="prefix" name="plus"></sl-icon>
                       Register User
                   ` : ``}
                   </sl-menu-item>
-                  <sl-menu-item class="manage-account" id="manage-account-side" @click="${() => gotoRoute('/users')}">
+                  <sl-menu-item class="manage-account menu-items" id="manage-account-side" @click="${() => gotoRoute('/users')}">
                     <sl-icon class="dropdown-icon" slot="prefix" name="person"></sl-icon>
                     <sl-icon class="add-icon" slot="prefix" name="gear-fill"></sl-icon>
                       Manage Account
                   </sl-menu-item>
                   ${Auth.currentUser.accessLevel == 2 ? html`
                   <sl-menu-divider></sl-menu-divider>
-                    <sl-menu-item @click="${() => gotoRoute('/profile')}">
+                    <sl-menu-item class="register-place-side menu-items"  id="register-place-side">
                       <sl-icon class="dropdown-icon" slot="prefix" name="house-door"></sl-icon>
                       <sl-icon class="settings-icon" slot="prefix" name="plus"></sl-icon>
                         Register Place
                     </sl-menu-item>
-                  <sl-menu-item @click="${() => gotoRoute('/places')}">
+                  <sl-menu-item class="menu-items" @click="${() => gotoRoute('/places')}">
                     <sl-icon class="dropdown-icon" slot="prefix" name="house-door"></sl-icon>
                     <sl-icon class="manage-place" slot="prefix" name="gear-fill"></sl-icon>
                       Manage Place
                   </sl-menu-item>
                   <sl-menu-divider></sl-menu-divider>
-                  <sl-menu-item @click="${() => gotoRoute('/profile')}">
+                  <sl-menu-item class="menu-items" @click="${() => gotoRoute('/profile')}">
                     <sl-icon class="dropdown-icon" slot="prefix" name="broadcast"></sl-icon>
                     <sl-icon class="manage-device" slot="prefix" name="plus"></sl-icon>
                       Register Device
                   </sl-menu-item>
-                  <sl-menu-item @click="${() => gotoRoute('/devices')}">
+                  <sl-menu-item class="menu-items" @click="${() => gotoRoute('/devices')}">
                     <sl-icon class="dropdown-icon" slot="prefix" name="broadcast"></sl-icon>
                     <sl-icon class="add-device" slot="prefix" name="gear-fill"></sl-icon>
                       Manage Device
                   </sl-menu-item>
                   <sl-menu-divider></sl-menu-divider>
                   ` : ``}
-                  <sl-menu-item @click="${() => Auth.signOut()}">
+                  <sl-menu-item class="menu-items" @click="${() => Auth.signOut()}">
                     <sl-icon class="signout-icon" slot="prefix" name="box-arrow-right"></sl-icon>
                       Sign Out
                   </sl-menu-item>

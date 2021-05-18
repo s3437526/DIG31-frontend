@@ -57,15 +57,23 @@ Chart.register(
     Title,
     Tooltip
 );
+
+let users, items, places
 class HomeView {
     async init() {
         console.log('HomeView.init')
         document.title = 'Overview'
-        let users = await FetchAPI.getUsersAsync()
-        let items = await FetchAPI.getItemsAsync()
-        let places = await FetchAPI.getPlacesAsync()
+        if (localStorage.accessLevel >= 1) {
+            users = await FetchAPI.getUsersAsync()
+            items = await FetchAPI.getItemsAsync()
+            places = await FetchAPI.getPlacesAsync()
+            console.log(`Users are: ${users}`)
+            console.log(`Items are: ${items}`)
+            console.log(`Places are: ${places}`)
+        }
+
         await this.render()
-        await this.renderCharts(users, items, places)
+        if (localStorage.accessLevel >= 1) await this.renderCharts(users, items, places)
         Utils.pageIntroAnim()
     }
 
@@ -122,20 +130,20 @@ class HomeView {
             }
         });
         let ctx2 = document.getElementById('myChart2').getContext('2d');
-        console.log(items)
+        // console.log(items)
         Chart.defaults.color = '#fff'
         let i, j
         let labels = []
         let temp = []
         let durations = []
         let colours = []
-        console.log(durations)
+            // console.log(durations)
         items.forEach(item => {
             labels.push(`${item.name} duration`)
             temp.push(item.activityHistory.activityDuration)
                 // colours.push()
         });
-        console.log(temp)
+        // console.log(temp)
 
         for (i = 0; i < temp.length; i++) {
             let counter = 0
@@ -144,7 +152,7 @@ class HomeView {
             }
             durations.push(counter)
         }
-        console.log(durations)
+        // console.log(durations)
         let myChart2 = new Chart(ctx2, {
             type: 'doughnut',
             data: {

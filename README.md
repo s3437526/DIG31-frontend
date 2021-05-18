@@ -40,4 +40,8 @@ TODO
 - Transfer all get (user, place, item) calls and data structures to feed into va-app-header for more global availability
 - Add random colours to each entity type, ensuring no existing close colours exist already (for chart display)
 - Change arrays of durations and activity history to external logs?
-- 
+- Fix stuttering/staggering of dropdown selection in register place dialog when activating the dropdown
+- Make register place dialog change icon when place type is selected from dropdown
+- Register places dialog needs to allow cancelling and hide even if fields are empty. Currently this is not allowed.
+- Make home view the overview and home to show blank home screen for aesthetics when signed out rather than an empty overview panel
+- Firefox (only) shows error when signing in where user fetch request fails. Users loaded correctly however. Looks like a timing issue that is a non-issue. Chrome does not report this error.
