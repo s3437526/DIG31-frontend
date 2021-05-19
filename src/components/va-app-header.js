@@ -31,7 +31,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 const registerPlaceDialog = this.shadowRoot.querySelector('.register-place-dialog')
                 const menuItems = this.shadowRoot.querySelectorAll('sl-menu-item')
                 const registerPlaceDropdown = this.shadowRoot.querySelector('#register-place-dropdown')
-                const registerDeviceDialog = this.shadowRoot.querySelector('#register-device-dialog')
+                const registerDeviceDialog = this.shadowRoot.querySelector('.register-device-dialog')
 
                 // set click event listener for menu items
                 menuItems.forEach(menuItem => {
@@ -41,7 +41,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                             signupDialog.show()
                         } else if (e.target.id === 'register-place' || e.target.id === 'regsiter-place-side') {
                             registerPlaceDialog.show()
-                        } else if (e.target.id === 'register-device' || e.target.id === 'regsiter-device-side') {
+                        } else if (e.target.id === 'register-device' || e.target.id === 'register-device-side') {
                             registerDeviceDialog.show()
                         }
                     })
@@ -285,6 +285,56 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
 
             }
 
+            handleAdvancedSettings(e){      
+              const advancedDeviceSettings = this.shadowRoot.querySelector('.advanced-device-settings')
+              advancedDeviceSettings.classList.toggle('hidden')
+            }
+
+            handleAutoManagement(e){
+              const minOnSetting = this.shadowRoot.querySelector('.min-on-setting')
+              const minOffSetting = this.shadowRoot.querySelector('.min-off-setting')
+              const minInputVal = this.shadowRoot.querySelector('.min-input-value')
+              const maxInputVal = this.shadowRoot.querySelector('.max-input-value')
+              
+              
+              if(e.target.checked){
+                minOnSetting.setAttribute('disabled', false) 
+                minOffSetting.setAttribute('disabled', false)
+                minInputVal.setAttribute('disabled', false)
+                maxInputVal.setAttribute('disabled', false)
+              }
+              else {
+                minOnSetting.setAttribute('disabled', true)
+                minOffSetting.setAttribute('disabled', true)
+                minInputVal.setAttribute('disabled', true)
+                maxInputVal.setAttribute('disabled', true)
+              }
+            }
+
+            handleMinSliderValues(e){
+              const minInputVal = this.shadowRoot.querySelector('.min-input-value')
+              console.log(e.target.value)
+              minInputVal.value = e.target.value
+            }
+
+            handleMaxSliderValues(e){
+              const maxInputVal = this.shadowRoot.querySelector('.max-input-value')
+              console.log(e.target.value)
+              maxInputVal.value = e.target.value
+            }
+
+            handleMinInputValues(e){
+              const minInputVal = this.shadowRoot.querySelector('.min-on-setting')
+              console.log(e.target.value)
+              minInputVal.value = e.target.value
+            }
+
+            handleMaxInputValues(e){
+              const maxInputVal = this.shadowRoot.querySelector('.min-off-setting')
+              console.log(e.target.value)
+              maxInputVal.value = e.target.value
+            }
+
             render() {
                     return html `
     <style>      
@@ -446,7 +496,6 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
       
       sl-details::part(content){
         padding: 0;
-        
         border-top: 1px solid white;
       }
 
@@ -533,55 +582,64 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
       }
 
       .dialog-heading{
-                display: flex; 
-                align-items: center; 
-                justify-content: center; 
-                font-size: 1.5rem; 
-                font-weight: 900;
-                color: white;
-            }
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        font-size: 1.5rem; 
+        font-weight: 900;
+        color: white;
+      }
 
-            .flex-center{
-                display:flex;
-                align-items: center;
-                justify-content: center;
-            }
+      .flex-center{
+          display:flex;
+          align-items: center;
+          justify-content: center;
+      }
 
-            sl-dialog::part(panel){
-                background: var(--dialog-background);
-            }
+      sl-dialog::part(panel){
+          background: var(--dialog-background);
+      }
 
-            .pad-bottom{
-                padding-bottom: 20px;
-            }
+      .pad-bottom{
+          padding-bottom: 20px;
+      }
 
-            .toggle-dialogs{
-              cursor: pointer;
-              color: var(--brand-color);
-              text-decoration: underline;
-            }
+      .toggle-dialogs{
+        cursor: pointer;
+        color: var(--brand-color);
+        text-decoration: underline;
+      }
 
-            .toggle-dialogs:hover{
-              color: white;
-            }
+      .toggle-dialogs:hover{
+        color: white;
+      }
 
-            .toggle-text{
-              margin: 0;
-              color: white;
-            }
+      .toggle-text{
+        margin: 0;
+        color: white;
+      }
 
-            .toggle-switch{
-             --width: 60px; --height: 30px; --thumb-size: 28px;
-             color: white;
-             margin: 10px 0;
-            }
+      .toggle-switch{
+        --width: 60px; --height: 30px; --thumb-size: 28px;
+        color: white;
+        margin: 10px 0;
+      }
 
-            .register-place-dropdown-item::part(base){
-              /* background: orange; */
-            }
+      .input-labels{
+        color: white;
+      }
 
-            /* .select__menu */
+      .text-input-sml{
+        width: 10rem;
+      }
 
+      .text-input-xs{
+        width: 5rem;
+      }
+
+      .hidden{
+        display: none;
+      }
     </style>  
     <!-- Sign in dialog -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -645,12 +703,69 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
     </div>
     </sl-dialog>
     <!-- Register device menu -->
-
+    <sl-dialog no-header="true" slot="label" class="register-device-dialog" style="--width: 30vw;">
+      <span class="dialog-heading">Register Device</span>
+      <div class="page-content page-centered">
+          <div class="flex-center">
+              <div class="material-icons" style="font-size: 8rem; margin: 1rem; color: white;">sensors</div>          
+          </div>
+          <sl-form class="form-register-device dark-theme" @sl-submit=${this.registerDeviceSubmitHandler}>
+              <div class="input-group pad-bottom input-labels">
+                <sl-input name="name" type="text" placeholder="Device name... e.g. Hallway LEDs" required></sl-input>
+              </div>
+              <div class="input-group pad-bottom input-labels">
+                <sl-select id="register-device-dropdown" name="type" placeholder="Select device type..."></sl-select>
+              </div>      
+              <div class="input-group pad-bottom input-labels">
+                <sl-select id="register-device-location-dropdown" name="placeName" placeholder="Select device location..."></sl-select>
+              </div>
+              <div class="input-group input-labels">
+                <p class="toggle-text">Advanced Settings</p>
+                <sl-switch class="toggle-switch" id="advanced-settings-toggle" @sl-change=${this.handleAdvancedSettings}></sl-switch>      
+              </div>
+              <div class="advanced-device-settings hidden">
+                <div style="display:flex; justify-content: center; align-items: center; border-bottom: 1px solid white; padding: 0 0 1rem 0; margin-bottom: 1rem; color: white;">
+                  <div>Advanced Settings</div>
+                </div>
+                <div class="input-group pad-bottom input-labels">
+                  <p class="toggle-text">Disable/Enable</p>
+                  <sl-switch class="toggle-switch" id="disable-enable-toggle"></sl-switch>      
+                </div>
+                <div class="input-group pad-bottom input-labels">
+                  <p class="toggle-text">Manual/Auto</p>
+                  <sl-switch class="toggle-switch" id="manual-auto-toggle" @sl-change=${this.handleAutoManagement} checked></sl-switch>      
+                </div>
+                <div class="input-group">
+                <!-- Will be replaced with custom made component containing two selector in one line -->
+                  <sl-range class="min-on-setting" label="Moisture level on trigger" help-text="Turn on at %."min="0"max="100" value="30" @sl-change=${this.handleMinSliderValues}></sl-range>
+                  <sl-range class="min-off-setting" label="Moisture level off trigger" help-text="Turn off at %."min="0"max="100" value="80" @sl-change=${this.handleMaxSliderValues}></sl-range>
+                </div>
+                <div class="input-group input-labels" style="display: flex;">
+                  <sl-input class="pad-bottom text-input-xs min-input-value" name="min" type="number" label="Min." @sl-change=${this.handleMinInputValues} value="30"></sl-input>
+                  <sl-input class="pad-bottom text-input-xs max-input-value" style="margin-left: 1rem;" name="max" type="number" label="Max." @sl-change=${this.handleMaxInputValues} value="80"></sl-input>
+                </div>
+                <div class="input-group input-labels">
+                  <sl-input class="pad-bottom text-input-xs" name="reporting-interval" label="Reporting interval (sec)" type="number"></sl-input>
+                </div>
+                <div class="input-group input-labels">
+                  <sl-input class="pad-bottom text-input-xs" name="polling-rate" label="Polling rate (sec)" type="number"></sl-input>
+                </div>
+                <div class="input-group input-labels">
+                  <sl-input class="pad-bottom text-input-sml" name="ip-address" label="IP address" type="text"></sl-input>
+                </div>
+                <div class="input-group input-labels">
+                  <sl-input class="pad-bottom text-input-sml" name="mqtt-topic" label="MQTT topic" type="string"></sl-input>
+                </div>
+              </div>           
+              <sl-button class="cancel-btn cancel pad-bottom" type="primary" submit style="width: 100%;">Cancel</sl-button>
+              <sl-button class="submit-btn register-devicd" type="primary" submit style="width: 100%;">Register</sl-button>
+          </sl-form>
+      </div>
+    </sl-dialog>
     <!-- Register place menu -->
     <sl-dialog no-header="true" slot="label" class="register-place-dialog" style="--width: 30vw;">
       <span class="dialog-heading">Register Place</span>
       <div class="page-content page-centered">
-          <!-- <div class="signinup-box"> -->
           <div class="flex-center">
               <div class="material-icons" style="font-size: 8rem; margin: 1rem; color: white;">home</div>          
           </div>
@@ -665,7 +780,6 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
               <sl-button class="cancel-btn cancel pad-bottom" type="primary" submit style="width: 100%;">Cancel</sl-button>
               <sl-button class="submit-btn register-place" type="primary" submit style="width: 100%;">Register</sl-button>
           </sl-form>
-          <!-- </div> -->
       </div>
     </sl-dialog>
     <!-- Hamburger -->
@@ -687,8 +801,9 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
               <sl-icon slot="icon" name="gear-fill" style="font-size: 1.9rem;"></sl-icon>
             </a>
             <sl-menu>            
-              <sl-menu-item @click="${() => gotoRoute('/profile')}"><sl-icon class="dropdown-icon" slot="prefix" name="wifi"></sl-icon>System Status</sl-menu-item>
-              <sl-menu-item @click="${() => gotoRoute('/editProfile')}"><sl-icon class="dropdown-icon" slot="prefix" name="list-ul"></sl-icon>Logs</sl-menu-item>
+            <!-- Not yet implemented -->
+              <sl-menu-item @click="${() => gotoRoute('/')}"><sl-icon class="dropdown-icon" slot="prefix" name="wifi"></sl-icon>System Status</sl-menu-item>
+              <sl-menu-item @click="${() => gotoRoute('/')}"><sl-icon class="dropdown-icon" slot="prefix" name="list-ul"></sl-icon>Logs</sl-menu-item>
             </sl-menu>
           </sl-dropdown>
           <sl-dropdown distance="0" class="dropdowns">
@@ -721,7 +836,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                   Manage Place
               </sl-menu-item>
               <sl-menu-divider></sl-menu-divider>
-              <sl-menu-item class="menu-items" @click="${() => gotoRoute('/profile')}">
+              <sl-menu-item class="menu-items register-device" id="register-device">
                 <sl-icon class="dropdown-icon" slot="prefix" name="broadcast"></sl-icon>
                 <sl-icon class="manage-device" slot="prefix" name="plus"></sl-icon>
                   Register Device
@@ -774,8 +889,9 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 <sl-icon slot="icon" name="gear-fill" style="font-size: 2rem; color: white;"></sl-icon>
               </a>
               <sl-menu class="left-menu">            
-                <sl-menu-item class="menu-items" @click="${() => gotoRoute('/profile')}"><sl-icon class="dropdown-icon" slot="prefix" name="wifi"></sl-icon>System Status</sl-menu-item>
-                <sl-menu-item class="menu-items" @click="${() => gotoRoute('/editProfile')}"><sl-icon class="dropdown-icon" slot="prefix" name="list-ul"></sl-icon>Logs</sl-menu-item>
+              <!-- Not yet implemented -->
+                <sl-menu-item class="menu-items" @click="${() => gotoRoute('/')}"><sl-icon class="dropdown-icon" slot="prefix" name="wifi"></sl-icon>System Status</sl-menu-item>
+                <sl-menu-item class="menu-items" @click="${() => gotoRoute('/')}"><sl-icon class="dropdown-icon" slot="prefix" name="list-ul"></sl-icon>Logs</sl-menu-item>
               </sl-menu>
             </sl-dropdown>
             <sl-dropdown skidding="-171" distance="10" class="dropdowns-left">
@@ -808,7 +924,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                       Manage Place
                   </sl-menu-item>
                   <sl-menu-divider></sl-menu-divider>
-                  <sl-menu-item class="menu-items" @click="${() => gotoRoute('/profile')}">
+                  <sl-menu-item class="menu-items register-device-side" id="register-device-side">
                     <sl-icon class="dropdown-icon" slot="prefix" name="broadcast"></sl-icon>
                     <sl-icon class="manage-device" slot="prefix" name="plus"></sl-icon>
                       Register Device

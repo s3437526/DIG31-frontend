@@ -31,7 +31,6 @@ TODO
 - Add username to user collections
 - Hide sidenav when clicking on item?
 - Remove/change scrollbar to look more stylish and discrete while still indicating scrollable content
-- Sign in dialog (when launched from logged in user) does not allow clicking outside it to dismiss it even though it should
 - Implement system status and logs menu items
 - Implement notifications and warnings menu items
 - Add GSAP animation to device status lights
@@ -45,3 +44,6 @@ TODO
 - Register places dialog needs to allow cancelling and hide even if fields are empty. Currently this is not allowed.
 - Make home view the overview and home to show blank home screen for aesthetics when signed out rather than an empty overview panel
 - Firefox (only) shows error when signing in where user fetch request fails. Users loaded correctly however. Looks like a timing issue that is a non-issue. Chrome does not report this error.
+- Implement manage user feature (bring up register user dialog and send data as PUT rather than post)
+- Places menu link should list all DEVICES for the selected place
+- Register device sliders (shoelace) labels and help text do not seem to work
