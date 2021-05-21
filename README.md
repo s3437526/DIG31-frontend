@@ -47,3 +47,8 @@ TODO
 - Implement manage user feature (bring up register user dialog and send data as PUT rather than post)
 - Places menu link should list all DEVICES for the selected place
 - Register device sliders (shoelace) labels and help text do not seem to work
+- Register device dropdown text disappears when dropdown is not in focus. Text reappears on hover over respective box.
+- Looks like clicking on icons in menu do not trigger the desired menu selection event. Have to click on the menu text to make it work at the moment.
+- Make all bad toasts red with error class
+- Register item when in basic mode needs to append default values
+- Login credentials unsecured visible in dev tools??

@@ -71,7 +71,7 @@ class FetchAPI {
         }
         // If successful, convert data to JSON and return it to the calling function
         let data = await response.json();
-        console.log(data)
+        // console.log(data)
         return data;
     }
 
@@ -149,6 +149,33 @@ class FetchAPI {
         // If successful, convert data to JSON and return it to the calling function
         let data = await response.json();
         // console.log(data)
+        return data;
+    }
+
+    // POST - create place function using asynchronous fetch API call
+    async postItemAsync(formData) {
+        headers = {
+            "Authorization": `Bearer ${localStorage.accessToken}` //,
+                // "access": JSON.stringify(currentUser.accessLevel)
+        }
+        let response = await fetch(`${App.apiBase}/item`, {
+                method: 'POST',
+                headers: {
+                    "Authorization": `Bearer ${localStorage.accessToken}`,
+                    "access": `${localStorage.accessLevel}`
+                        // 'Content-Type': 'application/json'
+                },
+                // mode: 'cors',
+                body: formData
+            })
+            // Handle result of API call - if unsuccessful, throw error with customised message
+        if (!response.ok) {
+            Toast.show(`Problem creating item: ${response.status}`)
+            const message = `Problem creating item ${response.status}`
+            throw new Error(message)
+        }
+        // If successful, convert data to JSON and return it to the calling function
+        let data = await response.json();
         return data;
     }
 }

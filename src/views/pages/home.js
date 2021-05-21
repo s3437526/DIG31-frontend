@@ -67,9 +67,9 @@ class HomeView {
             users = await FetchAPI.getUsersAsync()
             items = await FetchAPI.getItemsAsync()
             places = await FetchAPI.getPlacesAsync()
-            console.log(`Users are: ${users}`)
-            console.log(`Items are: ${items}`)
-            console.log(`Places are: ${places}`)
+                // console.log(`Users are: ${users}`)
+                // console.log(`Items are: ${items}`)
+                // console.log(`Places are: ${places}`)
         }
 
         await this.render()
@@ -137,8 +137,8 @@ class HomeView {
         let temp = []
         let durations = []
         let colours = []
-            // console.log(durations)
         items.forEach(item => {
+            // console.log(`Item is: ${JSON.stringify(item)}`)
             labels.push(`${item.name} duration`)
             temp.push(item.activityHistory.activityDuration)
                 // colours.push()

@@ -4,8 +4,8 @@ import Auth from './../Auth'
 import App from './../App'
 import FetchAPI from '../FetchAPI'
 
-let places, items, users, locations = [{}]
-let collections = [{ places, items, users, locations }]
+let places, items, users, locations, devices = [{}]
+let collections = [{ places, items, users, locations, devices }]
 customElements.define('va-app-header', class AppHeader extends LitElement {
             constructor() {
                 super()
@@ -29,9 +29,11 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 const signinDialog = this.shadowRoot.querySelector('.signin-dialog')
                 const signupDialog = this.shadowRoot.querySelector('.signup-dialog')
                 const registerPlaceDialog = this.shadowRoot.querySelector('.register-place-dialog')
+                const registerDeviceDialog = this.shadowRoot.querySelector('.register-device-dialog')
                 const menuItems = this.shadowRoot.querySelectorAll('sl-menu-item')
                 const registerPlaceDropdown = this.shadowRoot.querySelector('#register-place-dropdown')
-                const registerDeviceDialog = this.shadowRoot.querySelector('.register-device-dialog')
+                const registerDeviceDropdown = this.shadowRoot.querySelector('#register-device-dropdown')
+                const registerDeviceLocationDropdown = this.shadowRoot.querySelector('#register-device-location-dropdown')
 
                 // set click event listener for menu items
                 menuItems.forEach(menuItem => {
@@ -72,6 +74,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                     collections.items = await FetchAPI.getItemsAsync()
                     collections.users = localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : ""
                     collections.locations = localStorage.accessLevel == 2 ? await FetchAPI.getLocationsAsync() : ""
+                    collections.devices = localStorage.accessLevel == 2 ? await FetchAPI.getDevicesAsync() : ""
 
                     // these HAVE to be streamlined...waaay to repetitive! Do if time permits, otherwise after unit completion!
                     this.renderPlacesButtons()
@@ -99,16 +102,31 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 })
 
                 // register place dropdown items
-                localStorage.accessLevel >= 1 ? collections.locations.forEach(location => {
+                localStorage.accessLevel >= 1 ? collections.locations.forEach(location => { // could just be straight up 2?
                     let dropdown = document.createElement('sl-menu-item')
                     dropdown.innerHTML = location.locationType
                     dropdown.classList.add('register-place-dropdown-item')
                     dropdown.setAttribute('id', location._id)
                     dropdown.setAttribute('value', location.locationType)
                     registerPlaceDropdown.appendChild(dropdown)
+                }) : ""
 
-                    console.log(location)
+                localStorage.accessLevel >= 1 ? collections.places.forEach(place => { // could just be straight up 2?
+                    let dropdown = document.createElement('sl-menu-item')
+                    dropdown.innerHTML = place.placeName
+                    dropdown.classList.add('register-device-dropdown-location-item')
+                    dropdown.setAttribute('id', `${place._id}-place-register`)
+                    dropdown.setAttribute('value', place.placeName)
+                    registerDeviceLocationDropdown.appendChild(dropdown)
+                }) : ""
 
+                localStorage.accessLevel >= 1 ? collections.devices.forEach(device => { // could just be straight up 2?
+                    let dropdown = document.createElement('sl-menu-item')
+                    dropdown.innerHTML = device.type
+                    dropdown.classList.add('register-device-dropdown-type-item')
+                    dropdown.setAttribute('id', `${device._id}-device-register`)
+                    dropdown.setAttribute('value', device.type)
+                    registerDeviceDropdown.appendChild(dropdown)
                 }) : ""
             }
 
@@ -120,9 +138,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                     itemElement.setAttribute('path', "icons")
                     itemElement.append(entity.placeName)
                     list.appendChild(itemElement)
-                    itemElement.addEventListener('click', () => {
-                        console.log(entity)
-                    })
+                    itemElement.addEventListener('click', () => {})
                 })
             }
 
@@ -134,9 +150,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                     itemElement.setAttribute('path', "icons")
                     itemElement.append(entity.name)
                     list.appendChild(itemElement)
-                    itemElement.addEventListener('click', () => {
-                        console.log(entity)
-                    })
+                    itemElement.addEventListener('click', () => {})
                 })
             }
 
@@ -248,17 +262,19 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 const submitBtn = this.shadowRoot.querySelector('.submit-btn')
                 const cancelBtn = this.shadowRoot.querySelector('.cancel-btn')
                 const registerPlaceDialog = this.shadowRoot.querySelector('.register-place-dialog')
-                const objectId = this.shadowRoot.querySelector('.register-place-dropdown-item').id
+                const selectedObjectValue = this.shadowRoot.querySelector('#register-place-dropdown').value
+                let objectId = null
+                const deviceObject = collections.locations.filter(location => {
+                    location.locationType === selectedObjectValue ? objectId = location._id : ""
+                })
 
                 formData.append("locationType", objectId)
                 FetchAPI.postPlaceAsync(formData)
 
-                console.log("Place registered...???")
+                // console.log(e.target.innerText)
+                // if successful, hide dialog, if not, keep it open and show toast - otherwise keep dialog open
 
-                console.log(e.target.innerText)
-                    // if successful, hide dialog, if not, keep it open and show toast - otherwise keep dialog open
-
-                window.location.reload()
+                // window.location.reload()
 
                 // console.log(formData)
                 for (var pair of formData.entries()) {
@@ -275,64 +291,120 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 const formData = e.detail.formData
                 const submitBtn = this.shadowRoot.querySelector('.submit-btn')
                 const cancelBtn = this.shadowRoot.querySelector('.cancel-btn')
-                const registerPlaceDialog = this.shadowRoot.querySelector('.register-device-dialog')
-                console.log("Device registered...")
+                const registerDeviceDialog = this.shadowRoot.querySelector('.register-device-dialog')
+                let advancedToggle = this.shadowRoot.querySelector('#advanced-settings-toggle')
+                let manAutoToggle = this.shadowRoot.querySelector('#manual-auto-toggle')
+                const deviceName = this.shadowRoot.querySelector('#device-name').value
+                const selectedObjectValue = this.shadowRoot.querySelector('#register-device-dropdown').value
+                const locationObjectValue = this.shadowRoot.querySelector('#register-device-location-dropdown').value
+                let typeObjectId, placeObjectId = null
+                const deviceObject = collections.devices.filter(device => {
+                    device.type === selectedObjectValue ? typeObjectId = device._id : ""
+                })
+                const locationObject = collections.places.filter(place => {
+                    place.placeName === locationObjectValue ? placeObjectId = place._id : ""
+                    console.log(place._id)
+                    console.log(place.placeName, locationObjectValue)
+                })
+                const ipInput = this.shadowRoot.querySelector('#ip-input')
+                const mqttInput = this.shadowRoot.querySelector('#mqtt-input')
 
-                console.log(e.target.innerText)
-                if (e.target.innerText === "Cancel") {
-                    registerPlaceDialog.hide()
+                console.log(`The original ID is: ${placeObjectId}`)
+                    // console.log(`Object id is: ${typeObjectId.split('-')[0]}`)
+                console.log(e.target)
+                console.log(typeObjectId)
+                console.log(placeObjectId)
+
+                console.log(advancedToggle)
+                if (advancedToggle.checked) {
+                    formData.append("type", typeObjectId)
+                    formData.append("placeName", placeObjectId)
+                    formData.append('enabled', this.shadowRoot.querySelector('#disable-enable-toggle').checked)
+                    formData.append("pinned", false)
+                    formData.append("state", 0)
+                    formData.append("status", 0)
+                    if (formData.get('ipAddress') === "") formData.set("ipAddress", "192.168.0.22") // Arbitrary at this point - will be dynamically allocated
+                    if (formData.get('mqttTopic') === "") formData.set("mqttTopic", `${deviceName}_${locationObjectValue}_${selectedObjectValue}`)
+                    console.log(formData.get('mqttTopic'))
+                    console.log(formData.get('ipAddress'))
+                    console.log(manAutoToggle.checked)
+                    if (manAutoToggle.checked) {
+                        console.log("Device is auto managed...")
+                    } else {
+                        formData.append("minTrigger", 0)
+                        formData.append("maxTrigger", 0)
+                    }
+                } else {
+                    formData.append("type", typeObjectId)
+                    formData.append("placeName", placeObjectId)
+                    formData.append('enabled', false)
+                    formData.append("pinned", false)
+                    formData.append("state", 0)
+                    formData.append("status", 0)
+                    formData.append("autoManage", true)
+                        // formData.append("pollRate", 60)
+                        // formData.append("reportingRate", 60)
+                    formData.append("ipAddress", "192.168.0.22") // Arbitrary at this point - will be dynamically allocated
+                    formData.append("mqttTopic", `${deviceName}_${locationObjectValue}_${selectedObjectValue}`)
                 }
 
+                // check that the mqttTopic, ipAddress do not already exist
+
+                FetchAPI.postItemAsync(formData)
+
+                if (e.target.innerText === "Cancel") {
+                    registerDeviceDialog.hide()
+                }
+                window.location.reload()
             }
 
-            handleAdvancedSettings(e){      
-              const advancedDeviceSettings = this.shadowRoot.querySelector('.advanced-device-settings')
-              advancedDeviceSettings.classList.toggle('hidden')
+            handleAdvancedSettings(e) {
+                const advancedDeviceSettings = this.shadowRoot.querySelector('.advanced-device-settings')
+                advancedDeviceSettings.classList.toggle('hidden')
             }
 
-            handleAutoManagement(e){
-              const minOnSetting = this.shadowRoot.querySelector('.min-on-setting')
-              const minOffSetting = this.shadowRoot.querySelector('.min-off-setting')
-              const minInputVal = this.shadowRoot.querySelector('.min-input-value')
-              const maxInputVal = this.shadowRoot.querySelector('.max-input-value')
-              
-              
-              if(e.target.checked){
-                minOnSetting.setAttribute('disabled', false) 
-                minOffSetting.setAttribute('disabled', false)
-                minInputVal.setAttribute('disabled', false)
-                maxInputVal.setAttribute('disabled', false)
-              }
-              else {
-                minOnSetting.setAttribute('disabled', true)
-                minOffSetting.setAttribute('disabled', true)
-                minInputVal.setAttribute('disabled', true)
-                maxInputVal.setAttribute('disabled', true)
-              }
+            handleAutoManagement(e) {
+                const minOnSetting = this.shadowRoot.querySelector('.min-on-setting')
+                const minOffSetting = this.shadowRoot.querySelector('.min-off-setting')
+                const minInputVal = this.shadowRoot.querySelector('.min-input-value')
+                const maxInputVal = this.shadowRoot.querySelector('.max-input-value')
+
+
+                if (e.target.checked) {
+                    minOnSetting.setAttribute('disabled', false)
+                    minOffSetting.setAttribute('disabled', false)
+                    minInputVal.setAttribute('disabled', false)
+                    maxInputVal.setAttribute('disabled', false)
+                } else {
+                    minOnSetting.setAttribute('disabled', true)
+                    minOffSetting.setAttribute('disabled', true)
+                    minInputVal.setAttribute('disabled', true)
+                    maxInputVal.setAttribute('disabled', true)
+                }
             }
 
-            handleMinSliderValues(e){
-              const minInputVal = this.shadowRoot.querySelector('.min-input-value')
-              console.log(e.target.value)
-              minInputVal.value = e.target.value
+            handleMinSliderValues(e) {
+                const minInputVal = this.shadowRoot.querySelector('.min-input-value')
+                console.log(e.target.value)
+                minInputVal.value = e.target.value
             }
 
-            handleMaxSliderValues(e){
-              const maxInputVal = this.shadowRoot.querySelector('.max-input-value')
-              console.log(e.target.value)
-              maxInputVal.value = e.target.value
+            handleMaxSliderValues(e) {
+                const maxInputVal = this.shadowRoot.querySelector('.max-input-value')
+                console.log(e.target.value)
+                maxInputVal.value = e.target.value
             }
 
-            handleMinInputValues(e){
-              const minInputVal = this.shadowRoot.querySelector('.min-on-setting')
-              console.log(e.target.value)
-              minInputVal.value = e.target.value
+            handleMinInputValues(e) {
+                const minInputVal = this.shadowRoot.querySelector('.min-on-setting')
+                console.log(e.target.value)
+                minInputVal.value = e.target.value
             }
 
-            handleMaxInputValues(e){
-              const maxInputVal = this.shadowRoot.querySelector('.min-off-setting')
-              console.log(e.target.value)
-              maxInputVal.value = e.target.value
+            handleMaxInputValues(e) {
+                const maxInputVal = this.shadowRoot.querySelector('.min-off-setting')
+                console.log(e.target.value)
+                maxInputVal.value = e.target.value
             }
 
             render() {
@@ -711,13 +783,13 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
           </div>
           <sl-form class="form-register-device dark-theme" @sl-submit=${this.registerDeviceSubmitHandler}>
               <div class="input-group pad-bottom input-labels">
-                <sl-input name="name" type="text" placeholder="Device name... e.g. Hallway LEDs" required></sl-input>
+                <sl-input name="name" type="text" id="device-name" placeholder="Device name... e.g. Hallway LEDs" required></sl-input>
               </div>
               <div class="input-group pad-bottom input-labels">
-                <sl-select id="register-device-dropdown" name="type" placeholder="Select device type..."></sl-select>
+                <sl-select id="register-device-dropdown" placeholder="Select device type..."></sl-select>
               </div>      
               <div class="input-group pad-bottom input-labels">
-                <sl-select id="register-device-location-dropdown" name="placeName" placeholder="Select device location..."></sl-select>
+                <sl-select id="register-device-location-dropdown" placeholder="Select device location..."></sl-select>
               </div>
               <div class="input-group input-labels">
                 <p class="toggle-text">Advanced Settings</p>
@@ -741,24 +813,24 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                   <sl-range class="min-off-setting" label="Moisture level off trigger" help-text="Turn off at %."min="0"max="100" value="80" @sl-change=${this.handleMaxSliderValues}></sl-range>
                 </div>
                 <div class="input-group input-labels" style="display: flex;">
-                  <sl-input class="pad-bottom text-input-xs min-input-value" name="min" type="number" label="Min." @sl-change=${this.handleMinInputValues} value="30"></sl-input>
-                  <sl-input class="pad-bottom text-input-xs max-input-value" style="margin-left: 1rem;" name="max" type="number" label="Max." @sl-change=${this.handleMaxInputValues} value="80"></sl-input>
+                  <sl-input class="pad-bottom text-input-xs min-input-value" name="minTrigger" type="number" label="Min." @sl-change=${this.handleMinInputValues} value="30"></sl-input>
+                  <sl-input class="pad-bottom text-input-xs max-input-value" style="margin-left: 1rem;" name="maxTrigger" type="number" label="Max." @sl-change=${this.handleMaxInputValues} value="80"></sl-input>
                 </div>
                 <div class="input-group input-labels">
-                  <sl-input class="pad-bottom text-input-xs" name="reporting-interval" label="Reporting interval (sec)" type="number"></sl-input>
+                  <sl-input class="pad-bottom text-input-xs" name="reportingRate" label="Reporting interval (sec)" type="number" value="60"></sl-input>
                 </div>
                 <div class="input-group input-labels">
-                  <sl-input class="pad-bottom text-input-xs" name="polling-rate" label="Polling rate (sec)" type="number"></sl-input>
+                  <sl-input class="pad-bottom text-input-xs" name="pollRate" label="Polling rate (sec)" type="number" value="15"></sl-input>
                 </div>
                 <div class="input-group input-labels">
-                  <sl-input class="pad-bottom text-input-sml" name="ip-address" label="IP address" type="text"></sl-input>
+                  <sl-input class="pad-bottom text-input-sml" id="ip-input" name="ipAddress" label="IP address" type="text" value=""></sl-input>
                 </div>
                 <div class="input-group input-labels">
-                  <sl-input class="pad-bottom text-input-sml" name="mqtt-topic" label="MQTT topic" type="string"></sl-input>
+                  <sl-input class="pad-bottom text-input-sml" id="mqtt-input" name="mqttTopic" label="MQTT topic" type="string" value=""></sl-input>
                 </div>
               </div>           
               <sl-button class="cancel-btn cancel pad-bottom" type="primary" submit style="width: 100%;">Cancel</sl-button>
-              <sl-button class="submit-btn register-devicd" type="primary" submit style="width: 100%;">Register</sl-button>
+              <sl-button class="submit-btn register-device pad-bottom" id="register-device-submit-btn" type="primary" submit style="width: 100%;">Register</sl-button>
           </sl-form>
       </div>
     </sl-dialog>
