@@ -7667,6 +7667,37 @@ class FetchAPI {
 
     let data = await response.json();
     return data;
+  } // PUT - create place function using asynchronous fetch API call
+
+
+  async putItemAsync(formData) {
+    console.log(formData);
+    headers = {
+      "Authorization": "Bearer ".concat(localStorage.accessToken) //,
+      // "access": JSON.stringify(currentUser.accessLevel)
+
+    };
+    let response = await fetch("".concat(_App.default.apiBase, "/item"), {
+      method: 'PUT',
+      headers: {
+        "Authorization": "Bearer ".concat(localStorage.accessToken),
+        'Content-Type': 'application/json' // 'Content-Type': 'application/json'
+
+      },
+      // mode: 'cors',
+      body: JSON.stringify(formData)
+    }); // Handle result of API call - if unsuccessful, throw error with customised message
+
+    if (!response.ok) {
+      _Toast.default.show("Problem updating item: ".concat(response.status));
+
+      const message = "Problem updating item ".concat(response.status);
+      throw new Error(message);
+    } // If successful, convert data to JSON and return it to the calling function
+
+
+    let data = await response.json();
+    return data;
   }
 
 }
@@ -24882,356 +24913,7 @@ class PlacesView {
 var _default = new PlacesView();
 
 exports.default = _default;
-},{"../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","../../Router":"Router.js","../../Auth":"Auth.js","../../Utils":"Utils.js","../../FetchAPI":"FetchAPI.js"}],"views/pages/devices.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _App = _interopRequireDefault(require("../../App"));
-
-var _litHtml = require("lit-html");
-
-var _Router = require("../../Router");
-
-var _Auth = _interopRequireDefault(require("../../Auth"));
-
-var _Utils = _interopRequireDefault(require("../../Utils"));
-
-var _FetchAPI = _interopRequireDefault(require("../../FetchAPI"));
-
-var _gsap = _interopRequireDefault(require("gsap"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _templateObject2() {
-  const data = _taggedTemplateLiteral(["\n            <div class=\"cols col1\">\n              <div class=\"material-icons\">", "</div>\n            </div>\n            <div class=\"cols col2\">\n              <div>", "</div>\n            </div>\n              <div class=\"cols col3\">\n                <div>", "</div>\n              </div>\n              <div class=\"cols col4\">\n                <div class=\"status-container\">\n                  <div class=\"", "\"></div>\n                  <div>", "</div>\n                </div>\n              </div>\n              <div class=\"cols col5\">\n                <div class=\"status-container\">\n                  <div class=\"", "\"></div>\n                  <div>", " ", "</div>\n                </div>\n              </div>\n            <div class=\"cols col6\">\n              <div class=\"", " material-icons\">", "</div>\n            </div>\n              <div class=\"cols col7\">\n                <div class=\"material-icons link\" @click=", ">handyman</div>\n              </div>\n            </div>\n            "]);
-
-  _templateObject2 = function _templateObject2() {
-    return data;
-  };
-
-  return data;
-}
-
-function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n      <style>\n        .status-container{\n          display: flex; \n          align-items: center; \n          justify-content: center; \n        }\n\n        .active{\n          background: #003A85;\n          width: 22px;\n          height: 12px;\n          margin-right: 10px;\n          /* box-shadow: #000 0 -1px 7px 1px, inset #460 0 -1px 9px, #7D0 0 2px 12px; */\n        }\n\n        .inactive{\n          background-color: red;\n          width: 22px;\n          height: 12px;\n          margin-right: 10px;\n        }\n\n        .online{\n          width: 22px;\n          height: 12px;\n          background-color: #00FF33;\n          margin-right: 10px;\n          /* box-shadow: #000 0 -1px 7px 1px, inset #460 0 -1px 9px, #7D0 0 2px 12px; */\n        }\n\n        .offline{\n          width: 22px;\n          height: 12px;\n          background-color: lightgray;\n          margin-right: 10px;\n        }\n\n        .image{\n          height: 100%;\n          width: auto;\n        }\n\n        .grid-container{\n          display: grid;\n          width: 100%;\n          grid-template-columns: 10% 20% 20% 20% 20% 5% 5%;\n        }\n\n        .header{\n          font-weight: 900;\n          font-size: 1.2rem;\n        }\n\n        .cols{\n          border-bottom: 1px solid;\n          display: flex;\n          justify-content: center;\n          align-items: center;\n          width: 100%;\n          height: 4rem;\n          padding: 0.5rem 0;\n        }\n\n        /* .col1{\n        } */\n\n        .col2{\n          justify-content: flex-start;\n          padding: 0 1rem;\n        }\n\n        .col3{\n          justify-content: flex-start;\n        }\n\n        .col4{\n          /* justify-content: flex-start; */\n        }\n\n        .col5{\n          /* justify-content: flex-start; */\n        }\n\n        .col6{\n\n        }\n\n        .col7{\n\n        }\n\n        .link{\n          cursor: pointer;\n        }\n\n        .col1 .material-icons{\n          font-size: 48px !important;\n        }\n\n        div::part(body){\n          /* background: orange; */\n        }\n\n      </style>\n      <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n      <va-app-header title=\"Devices\" user=\"", "\"></va-app-header>\n      <div class=\"page-content\">\n        <aa-panel-template title=", ">\n          <div slot=\"table-heading\">\n            <div class=\"grid-container\">\n              <div class=\"cols col1 header\">\n                <div></div>\n              </div>\n              <div class=\"cols col2 header\">\n                <div>Device Name</div>\n              </div>\n              <div class=\"cols col3 header\">\n                <div>Location</div>\n              </div>\n              <div class=\"cols col4 header\">\n                <div>Sensor Status</div>\n              </div>\n              <div class=\"cols col5 header\">\n                <div>Status</div>\n              </div>\n              <div class=\"cols col6 header\">\n                <div class=\"material-icons\">push_pin</div>\n              </div>\n              <div class=\"cols col7 header\">\n                <div></div>\n              </div>\n            </div>\n          </div>\n          <div slot=\"body\" part=\"body\">\n            <div class=\"grid-container\">\n              ", "\n            </div>\n        </div>\n      </div>\n    </aa-panel-template>\n  </div>     \n"]);
-
-  _templateObject = function _templateObject() {
-    return data;
-  };
-
-  return data;
-}
-
-function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-class DevicesView {
-  async init() {
-    document.title = 'Devices';
-    let devices = await _FetchAPI.default.getItemsAsync();
-    await this.render(devices);
-    this.animateStatus();
-
-    _Utils.default.pageIntroAnim();
-  }
-
-  animateStatus() {
-    const tl1 = new _gsap.default.to(".active", {
-      backgroundColor: "#3B90FF",
-      delay: 0.5,
-      duration: .5,
-      repeat: -1,
-      yoyo: true
-    });
-  }
-
-  handleClick(device) {
-    console.log("Device selected... ".concat(JSON.stringify(device)));
-  }
-
-  async render(devices) {
-    const template = (0, _litHtml.html)(_templateObject(), JSON.stringify(_Auth.default.currentUser), document.title, devices.map(device => (0, _litHtml.html)(_templateObject2(), device.type.iconURL, device.name, device.placeName.placeName, device.status ? "online" : "offline", device.status ? "online" : "offline", device.state ? "active" : "inactive", device.level ? "".concat(device.level, "%,") : "", device.state ? "active" : "inactive", device.pinned ? "pinned" : "unpinned", device.pinned ? "push_pin" : "", () => this.handleClick(device))));
-    (0, _litHtml.render)(template, _App.default.rootEl);
-  }
-
-}
-
-var _default = new DevicesView();
-
-exports.default = _default;
-},{"../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","../../Router":"Router.js","../../Auth":"Auth.js","../../Utils":"Utils.js","../../FetchAPI":"FetchAPI.js","gsap":"../node_modules/gsap/index.js"}],"views/pages/guide.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _App = _interopRequireDefault(require("../../App"));
-
-var _litHtml = require("lit-html");
-
-var _Router = require("../../Router");
-
-var _Auth = _interopRequireDefault(require("../../Auth"));
-
-var _Utils = _interopRequireDefault(require("../../Utils"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n      <va-app-header title=\"Guide\" user=\"", "\"></va-app-header>\n      <div class=\"page-content calign\">\n        <h3 class=\"brand-color\">Welcome ", "!</h3>\n        <p>This is a quick tour to teach you the basics of using Haircuts ...</p>\n      \n        <div class=\"guide-step\">\n          <h4>Search Hairdressers</h4>\n          <img src=\"https://plchldr.co/i/500x300?&bg=dddddd&fc=666666&text=IMAGE\">\n        </div>\n      \n        <div class=\"guide-step\">\n          <h4>Find a haircut</h4>\n          <img src=\"https://plchldr.co/i/500x300?&bg=dddddd&fc=666666&text=IMAGE\">\n        </div>\n      \n        <div class=\"guide-step\">\n          <h4>Save haircuts to favourites</h4>\n          <img src=\"https://plchldr.co/i/500x300?&bg=dddddd&fc=666666&text=IMAGE\">\n        </div>\n      \n        <sl-button type=\"primary\" @click=", ">Okay got it!</sl-button>\n      \n      \n      </div>\n    "]);
-
-  _templateObject = function _templateObject() {
-    return data;
-  };
-
-  return data;
-}
-
-function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-class GuideView {
-  init() {
-    document.title = 'Guide';
-    this.render();
-
-    _Utils.default.pageIntroAnim();
-  }
-
-  render() {
-    const template = (0, _litHtml.html)(_templateObject(), JSON.stringify(_Auth.default.currentUser), _Auth.default.currentUser.firstName, () => (0, _Router.gotoRoute)('/'));
-    (0, _litHtml.render)(template, _App.default.rootEl);
-  }
-
-}
-
-var _default = new GuideView();
-
-exports.default = _default;
-},{"../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","../../Router":"Router.js","../../Auth":"Auth.js","../../Utils":"Utils.js"}],"views/pages/usersView.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _App = _interopRequireDefault(require("../../App"));
-
-var _litHtml = require("lit-html");
-
-var _Router = require("../../Router");
-
-var _Auth = _interopRequireDefault(require("../../Auth"));
-
-var _Utils = _interopRequireDefault(require("../../Utils"));
-
-var _FetchAPI = _interopRequireDefault(require("../../FetchAPI"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _templateObject4() {
-  const data = _taggedTemplateLiteral(["    \n                      <img src=", " \n                            alt=\"", "\"\n                            class=\"image\"/>\n                    "]);
-
-  _templateObject4 = function _templateObject4() {
-    return data;
-  };
-
-  return data;
-}
-
-function _templateObject3() {
-  const data = _taggedTemplateLiteral(["\n                      <div class=\"material-icons\">account_circle</div>\n                      "]);
-
-  _templateObject3 = function _templateObject3() {
-    return data;
-  };
-
-  return data;
-}
-
-function _templateObject2() {
-  const data = _taggedTemplateLiteral(["\n              <div class=\"cols col1\">\n                  ", "\n                </div>\n                <div class=\"cols col2\">\n                  <div>", " ", "</div>\n                </div>\n                <div class=\"cols col3\">\n                  <div class=", ">", "</div>\n                </div>\n                <div class=\"cols col4\">\n                  <div class=\"material-icons link\" @click=", ">handyman</div>\n                </div>\n              </div>\n              "]);
-
-  _templateObject2 = function _templateObject2() {
-    return data;
-  };
-
-  return data;
-}
-
-function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n      <style>\n        .active{\n          color: lightgreen;\n        }\n\n        .inactive{\n          color: red;\n        }\n\n        .image{\n          height: 100%;\n          width: auto;\n        }\n\n        .grid-container{\n          display: grid;\n          width: 100%;\n          grid-template-columns: 10% 40% 40% 10%;\n        }\n\n        .header{\n          font-weight: 900;\n          font-size: 1.2rem;\n        }\n\n        .cols{\n          border-bottom: 1px solid;\n          display: flex;\n          justify-content: center;\n          align-items: center;\n          width: 100%;\n          height: 4rem;\n          padding: 0.5rem 0;\n        }\n\n        .col1{\n        }\n\n        .col2{\n          justify-content: flex-start;\n          padding: 0 1rem;\n        }\n\n        .col3{\n\n        }\n\n        .col4{\n          justify-content: flex-end;\n        }\n\n        .link{\n          cursor: pointer;\n        }\n\n        .col1 .material-icons{\n          font-size: 48px !important;\n        }\n\n        div::part(body){\n          /* background: orange; */\n        }\n\n      </style>\n      <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n      <va-app-header title=\"Users\" user=\"", "\"></va-app-header>\n      <div class=\"page-content\">\n        <aa-panel-template title=", ">\n          <div slot=\"table-heading\">\n            <div class=\"grid-container\">\n              <div class=\"cols col1 header\">\n                <div></div>\n              </div>\n              <div class=\"cols col2 header\">\n                <div>User Name</div>\n              </div>\n              <div class=\"cols col3 header\">\n                <div>Status</div>\n              </div>\n              <div class=\"cols col4 header\">\n                <div></div>\n              </div>\n            </div>\n          </div>\n          <div slot=\"body\" part=\"body\">\n            <div class=\"grid-container\">\n              ", "\n                </div>\n            </div>\n          </div>\n        </aa-panel-template>\n      </div>      \n    "]);
-
-  _templateObject = function _templateObject() {
-    return data;
-  };
-
-  return data;
-}
-
-function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-class UsersView {
-  async init() {
-    document.title = 'Users';
-    let users = await _FetchAPI.default.getUsersAsync();
-    await this.render(users);
-
-    _Utils.default.pageIntroAnim();
-  }
-
-  handleClick(user) {
-    console.log("User selected... ".concat(JSON.stringify(user)));
-  }
-
-  async render(users) {
-    const template = (0, _litHtml.html)(_templateObject(), JSON.stringify(_Auth.default.currentUser), document.title, users.map(user => (0, _litHtml.html)(_templateObject2(), user.imageURL === "" ? (0, _litHtml.html)(_templateObject3()) : (0, _litHtml.html)(_templateObject4(), "".concat(_App.default.apiBase, "/images/").concat(user.imageURL), "".concat(user.firstName, " image")), user.firstName, user.lastName, user.status ? "active" : "inactive", user.status ? "Active" : "Inactive", () => this.handleClick(user))));
-    (0, _litHtml.render)(template, _App.default.rootEl);
-  }
-
-}
-
-var _default = new UsersView();
-
-exports.default = _default;
-},{"../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","../../Router":"Router.js","../../Auth":"Auth.js","../../Utils":"Utils.js","../../FetchAPI":"FetchAPI.js"}],"Router.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.gotoRoute = gotoRoute;
-exports.anchorRoute = anchorRoute;
-exports.default = void 0;
-
-var _home = _interopRequireDefault(require("./views/pages/home"));
-
-var _ = _interopRequireDefault(require("./views/pages/404"));
-
-var _places = _interopRequireDefault(require("./views/pages/places"));
-
-var _devices = _interopRequireDefault(require("./views/pages/devices"));
-
-var _guide = _interopRequireDefault(require("./views/pages/guide"));
-
-var _usersView = _interopRequireDefault(require("./views/pages/usersView"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// import views
-// import profileView from './views/pages/profile'
-// import editProfileView from './views/pages/editProfile'
-// define routes
-const routes = {
-  '/': _home.default,
-  '/guide': _guide.default,
-  '/users': _usersView.default,
-  '404': _.default,
-  '/places': _places.default,
-  '/devices': _devices.default // '/profile': profileView,
-  // '/editProfile': editProfileView
-
-};
-
-class Router {
-  constructor() {
-    this.routes = routes;
-  }
-
-  init() {
-    // initial call
-    this.route(window.location.pathname); // on back/forward
-
-    window.addEventListener('popstate', () => {
-      this.route(window.location.pathname);
-    });
-  }
-
-  route(fullPathname) {
-    // extract path without params
-    const pathname = fullPathname.split('?')[0];
-    const route = this.routes[pathname];
-
-    if (route) {
-      // if route exists, run init() of the view
-      this.routes[window.location.pathname].init();
-    } else {
-      // show 404 view instead
-      this.routes['404'].init();
-    }
-  }
-
-  gotoRoute(pathname) {
-    window.history.pushState({}, pathname, window.location.origin + pathname);
-    this.route(pathname);
-  }
-
-} // create appRouter instance and export
-
-
-const AppRouter = new Router();
-var _default = AppRouter; // programmatically load any route
-
-exports.default = _default;
-
-function gotoRoute(pathname) {
-  AppRouter.gotoRoute(pathname);
-} // allows anchor <a> links to load routes
-
-
-function anchorRoute(e) {
-  e.preventDefault();
-  const pathname = e.target.closest('a').pathname;
-  AppRouter.gotoRoute(pathname);
-}
-},{"./views/pages/home":"views/pages/home.js","./views/pages/404":"views/pages/404.js","./views/pages/places":"views/pages/places.js","./views/pages/devices":"views/pages/devices.js","./views/pages/guide":"views/pages/guide.js","./views/pages/usersView":"views/pages/usersView.js"}],"App.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _Router = _interopRequireDefault(require("./Router"));
-
-var _Auth = _interopRequireDefault(require("./Auth"));
-
-var _Toast = _interopRequireDefault(require("./Toast"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class App {
-  constructor() {
-    this.name = "Haircuts";
-    this.version = "1.0.0";
-    this.apiBase = 'http://localhost:3000';
-    this.rootEl = document.getElementById("root");
-    this.version = "1.0.0";
-  }
-
-  init() {
-    console.log("App.init"); // Toast init
-
-    _Toast.default.init(); // Authentication check    
-
-
-    _Auth.default.check(() => {
-      // authenticated! init Router
-      _Router.default.init();
-    });
-  }
-
-}
-
-var _default = new App();
-
-exports.default = _default;
-},{"./Router":"Router.js","./Auth":"Auth.js","./Toast":"Toast.js"}],"../node_modules/lit-html/lib/modify-template.js":[function(require,module,exports) {
+},{"../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","../../Router":"Router.js","../../Auth":"Auth.js","../../Utils":"Utils.js","../../FetchAPI":"FetchAPI.js"}],"../node_modules/lit-html/lib/modify-template.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26981,7 +26663,630 @@ LitElement.finalized = true;
  */
 
 LitElement.render = _shadyRender.render;
-},{"lit-html":"../node_modules/lit-html/lit-html.js","lit-html/lib/shady-render":"../node_modules/lit-html/lib/shady-render.js","./lib/updating-element.js":"../node_modules/@polymer/lit-element/lib/updating-element.js","./lib/decorators.js":"../node_modules/@polymer/lit-element/lib/decorators.js","lit-html/lit-html":"../node_modules/lit-html/lit-html.js","./lib/css-tag.js":"../node_modules/@polymer/lit-element/lib/css-tag.js"}],"components/va-app-header.js":[function(require,module,exports) {
+},{"lit-html":"../node_modules/lit-html/lit-html.js","lit-html/lib/shady-render":"../node_modules/lit-html/lib/shady-render.js","./lib/updating-element.js":"../node_modules/@polymer/lit-element/lib/updating-element.js","./lib/decorators.js":"../node_modules/@polymer/lit-element/lib/decorators.js","lit-html/lit-html":"../node_modules/lit-html/lit-html.js","./lib/css-tag.js":"../node_modules/@polymer/lit-element/lib/css-tag.js"}],"components/aa-light-dialog.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _litElement = require("@polymer/lit-element");
+
+var _litHtml = require("lit-html");
+
+var _Router = require("../Router");
+
+var _Auth = _interopRequireDefault(require("../Auth"));
+
+var _App = _interopRequireDefault(require("../App"));
+
+var _FetchAPI = _interopRequireDefault(require("./../FetchAPI"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _templateObject() {
+  const data = _taggedTemplateLiteral(["\n        <style>\n            .dialog-heading{\n                display: flex; \n                align-items: center; \n                justify-content: center; \n                font-size: 1.5rem; \n                font-weight: 900;\n                color: white;\n            }\n\n            .flex-center{\n                display:flex;\n                align-items: center;\n                justify-content: center;\n            }\n\n            sl-dialog::part(panel){\n                background: var(--dialog-background);\n            }\n\n            .pad-bottom{\n                padding-bottom: 20px;\n            }\n\n            .toggle-dialogs{\n                cursor: pointer;\n                color: var(--brand-color);\n                text-decoration: underline;\n            }\n\n            .toggle-dialogs:hover{\n                color: white;\n            }\n\n            .toggle-text{\n                margin: 0;\n                color: white;\n            }\n\n            .toggle-switch{\n                --width: 60px; --height: 30px; --thumb-size: 28px;\n                color: white;\n                margin: 10px 0;\n            }\n\n            .input-labels{\n                color: white;\n            }\n\n            .text-input-sml{\n                width: 10rem;\n            }\n\n            .text-input-xs{\n                width: 5rem;\n            }\n\n            .hidden{\n                display: none;\n            }\n        </style>\n\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n        <span class=\"dialog-heading\">", "</span>\n            <div class=\"flex-center\">\n                <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">", "</div>          \n            </div>\n            <sl-form class=\"form-register-device dark-theme\" @sl-submit=", ">\n                <!-- <div class=\"input-group pad-bottom input-labels\">\n                    <sl-input name=\"name\" type=\"text\" id=\"device-name\" required value=", " disabled=\"true\"></sl-input>\n                </div> -->\n                <!-- <div class=\"input-group pad-bottom device-container\">\n                    <sl-select id=\"register-device-dropdown\"></sl-select>\n                </div>      \n                <div class=\"input-group pad-bottom\">\n                    <sl-select id=\"register-device-location-dropdown\" value=", "></sl-select>\n                </div> -->\n                <div class=\"input-group pad-bottom input-labels\">\n                        <p class=\"toggle-text\">Pin to dash</p>\n                        <sl-switch class=\"toggle-switch\" id=\"pin-unpin-toggle\" name=\"pinned\" @sl-change=", "></sl-switch>      \n                </div>\n                <div class=\"input-group pad-bottom input-labels\">\n                        <p class=\"toggle-text\">Off/On</p>\n                        <sl-switch class=\"toggle-switch\" id=\"off-on-toggle\" name=\"pinned\" @sl-change=", "></sl-switch>      \n                </div>\n                <div class=\"input-group\">\n                <!-- Will be replaced with custom made component containing two selector in one line -->\n                  <sl-range class=\"slider-level-input-value\" label=\"Level\" help-text=\"Light intensity\"min=\"0\"max=\"100\" value=\"50\" @sl-change=", "></sl-range><!-- set max input level -->\n                  <!-- add rgb values if RGB LED -->\n                </div>\n                <div class=\"input-group input-labels\" style=\"display: flex;\">\n                  <sl-input class=\"pad-bottom text-input-xs level-input-value\" name=\"level\" type=\"number\" label=\"Level\" @sl-change=", " value=\"50\"></sl-input>\n                </div>\n                <div class=\"input-group input-labels\">\n                    <p class=\"toggle-text\">Advanced Settings</p>\n                    <sl-switch class=\"toggle-switch\" id=\"advanced-settings-toggle\" @sl-change=", "></sl-switch>      \n                </div>\n                <div class=\"advanced-device-settings hidden\">\n                    <div style=\"display:flex; justify-content: center; align-items: center; border-bottom: 1px solid white; padding: 0 0 1rem 0; margin-bottom: 1rem; color: white;\">\n                        <div>Advanced Settings</div>\n                    </div>\n                    <div class=\"input-group pad-bottom input-labels\">\n                        <p class=\"toggle-text\">Disable/Enable</p>\n                        <sl-switch class=\"toggle-switch\" id=\"disable-enable-toggle\" @sl-change=", "></sl-switch>      \n                    </div>\n                    <div class=\"input-group input-labels\">\n                        <sl-input class=\"pad-bottom text-input-xs\" name=\"reportingRate\" label=\"Reporting interval (sec)\" type=\"number\"  value=", "></sl-input>\n                    </div>\n                    <div class=\"input-group input-labels\">\n                        <sl-input class=\"pad-bottom text-input-xs\" name=\"pollRate\" label=\"Polling rate (sec)\" type=\"number\"  value=", "></sl-input>\n                    </div>\n                    <div class=\"input-group input-labels\">\n                        <sl-input class=\"pad-bottom text-input-sml\" id=\"ip-input\" name=\"ipAddress\" label=\"IP address\" type=\"text\"  value=", "></sl-input>\n                    </div>\n                    <div class=\"input-group input-labels\">\n                        <sl-input class=\"pad-bottom text-input-sml\" id=\"mqtt-input\" name=\"mqttTopic\" label=\"MQTT topic\" type=\"string\"  value=", "></sl-input>\n                    </div>\n                </div>           \n                <sl-button class=\"cancel-btn cancel pad-bottom\" type=\"primary\" submit style=\"width: 100%;\">Cancel</sl-button>\n                <sl-button class=\"submit-btn register-device pad-bottom\" id=\"register-device-submit-btn\" type=\"primary\" submit style=\"width: 100%;\">Register</sl-button>\n            </sl-form>\n        "]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+// const template = document.createElement
+class LightDialog {
+  constructor() {
+    const devices = null;
+    const device = null;
+  } // element attributes
+
+
+  static get properties() {
+    return {
+      textContent: {
+        type: String
+      },
+      icon: {
+        type: String
+      },
+      path: {
+        type: String
+      },
+      active: {
+        type: String
+      }
+    };
+  }
+
+  firstUpdated() {
+    super.firstUpdated();
+    this.init; // let button = this.shadowRoot.querySelector('.container')
+    // button.addEventListener('click', () => {
+    //         this.shadowRoot.querySelector('.active-indicator').classList.toggle('active')
+    //     })
+    // // register place dropdown items
+    // localStorage.accessLevel >= 1 ? collections.locations.forEach(location => { // could just be straight up 2?
+    //     let dropdown = document.createElement('sl-menu-item')
+    //     dropdown.innerHTML = location.locationType
+    //     dropdown.classList.add('register-place-dropdown-item')
+    //     dropdown.setAttribute('id', location._id)
+    //     dropdown.setAttribute('value', location.locationType)
+    //     registerPlaceDropdown.appendChild(dropdown)
+    // }) : ""
+    // localStorage.accessLevel >= 1 ? collections.places.forEach(place => { // could just be straight up 2?
+    //     let dropdown = document.createElement('sl-menu-item')
+    //     dropdown.innerHTML = place.placeName
+    //     dropdown.classList.add('register-device-dropdown-location-item')
+    //     dropdown.setAttribute('id', `${place._id}-place-register`)
+    //     dropdown.setAttribute('value', place.placeName)
+    //     registerDeviceLocationDropdown.appendChild(dropdown)
+    // }) : ""
+    // localStorage.accessLevel >= 1 ? collections.devices.forEach(device => { // could just be straight up 2?
+    //     let dropdown = document.createElement('sl-menu-item')
+    //     dropdown.innerHTML = device.type
+    //     dropdown.classList.add('register-device-dropdown-type-item')
+    //     dropdown.setAttribute('id', `${device._id}-device-register`)
+    //     dropdown.setAttribute('value', device.type)
+    //     registerDeviceDropdown.appendChild(dropdown)
+    // }) : ""
+  }
+
+  init(device, devices) {
+    this.devices = devices;
+    this.device = device;
+    console.log(devices);
+    this.renderDialog(device);
+    console.log(device);
+    this.renderDevices();
+  }
+
+  registerSubmitHandler(e) {
+    e.preventDefault();
+    const formData = e.detail.formData;
+    const submitBtn = this.shadowRoot.querySelector('.submit-btn');
+    const cancelBtn = this.shadowRoot.querySelector('.cancel-btn');
+    const registerDeviceDialog = this.shadowRoot.querySelector('.register-device-dialog');
+    let advancedToggle = this.shadowRoot.querySelector('#advanced-settings-toggle');
+    let manAutoToggle = this.shadowRoot.querySelector('#manual-auto-toggle');
+    const deviceName = this.shadowRoot.querySelector('#device-name').value;
+    const selectedObjectValue = this.shadowRoot.querySelector('#register-device-dropdown').value;
+    const locationObjectValue = this.shadowRoot.querySelector('#register-device-location-dropdown').value;
+    let typeObjectId,
+        placeObjectId = null;
+    const deviceObject = collections.devices.filter(device => {
+      device.type === selectedObjectValue ? typeObjectId = device._id : "";
+    });
+    const locationObject = collections.places.filter(place => {
+      place.placeName === locationObjectValue ? placeObjectId = place._id : "";
+      console.log(place._id);
+      console.log(place.placeName, locationObjectValue);
+    });
+    const ipInput = this.shadowRoot.querySelector('#ip-input');
+    const mqttInput = this.shadowRoot.querySelector('#mqtt-input');
+    console.log("The original ID is: ".concat(placeObjectId)); // console.log(`Object id is: ${typeObjectId.split('-')[0]}`)
+
+    console.log(e.target);
+    console.log(typeObjectId);
+    console.log(placeObjectId);
+    console.log(advancedToggle);
+
+    if (advancedToggle.checked) {
+      formData.append("type", typeObjectId);
+      formData.append("placeName", placeObjectId);
+      formData.append('enabled', this.shadowRoot.querySelector('#disable-enable-toggle').checked);
+      formData.append("pinned", false);
+      formData.append("state", 0);
+      formData.append("status", 0);
+      if (formData.get('ipAddress') === "") formData.set("ipAddress", "192.168.0.22"); // Arbitrary at this point - will be dynamically allocated
+
+      if (formData.get('mqttTopic') === "") formData.set("mqttTopic", "".concat(deviceName, "_").concat(locationObjectValue, "_").concat(selectedObjectValue));
+      console.log(formData.get('mqttTopic'));
+      console.log(formData.get('ipAddress'));
+      console.log(manAutoToggle.checked);
+
+      if (manAutoToggle.checked) {
+        console.log("Device is auto managed...");
+      } else {
+        formData.append("minTrigger", 0);
+        formData.append("maxTrigger", 0);
+      }
+    } else {
+      formData.append("type", typeObjectId);
+      formData.append("placeName", placeObjectId);
+      formData.append('enabled', false);
+      formData.append("pinned", false);
+      formData.append("state", 0);
+      formData.append("status", 0);
+      formData.append("autoManage", true); // formData.append("pollRate", 60)
+      // formData.append("reportingRate", 60)
+
+      formData.append("ipAddress", "192.168.0.22"); // Arbitrary at this point - will be dynamically allocated
+
+      formData.append("mqttTopic", "".concat(deviceName, "_").concat(locationObjectValue, "_").concat(selectedObjectValue));
+    } // check that the mqttTopic, ipAddress do not already exist
+
+
+    _FetchAPI.default.postItemAsync(formData); // if (e.target.innerText === "Cancel") {
+    //     registerDeviceDialog.hide()
+    // }
+    // window.location.reload() // This for some reason doesn't allow the submission process to finish
+
+  }
+
+  renderDevices() {// const registerDeviceDropdown = document.querySelector('#register-device-dropdown')
+    // registerDeviceDropdown.value = this.device.name
+    // localStorage.accessLevel >= 1 ? this.devices.forEach(device => { // could just be straight up 2?
+    //     let dropdown = document.createElement('sl-menu-item')
+    //     dropdown.innerHTML = device.type.type
+    //     dropdown.classList.add('register-device-dropdown-type-item')
+    //     dropdown.setAttribute('id', `${device._id}-device-register`)
+    //     dropdown.setAttribute('value', device.name)
+    //     registerDeviceDropdown.appendChild(dropdown)
+    // }) : ""
+  }
+
+  handleAdvancedSettings(e) {
+    const advancedDeviceSettings = document.querySelector('.advanced-device-settings');
+    advancedDeviceSettings.classList.toggle('hidden');
+  }
+
+  handleEnabledDisabled(e) {
+    const disableEnable = document.querySelector('#disable-enable-toggle');
+
+    if (e.target.checked) {
+      disableEnable.setAttribute('checked', true);
+    } else {
+      disableEnable.removeAttribute('checked');
+    }
+  }
+
+  handleLevelInputValues(e) {
+    const sliderLvlVal = document.querySelector('.slider-level-input-value');
+    console.log(e.target.value);
+    sliderLvlVal.value = e.target.value;
+  }
+
+  handleLevelSliderValues(e) {
+    const lvlInputVal = document.querySelector('.level-input-value');
+    console.log(e.target.value);
+    lvlInputVal.value = e.target.value;
+  }
+
+  handlePinnedUnpinned(e) {
+    const pinnedInput = document.querySelector('#pin-unpin-toggle'); // console.log(e.target.value)
+
+    pinnedInput.value = e.target.value;
+  }
+
+  handlePowerStatus(e) {
+    e.preventDefault(); // const formData = e.detail.formData
+
+    const pinnedInput = document.querySelector('#off-on-toggle');
+
+    if (e.target.checked) {
+      console.log(e.target.checked);
+      pinnedInput.setAttribute('checked', true); // formData.set("state", "1")
+
+      _FetchAPI.default.putItemAsync(JSON.parse('{ "state": "1" }'));
+    } else {
+      pinnedInput.removeAttribute('checked'); // formData.set("state", "0")
+
+      _FetchAPI.default.putItemAsync(JSON.parse('{ "state": "0" }'));
+    }
+
+    console.log(e.target.checked); // pinnedInput.value = e.target.value
+    // FetchAPI.putItemAsync(e.target.value)
+  }
+
+  renderDialog(device) {
+    // create dialog
+    const lightDialog = document.createElement('sl-dialog'); // add classname
+
+    lightDialog.className = 'register-device-dialog'; // append header details
+
+    lightDialog.setAttribute('no-header', 'true');
+    lightDialog.setAttribute('style', '--width: 30vw;'); // dialog content
+
+    const dialogContent = (0, _litElement.html)(_templateObject(), device.name, device.type.iconURL, this.registerSubmitHandler, device.name, device.placeName.placeName, this.handlePinnedUnpinned, this.handlePowerStatus, this.handleLevelSliderValues, this.handleLevelInputValues, this.handleAdvancedSettings, this.handleEnabledDisabled, device.reportingRate, device.pollRate, device.ipAddress, device.mqttTopic);
+    (0, _litHtml.render)(dialogContent, lightDialog); // append to document.body
+
+    document.body.append(lightDialog); // show dialog
+
+    lightDialog.show(); // on hide delete dialog
+
+    lightDialog.addEventListener('sl-after-hide', () => {
+      lightDialog.remove();
+    });
+  }
+
+  render() {
+    // alert(`somthing happened... ${JSON.stringify(device.placeName.placeName)}`)
+    return;
+  }
+
+}
+
+var _default = new LightDialog();
+
+exports.default = _default;
+},{"@polymer/lit-element":"../node_modules/@polymer/lit-element/lit-element.js","lit-html":"../node_modules/lit-html/lit-html.js","../Router":"Router.js","../Auth":"Auth.js","../App":"App.js","./../FetchAPI":"FetchAPI.js"}],"views/pages/devices.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _App = _interopRequireDefault(require("../../App"));
+
+var _litHtml = require("lit-html");
+
+var _Auth = _interopRequireDefault(require("../../Auth"));
+
+var _Utils = _interopRequireDefault(require("../../Utils"));
+
+var _FetchAPI = _interopRequireDefault(require("../../FetchAPI"));
+
+var _gsap = _interopRequireDefault(require("gsap"));
+
+var _aaLightDialog = _interopRequireDefault(require("./../../components/aa-light-dialog"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _templateObject2() {
+  const data = _taggedTemplateLiteral(["\n            <div class=\"cols col1\">\n              <div class=\"material-icons\">", "</div>\n            </div>\n            <div class=\"cols col2\">\n              <div>", "</div>\n            </div>\n              <div class=\"cols col3\">\n                <div>", "</div>\n              </div>\n              <div class=\"cols col4\">\n                <div class=\"status-container\">\n                  <div class=\"", "\"></div>\n                  <div>", "</div>\n                </div>\n              </div>\n              <div class=\"cols col5\">\n                <div class=\"status-container\">\n                  <div class=\"", "\"></div>\n                  <div>", " ", "</div>\n                </div>\n              </div>\n            <div class=\"cols col6\">\n              <div class=\"", " material-icons\">", "</div>\n            </div>\n              <div class=\"cols col7\">\n                <div class=\"material-icons link\" @click=", ">handyman</div>\n              </div>\n            </div>\n            "]);
+
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject() {
+  const data = _taggedTemplateLiteral(["\n      <style>\n        .status-container{\n          display: flex; \n          align-items: center; \n          justify-content: center; \n        }\n\n        .active{\n          background: #003A85;\n          width: 22px;\n          height: 12px;\n          margin-right: 10px;\n          /* box-shadow: #000 0 -1px 7px 1px, inset #460 0 -1px 9px, #7D0 0 2px 12px; */\n        }\n\n        .inactive{\n          background-color: red;\n          width: 22px;\n          height: 12px;\n          margin-right: 10px;\n        }\n\n        .online{\n          width: 22px;\n          height: 12px;\n          background-color: #00FF33;\n          margin-right: 10px;\n          /* box-shadow: #000 0 -1px 7px 1px, inset #460 0 -1px 9px, #7D0 0 2px 12px; */\n        }\n\n        .offline{\n          width: 22px;\n          height: 12px;\n          background-color: lightgray;\n          margin-right: 10px;\n        }\n\n        .image{\n          height: 100%;\n          width: auto;\n        }\n\n        .grid-container{\n          display: grid;\n          width: 100%;\n          grid-template-columns: 10% 20% 20% 20% 20% 5% 5%;\n        }\n\n        .header{\n          font-weight: 900;\n          font-size: 1.2rem;\n        }\n\n        .cols{\n          border-bottom: 1px solid;\n          display: flex;\n          justify-content: center;\n          align-items: center;\n          width: 100%;\n          height: 4rem;\n          padding: 0.5rem 0;\n        }\n\n        /* .col1{\n        } */\n\n        .col2{\n          justify-content: flex-start;\n          padding: 0 1rem;\n        }\n\n        .col3{\n          justify-content: flex-start;\n        }\n\n        /* .col4{\n        }\n\n        .col5{\n        }\n\n        .col6{\n\n        }\n\n        .col7{\n\n        } */\n\n        .link{\n          cursor: pointer;\n        }\n\n        .col1 .material-icons{\n          font-size: 48px !important;\n        }\n\n      </style>\n      <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n      <va-app-header title=\"Devices\" user=\"", "\"></va-app-header>\n      <div class=\"page-content\">\n        <aa-panel-template title=", ">\n          <div slot=\"table-heading\">\n            <div class=\"grid-container\">\n              <div class=\"cols col1 header\">\n                <div></div>\n              </div>\n              <div class=\"cols col2 header\">\n                <div>Device Name</div>\n              </div>\n              <div class=\"cols col3 header\">\n                <div>Location</div>\n              </div>\n              <div class=\"cols col4 header\">\n                <div>Sensor Status</div>\n              </div>\n              <div class=\"cols col5 header\">\n                <div>Status</div>\n              </div>\n              <div class=\"cols col6 header\">\n                <div class=\"material-icons\">push_pin</div>\n              </div>\n              <div class=\"cols col7 header\">\n                <div></div>\n              </div>\n            </div>\n          </div>\n          <div slot=\"body\" part=\"body\">\n            <div class=\"grid-container\">\n              ", "\n            </div>\n        </div>\n      </div>\n    </aa-panel-template>\n  </div> \n"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+class DevicesView {
+  async init() {
+    document.title = 'Devices';
+    let devices = await _FetchAPI.default.getItemsAsync(); // let places = await FetchAPI.getPlacesAsync()
+
+    await this.render(devices);
+    this.animateStatus();
+
+    _Utils.default.pageIntroAnim();
+  } // blinking light for active status
+
+
+  animateStatus() {
+    const tl1 = new _gsap.default.to(".active", {
+      backgroundColor: "#3B90FF",
+      delay: 0.5,
+      duration: .5,
+      repeat: -1,
+      yoyo: true
+    });
+  }
+
+  handleClick(device, devices) {
+    console.log("Device selected... ".concat(JSON.stringify(device)));
+
+    _aaLightDialog.default.init(device, devices);
+  }
+
+  async render(devices, places) {
+    const template = (0, _litHtml.html)(_templateObject(), JSON.stringify(_Auth.default.currentUser), document.title, devices.map(device => (0, _litHtml.html)(_templateObject2(), device.type.iconURL, device.name, device.placeName.placeName, device.status ? "online" : "offline", device.status ? "online" : "offline", device.state ? "active" : "inactive", device.level ? "".concat(device.level, "%,") : "", device.state ? "active" : "inactive", device.pinned ? "pinned" : "unpinned", device.pinned ? "push_pin" : "", () => this.handleClick(device, devices))));
+    (0, _litHtml.render)(template, _App.default.rootEl);
+  }
+
+}
+
+var _default = new DevicesView();
+
+exports.default = _default;
+},{"../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","../../Auth":"Auth.js","../../Utils":"Utils.js","../../FetchAPI":"FetchAPI.js","gsap":"../node_modules/gsap/index.js","./../../components/aa-light-dialog":"components/aa-light-dialog.js"}],"views/pages/guide.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _App = _interopRequireDefault(require("../../App"));
+
+var _litHtml = require("lit-html");
+
+var _Router = require("../../Router");
+
+var _Auth = _interopRequireDefault(require("../../Auth"));
+
+var _Utils = _interopRequireDefault(require("../../Utils"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _templateObject() {
+  const data = _taggedTemplateLiteral(["\n      <va-app-header title=\"Guide\" user=\"", "\"></va-app-header>\n      <div class=\"page-content calign\">\n        <h3 class=\"brand-color\">Welcome ", "!</h3>\n        <p>This is a quick tour to teach you the basics of using Haircuts ...</p>\n      \n        <div class=\"guide-step\">\n          <h4>Search Hairdressers</h4>\n          <img src=\"https://plchldr.co/i/500x300?&bg=dddddd&fc=666666&text=IMAGE\">\n        </div>\n      \n        <div class=\"guide-step\">\n          <h4>Find a haircut</h4>\n          <img src=\"https://plchldr.co/i/500x300?&bg=dddddd&fc=666666&text=IMAGE\">\n        </div>\n      \n        <div class=\"guide-step\">\n          <h4>Save haircuts to favourites</h4>\n          <img src=\"https://plchldr.co/i/500x300?&bg=dddddd&fc=666666&text=IMAGE\">\n        </div>\n      \n        <sl-button type=\"primary\" @click=", ">Okay got it!</sl-button>\n      \n      \n      </div>\n    "]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+class GuideView {
+  init() {
+    document.title = 'Guide';
+    this.render();
+
+    _Utils.default.pageIntroAnim();
+  }
+
+  render() {
+    const template = (0, _litHtml.html)(_templateObject(), JSON.stringify(_Auth.default.currentUser), _Auth.default.currentUser.firstName, () => (0, _Router.gotoRoute)('/'));
+    (0, _litHtml.render)(template, _App.default.rootEl);
+  }
+
+}
+
+var _default = new GuideView();
+
+exports.default = _default;
+},{"../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","../../Router":"Router.js","../../Auth":"Auth.js","../../Utils":"Utils.js"}],"views/pages/usersView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _App = _interopRequireDefault(require("../../App"));
+
+var _litHtml = require("lit-html");
+
+var _Router = require("../../Router");
+
+var _Auth = _interopRequireDefault(require("../../Auth"));
+
+var _Utils = _interopRequireDefault(require("../../Utils"));
+
+var _FetchAPI = _interopRequireDefault(require("../../FetchAPI"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _templateObject4() {
+  const data = _taggedTemplateLiteral(["    \n                      <img src=", " \n                            alt=\"", "\"\n                            class=\"image\"/>\n                    "]);
+
+  _templateObject4 = function _templateObject4() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject3() {
+  const data = _taggedTemplateLiteral(["\n                      <div class=\"material-icons\">account_circle</div>\n                      "]);
+
+  _templateObject3 = function _templateObject3() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject2() {
+  const data = _taggedTemplateLiteral(["\n              <div class=\"cols col1\">\n                  ", "\n                </div>\n                <div class=\"cols col2\">\n                  <div>", " ", "</div>\n                </div>\n                <div class=\"cols col3\">\n                  <div class=", ">", "</div>\n                </div>\n                <div class=\"cols col4\">\n                  <div class=\"material-icons link\" @click=", ">handyman</div>\n                </div>\n              </div>\n              "]);
+
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject() {
+  const data = _taggedTemplateLiteral(["\n      <style>\n        .active{\n          color: lightgreen;\n        }\n\n        .inactive{\n          color: red;\n        }\n\n        .image{\n          height: 100%;\n          width: auto;\n        }\n\n        .grid-container{\n          display: grid;\n          width: 100%;\n          grid-template-columns: 10% 40% 40% 10%;\n        }\n\n        .header{\n          font-weight: 900;\n          font-size: 1.2rem;\n        }\n\n        .cols{\n          border-bottom: 1px solid;\n          display: flex;\n          justify-content: center;\n          align-items: center;\n          width: 100%;\n          height: 4rem;\n          padding: 0.5rem 0;\n        }\n\n        .col1{\n        }\n\n        .col2{\n          justify-content: flex-start;\n          padding: 0 1rem;\n        }\n\n        .col3{\n\n        }\n\n        .col4{\n          justify-content: flex-end;\n        }\n\n        .link{\n          cursor: pointer;\n        }\n\n        .col1 .material-icons{\n          font-size: 48px !important;\n        }\n\n        div::part(body){\n          /* background: orange; */\n        }\n\n      </style>\n      <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n      <va-app-header title=\"Users\" user=\"", "\"></va-app-header>\n      <div class=\"page-content\">\n        <aa-panel-template title=", ">\n          <div slot=\"table-heading\">\n            <div class=\"grid-container\">\n              <div class=\"cols col1 header\">\n                <div></div>\n              </div>\n              <div class=\"cols col2 header\">\n                <div>User Name</div>\n              </div>\n              <div class=\"cols col3 header\">\n                <div>Status</div>\n              </div>\n              <div class=\"cols col4 header\">\n                <div></div>\n              </div>\n            </div>\n          </div>\n          <div slot=\"body\" part=\"body\">\n            <div class=\"grid-container\">\n              ", "\n                </div>\n            </div>\n          </div>\n        </aa-panel-template>\n      </div>      \n    "]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+class UsersView {
+  async init() {
+    document.title = 'Users';
+    let users = await _FetchAPI.default.getUsersAsync();
+    await this.render(users);
+
+    _Utils.default.pageIntroAnim();
+  }
+
+  handleClick(user) {
+    console.log("User selected... ".concat(JSON.stringify(user)));
+  }
+
+  async render(users) {
+    const template = (0, _litHtml.html)(_templateObject(), JSON.stringify(_Auth.default.currentUser), document.title, users.map(user => (0, _litHtml.html)(_templateObject2(), user.imageURL === "" ? (0, _litHtml.html)(_templateObject3()) : (0, _litHtml.html)(_templateObject4(), "".concat(_App.default.apiBase, "/images/").concat(user.imageURL), "".concat(user.firstName, " image")), user.firstName, user.lastName, user.status ? "active" : "inactive", user.status ? "Active" : "Inactive", () => this.handleClick(user))));
+    (0, _litHtml.render)(template, _App.default.rootEl);
+  }
+
+}
+
+var _default = new UsersView();
+
+exports.default = _default;
+},{"../../App":"App.js","lit-html":"../node_modules/lit-html/lit-html.js","../../Router":"Router.js","../../Auth":"Auth.js","../../Utils":"Utils.js","../../FetchAPI":"FetchAPI.js"}],"Router.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.gotoRoute = gotoRoute;
+exports.anchorRoute = anchorRoute;
+exports.default = void 0;
+
+var _home = _interopRequireDefault(require("./views/pages/home"));
+
+var _ = _interopRequireDefault(require("./views/pages/404"));
+
+var _places = _interopRequireDefault(require("./views/pages/places"));
+
+var _devices = _interopRequireDefault(require("./views/pages/devices"));
+
+var _guide = _interopRequireDefault(require("./views/pages/guide"));
+
+var _usersView = _interopRequireDefault(require("./views/pages/usersView"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// import views
+// import profileView from './views/pages/profile'
+// import editProfileView from './views/pages/editProfile'
+// define routes
+const routes = {
+  '/': _home.default,
+  '/guide': _guide.default,
+  '/users': _usersView.default,
+  '404': _.default,
+  '/places': _places.default,
+  '/devices': _devices.default // '/profile': profileView,
+  // '/editProfile': editProfileView
+
+};
+
+class Router {
+  constructor() {
+    this.routes = routes;
+  }
+
+  init() {
+    // initial call
+    this.route(window.location.pathname); // on back/forward
+
+    window.addEventListener('popstate', () => {
+      this.route(window.location.pathname);
+    });
+  }
+
+  route(fullPathname) {
+    // extract path without params
+    const pathname = fullPathname.split('?')[0];
+    const route = this.routes[pathname];
+
+    if (route) {
+      // if route exists, run init() of the view
+      this.routes[window.location.pathname].init();
+    } else {
+      // show 404 view instead
+      this.routes['404'].init();
+    }
+  }
+
+  gotoRoute(pathname) {
+    window.history.pushState({}, pathname, window.location.origin + pathname);
+    this.route(pathname);
+  }
+
+} // create appRouter instance and export
+
+
+const AppRouter = new Router();
+var _default = AppRouter; // programmatically load any route
+
+exports.default = _default;
+
+function gotoRoute(pathname) {
+  AppRouter.gotoRoute(pathname);
+} // allows anchor <a> links to load routes
+
+
+function anchorRoute(e) {
+  e.preventDefault();
+  const pathname = e.target.closest('a').pathname;
+  AppRouter.gotoRoute(pathname);
+}
+},{"./views/pages/home":"views/pages/home.js","./views/pages/404":"views/pages/404.js","./views/pages/places":"views/pages/places.js","./views/pages/devices":"views/pages/devices.js","./views/pages/guide":"views/pages/guide.js","./views/pages/usersView":"views/pages/usersView.js"}],"App.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Router = _interopRequireDefault(require("./Router"));
+
+var _Auth = _interopRequireDefault(require("./Auth"));
+
+var _Toast = _interopRequireDefault(require("./Toast"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+class App {
+  constructor() {
+    this.name = "Haircuts";
+    this.version = "1.0.0";
+    this.apiBase = 'http://localhost:3000';
+    this.rootEl = document.getElementById("root");
+    this.version = "1.0.0";
+  }
+
+  init() {
+    console.log("App.init"); // Toast init
+
+    _Toast.default.init(); // Authentication check    
+
+
+    _Auth.default.check(() => {
+      // authenticated! init Router
+      _Router.default.init();
+    });
+  }
+
+}
+
+var _default = new App();
+
+exports.default = _default;
+},{"./Router":"Router.js","./Auth":"Auth.js","./Toast":"Toast.js"}],"components/va-app-header.js":[function(require,module,exports) {
 "use strict";
 
 var _litElement = require("@polymer/lit-element");
@@ -27057,7 +27362,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  const data = _taggedTemplateLiteral(["\n    <style>      \n      * {\n        box-sizing: border-box;\n      }\n      .app-header {\n        background: rgb(94,85,107);\n        position: fixed;\n        top: 0;\n        right: 0;\n        left: 0;\n        height: var(--app-header-height);\n        color: #fff;\n        display: flex;\n        justify-content: flex-end;\n        z-index: 9;\n        box-shadow: 4px 0px 10px rgba(0,0,0,0.2);\n        align-items: center;\n      }\n\n      .app-header-main {\n        flex-grow: 1;\n        display: flex;\n        align-items: center;\n      }\n\n      .app-header-main::slotted(h1){\n        color: #fff;\n      }\n\n      .app-logo a {\n        color: #fff;\n        text-decoration: none;\n        font-weight: bold;\n        font-size: 1.2em;\n        padding: .6em;\n        display: inline-block;        \n      }\n\n      .app-logo img {\n        width: 90px;\n      }\n      \n      .hamburger-btn::part(base) {\n        color: #fff;\n        font-size: 2.5em;\n      }\n\n      .app-top-nav {\n        display: flex;\n        height: 100%;\n        align-items: center;\n      }\n\n      .app-top-nav a {\n        display: inline-block;\n        padding: .8em;\n        text-decoration: none;\n        color: #fff;\n      }\n\n      sl-drawer::part(panel){\n        background-color: rgb(94,85,107);\n        --size: 20em;\n      }\n\n      sl-drawer::part(body){\n        padding: 0;\n        scrollbar-width: none; /* Firefox */\n        -ms-overflow-style: none;  /* IE 10+ */\n        &::-webkit-scrollbar {\n        width: 0px;\n        background: transparent; /* Chrome/Safari/Webkit */\n        }\n      }\n      \n      sl-drawer::part(overlay){\n        background: transparent;\n      }\n\n      sl-drawer::part(close-button){\n        color: white;\n      }\n\n      .sidenav-content{\n        display: flex; \n        flex-direction: column; \n        align-items: center; \n        height: 100%; \n        justify-content: space-between;\n      }\n\n      .accordion-container{\n        width: 100%;\n      }\n\n      .dashboard-button::part(content){\n        display: none;\n      }\n\n      .bottom-menus{\n        width: 100%;\n        padding: 5%;\n      }\n\n      .app-side-menu-items a {\n        display: block;\n        padding: .5em;\n        text-decoration: none;\n        font-size: 1.3em;\n        color: var(--app-header-txt-color);\n      }\n\n      .page-title {\n        color: var(--app-header-txt-color);\n        margin-right: 0.5em;\n        font-size: var(--app-header-title-font-size);\n      }\n\n      /* active nav links */\n      .app-top-nav a.active,\n      .app-side-menu-items a.active {\n        font-weight: bold;\n      }\n\n      #bell-icon, #bell-icon-sidenav, #alert-icon, #alert-icon-sidenav, .bi-bell{\n        color: gray;\n      }\n\n      sl-dropdown::part(panel){\n        background-color: rgb(94,85,107);\n        border: none;\n        max-height: 100vh;\n        border-radius:  0 0 5px 5px;\n      }\n\n      sl-menu.left-menu::part(base){\n        border: 1px solid #fff;\n        border-radius: 5px;\n      }\n\n      .menu-items::part(base){\n        color: #fff;\n      }\n\n      .menu-items::part(base):hover{\n        color: rgb(94,85,107);\n      }\n\n      sl-avatar::part(base){\n        --size: 2rem;\n        color: white;\n      }\n\n      sl-details::part(header){\n        padding: var(--sl-spacing-x-small);\n      }\n      \n      sl-details::part(content){\n        padding: 0;\n        border-top: 1px solid white;\n      }\n\n      sl-details::part(summary):hover{\n        color: var(--base-color);\n      }\n\n      sl-details::part(base){\n        color: white;\n        background: var(--base-color);\n      }\n\n      sl-details::part(base):hover{\n        color: var(--base-color);\n        background: white;\n      }\n\n      .dropdown-icon{\n        font-size: 2rem;\n\n      }.settings-icon{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -15%; \n        margin-right:0;\n      }\n\n      .add-icon{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-place{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-device{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -5%; \n        margin-right:0;\n      }\n\n      .add-device{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: 0;\n      }\n\n      .signout-icon{\n        font-size: 2rem;\n        left: 10%;\n        margin-right:1.5rem;\n      }\n\n      .app-side-nav{\n        display:none;\n      }\n\n      .summary-icon::part(summary){\n        font-size: 2rem;\n      }\n\n      /* RESPONSIVE - MOBILE ------------------- */\n      @media all and (max-width: 768px){       \n        \n        .app-top-nav {\n          display: none;\n        }\n\n        .app-side-nav{\n          display:flex;\n          align-items: center;\n          justify-content: space-evenly;\n        }\n      }\n\n      .dialog-heading{\n        display: flex; \n        align-items: center; \n        justify-content: center; \n        font-size: 1.5rem; \n        font-weight: 900;\n        color: white;\n      }\n\n      .flex-center{\n          display:flex;\n          align-items: center;\n          justify-content: center;\n      }\n\n      sl-dialog::part(panel){\n          background: var(--dialog-background);\n      }\n\n      .pad-bottom{\n          padding-bottom: 20px;\n      }\n\n      .toggle-dialogs{\n        cursor: pointer;\n        color: var(--brand-color);\n        text-decoration: underline;\n      }\n\n      .toggle-dialogs:hover{\n        color: white;\n      }\n\n      .toggle-text{\n        margin: 0;\n        color: white;\n      }\n\n      .toggle-switch{\n        --width: 60px; --height: 30px; --thumb-size: 28px;\n        color: white;\n        margin: 10px 0;\n      }\n\n      .input-labels{\n        color: white;\n      }\n\n      .text-input-sml{\n        width: 10rem;\n      }\n\n      .text-input-xs{\n        width: 5rem;\n      }\n\n      .hidden{\n        display: none;\n      }\n    </style>  \n    <!-- Sign in dialog -->\n    <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n    <sl-dialog no-header=\"true\" slot=\"label\" class=\"signin-dialog\" style=\"--width: 30vw;\">\n    <span class=\"dialog-heading\">Sign In</span>\n    <div class=\"page-content page-centered\">\n        <div class=\"signinup-box\">\n        <div class=\"flex-center\">\n            <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">account_circle</div>          \n        </div>\n        <sl-form class=\"form-signup dark-theme\" @sl-submit=", ">          \n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom email-input\" name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n            </div>\n            <sl-button class=\"submit-btn\" type=\"primary\" submit style=\"width: 100%;\">Sign In</sl-button>\n        </sl-form>\n        <p>No Account? <span class=\"toggle-dialogs\">Sign Up</span></p>\n        </div>\n    </div>\n    </sl-dialog>\n    <!-- Sign up dialog -->\n    <sl-dialog no-header=\"true\" slot=\"label\" class=\"signup-dialog\" style=\"--width: 30vw;\">\n    <span class=\"dialog-heading\">Sign up</span>\n    <div class=\"page-content page-centered\">\n        <div class=\"signupup-box\">\n        <div class=\"flex-center\">\n            <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">account_circle</div>          \n        </div>\n        <sl-form class=\"form-signup\" @sl-submit=", ">\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"firstName\" type=\"text\" placeholder=\"First Name\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"lastName\" type=\"text\" placeholder=\"Last Name\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"username\" type=\"text\" placeholder=\"Username\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n            </div>      \n            ", "\n            <sl-button type=\"primary\" class=\"submit-btn\" submit style=\"width: 100%;\">Sign Up</sl-button>\n        </sl-form>\n        <p>Have an account? <span class=\"toggle-dialogs\">Sign In</span></p>\n        </div>\n    </div>\n    </sl-dialog>\n    <!-- Register device menu -->\n    <sl-dialog no-header=\"true\" slot=\"label\" class=\"register-device-dialog\" style=\"--width: 30vw;\">\n      <span class=\"dialog-heading\">Register Device</span>\n      <div class=\"page-content page-centered\">\n          <div class=\"flex-center\">\n              <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">sensors</div>          \n          </div>\n          <sl-form class=\"form-register-device dark-theme\" @sl-submit=", ">\n              <div class=\"input-group pad-bottom input-labels\">\n                <sl-input name=\"name\" type=\"text\" id=\"device-name\" placeholder=\"Device name... e.g. Hallway LEDs\" required></sl-input>\n              </div>\n              <div class=\"input-group pad-bottom input-labels\">\n                <sl-select id=\"register-device-dropdown\" placeholder=\"Select device type...\"></sl-select>\n              </div>      \n              <div class=\"input-group pad-bottom input-labels\">\n                <sl-select id=\"register-device-location-dropdown\" placeholder=\"Select device location...\"></sl-select>\n              </div>\n              <div class=\"input-group input-labels\">\n                <p class=\"toggle-text\">Advanced Settings</p>\n                <sl-switch class=\"toggle-switch\" id=\"advanced-settings-toggle\" @sl-change=", "></sl-switch>      \n              </div>\n              <div class=\"advanced-device-settings hidden\">\n                <div style=\"display:flex; justify-content: center; align-items: center; border-bottom: 1px solid white; padding: 0 0 1rem 0; margin-bottom: 1rem; color: white;\">\n                  <div>Advanced Settings</div>\n                </div>\n                <div class=\"input-group pad-bottom input-labels\">\n                  <p class=\"toggle-text\">Disable/Enable</p>\n                  <sl-switch class=\"toggle-switch\" id=\"disable-enable-toggle\"></sl-switch>      \n                </div>\n                <div class=\"input-group pad-bottom input-labels\">\n                  <p class=\"toggle-text\">Manual/Auto</p>\n                  <sl-switch class=\"toggle-switch\" id=\"manual-auto-toggle\" @sl-change=", " checked></sl-switch>      \n                </div>\n                <div class=\"input-group\">\n                <!-- Will be replaced with custom made component containing two selector in one line -->\n                  <sl-range class=\"min-on-setting\" label=\"Moisture level on trigger\" help-text=\"Turn on at %.\"min=\"0\"max=\"100\" value=\"30\" @sl-change=", "></sl-range>\n                  <sl-range class=\"min-off-setting\" label=\"Moisture level off trigger\" help-text=\"Turn off at %.\"min=\"0\"max=\"100\" value=\"80\" @sl-change=", "></sl-range>\n                </div>\n                <div class=\"input-group input-labels\" style=\"display: flex;\">\n                  <sl-input class=\"pad-bottom text-input-xs min-input-value\" name=\"minTrigger\" type=\"number\" label=\"Min.\" @sl-change=", " value=\"30\"></sl-input>\n                  <sl-input class=\"pad-bottom text-input-xs max-input-value\" style=\"margin-left: 1rem;\" name=\"maxTrigger\" type=\"number\" label=\"Max.\" @sl-change=", " value=\"80\"></sl-input>\n                </div>\n                <div class=\"input-group input-labels\">\n                  <sl-input class=\"pad-bottom text-input-xs\" name=\"reportingRate\" label=\"Reporting interval (sec)\" type=\"number\" value=\"60\"></sl-input>\n                </div>\n                <div class=\"input-group input-labels\">\n                  <sl-input class=\"pad-bottom text-input-xs\" name=\"pollRate\" label=\"Polling rate (sec)\" type=\"number\" value=\"15\"></sl-input>\n                </div>\n                <div class=\"input-group input-labels\">\n                  <sl-input class=\"pad-bottom text-input-sml\" id=\"ip-input\" name=\"ipAddress\" label=\"IP address\" type=\"text\" value=\"\"></sl-input>\n                </div>\n                <div class=\"input-group input-labels\">\n                  <sl-input class=\"pad-bottom text-input-sml\" id=\"mqtt-input\" name=\"mqttTopic\" label=\"MQTT topic\" type=\"string\" value=\"\"></sl-input>\n                </div>\n              </div>           \n              <sl-button class=\"cancel-btn cancel pad-bottom\" type=\"primary\" submit style=\"width: 100%;\">Cancel</sl-button>\n              <sl-button class=\"submit-btn register-device pad-bottom\" id=\"register-device-submit-btn\" type=\"primary\" submit style=\"width: 100%;\">Register</sl-button>\n          </sl-form>\n      </div>\n    </sl-dialog>\n    <!-- Register place menu -->\n    <sl-dialog no-header=\"true\" slot=\"label\" class=\"register-place-dialog\" style=\"--width: 30vw;\">\n      <span class=\"dialog-heading\">Register Place</span>\n      <div class=\"page-content page-centered\">\n          <div class=\"flex-center\">\n              <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">home</div>          \n          </div>\n          <sl-form class=\"form-register-place dark-theme\" @sl-submit=", ">\n              <div class=\"input-group pad-bottom\">\n                <sl-input name=\"placeName\" type=\"text\" placeholder=\"Place name... e.g. Master Bedroom\" required></sl-input>\n              </div>\n              <div class=\"input-group pad-bottom\">\n              <sl-select id=\"register-place-dropdown\" name=\"location\" placeholder=\"Select location...\">\n              </sl-select>\n            </div>      \n              <sl-button class=\"cancel-btn cancel pad-bottom\" type=\"primary\" submit style=\"width: 100%;\">Cancel</sl-button>\n              <sl-button class=\"submit-btn register-place\" type=\"primary\" submit style=\"width: 100%;\">Register</sl-button>\n          </sl-form>\n      </div>\n    </sl-dialog>\n    <!-- Hamburger -->\n    <header class=\"app-header\" style=\"display:flex; justify-content: space-between; align-items:center;\">\n      <div class=\"left-navs\">\n        <sl-icon-button class=\"hamburger-btn\" name=\"list\" @click=\"", "\"></sl-icon-button>       \n      </div>\n      <!-- Main (top) menus -->\n      <div class=\"right-navs\">\n        <nav class=\"app-top-nav\">\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"bell-icon\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"alert-icon\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <sl-dropdown>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 1.9rem;\"></sl-icon>\n            </a>\n            <sl-menu>            \n            <!-- Not yet implemented -->\n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n          <sl-dropdown distance=\"0\" class=\"dropdowns\">\n            <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n              <sl-avatar image=", "></sl-avatar> ", "\n            </a>\n            <sl-menu>            \n            ", "\n              </sl-menu-item>\n              <sl-menu-item class=\"manage-account menu-items\" id=\"manage-account\" @click=\"", "\">\n                <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                  Manage Account\n              </sl-menu-item>\n              ", "\n              <sl-menu-item class=\"menu-items\" @click=\"", "\">\n                <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                  Sign Out\n              </sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n        </nav>\n      </div>\n    </header>\n    <sl-drawer class=\"app-side-menu\" placement=\"left\">\n      <div class=\"sidenav-content\">\n        <!-- accordion (details) container to list all entities categorically -->\n        <div class=\"accordion-container\">\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n          <div class=\"accordion-menu\">\n            <sl-details class=\"dashboard-button\" @click=\"", "\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">dashboard</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Dashboard</span></sl-details>\n            <sl-details class=\"details places-list\" summary=\"Places\" ><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">home</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Places</span></sl-details>\n            <sl-details class=\"details devices-list\" summary=\"Devices\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">sensors</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Devices</span></sl-details>\n            ", "\n          </div>\n          <style>\n            .details-group-example sl-details:not(:last-of-type) {\n              margin-bottom: var(--sl-spacing-xx-small);\n            }\n          </style>\n        </div>\n        <!--  -->\n        <div class=\"bottom-menus\">\n          <nav class=\"app-side-nav\">\n            <!-- <a href=\"/\" @click=\"", "\">Home</a>         -->\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"bell-icon-sidenav\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"alert-icon-sidenav\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <sl-dropdown skidding=\"-109\" distance=\"10\">\n              <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 2rem; color: white;\"></sl-icon>\n              </a>\n              <sl-menu class=\"left-menu\">            \n              <!-- Not yet implemented -->\n                <sl-menu-item class=\"menu-items\" @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n                <sl-menu-item class=\"menu-items\" @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n            <sl-dropdown skidding=\"-171\" distance=\"10\" class=\"dropdowns-left\">\n              <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n                <sl-avatar image=", ">\n              </a>\n              <sl-menu class=\"left-menu\">            \n                ", "\n                  </sl-menu-item>\n                  <sl-menu-item class=\"manage-account menu-items\" id=\"manage-account-side\" @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                    <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                      Manage Account\n                  </sl-menu-item>\n                  ", "\n                  <sl-menu-item class=\"menu-items\" @click=\"", "\">\n                    <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                      Sign Out\n                  </sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n          </nav>\n        </div>\n      </div>\n    </sl-drawer>\n    "]);
+  const data = _taggedTemplateLiteral(["\n    <style>      \n      * {\n        box-sizing: border-box;\n      }\n      .app-header {\n        background: rgb(94,85,107);\n        position: fixed;\n        top: 0;\n        right: 0;\n        left: 0;\n        height: var(--app-header-height);\n        color: #fff;\n        display: flex;\n        justify-content: flex-end;\n        z-index: 9;\n        box-shadow: 4px 0px 10px rgba(0,0,0,0.2);\n        align-items: center;\n      }\n\n      .app-header-main {\n        flex-grow: 1;\n        display: flex;\n        align-items: center;\n      }\n\n      .app-header-main::slotted(h1){\n        color: #fff;\n      }\n\n      .app-logo a {\n        color: #fff;\n        text-decoration: none;\n        font-weight: bold;\n        font-size: 1.2em;\n        padding: .6em;\n        display: inline-block;        \n      }\n\n      .app-logo img {\n        width: 90px;\n      }\n      \n      .hamburger-btn::part(base) {\n        color: #fff;\n        font-size: 2.5em;\n      }\n\n      .app-top-nav {\n        display: flex;\n        height: 100%;\n        align-items: center;\n      }\n\n      .app-top-nav a {\n        display: inline-block;\n        padding: .8em;\n        text-decoration: none;\n        color: #fff;\n      }\n\n      sl-drawer::part(panel){\n        background-color: rgb(94,85,107);\n        --size: 20em;\n      }\n\n      sl-drawer::part(body){\n        padding: 0;\n        scrollbar-width: none; /* Firefox */\n        -ms-overflow-style: none;  /* IE 10+ */\n        &::-webkit-scrollbar {\n        width: 0px;\n        background: transparent; /* Chrome/Safari/Webkit */\n        }\n      }\n      \n      sl-drawer::part(overlay){\n        background: transparent;\n      }\n\n      sl-drawer::part(close-button){\n        color: white;\n      }\n\n      .sidenav-content{\n        display: flex; \n        flex-direction: column; \n        align-items: center; \n        height: 100%; \n        justify-content: space-between;\n      }\n\n      .accordion-container{\n        width: 100%;\n      }\n\n      .dashboard-button::part(content){\n        display: none;\n      }\n\n      .bottom-menus{\n        width: 100%;\n        padding: 5%;\n      }\n\n      .app-side-menu-items a {\n        display: block;\n        padding: .5em;\n        text-decoration: none;\n        font-size: 1.3em;\n        color: var(--app-header-txt-color);\n      }\n\n      .page-title {\n        color: var(--app-header-txt-color);\n        margin-right: 0.5em;\n        font-size: var(--app-header-title-font-size);\n      }\n\n      /* active nav links */\n      .app-top-nav a.active,\n      .app-side-menu-items a.active {\n        font-weight: bold;\n      }\n\n      #bell-icon, #bell-icon-sidenav, #alert-icon, #alert-icon-sidenav, .bi-bell{\n        color: gray;\n      }\n\n      sl-dropdown::part(panel){\n        background-color: rgb(94,85,107);\n        border: none;\n        max-height: 100vh;\n        border-radius:  0 0 5px 5px;\n      }\n\n      sl-menu.left-menu::part(base){\n        border: 1px solid #fff;\n        border-radius: 5px;\n      }\n\n      .menu-items::part(base){\n        color: #fff;\n      }\n\n      .menu-items::part(base):hover{\n        color: rgb(94,85,107);\n      }\n\n      sl-avatar::part(base){\n        --size: 2rem;\n        color: white;\n      }\n\n      sl-details::part(header){\n        padding: var(--sl-spacing-x-small);\n      }\n      \n      sl-details::part(content){\n        padding: 0;\n        border-top: 1px solid white;\n      }\n\n      sl-details::part(summary):hover{\n        color: var(--base-color);\n      }\n\n      sl-details::part(base){\n        color: white;\n        background: var(--base-color);\n      }\n\n      sl-details::part(base):hover{\n        color: var(--base-color);\n        background: white;\n      }\n\n      .dropdown-icon{\n        font-size: 2rem;\n\n      }.settings-icon{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -15%; \n        margin-right:0;\n      }\n\n      .add-icon{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-place{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: -5%;\n      }\n\n      .manage-device{\n        font-size: 1.5rem; \n        position:relative; \n        top:-25%; \n        left: -5%; \n        margin-right:0;\n      }\n\n      .add-device{\n        font-size: 1rem; \n        position:relative; \n        top:-25%; \n        left: 0;\n      }\n\n      .signout-icon{\n        font-size: 2rem;\n        left: 10%;\n        margin-right:1.5rem;\n      }\n\n      .app-side-nav{\n        display:none;\n      }\n\n      .summary-icon::part(summary){\n        font-size: 2rem;\n      }\n\n      /* RESPONSIVE - MOBILE ------------------- */\n      @media all and (max-width: 768px){       \n        \n        .app-top-nav {\n          display: none;\n        }\n\n        .app-side-nav{\n          display:flex;\n          align-items: center;\n          justify-content: space-evenly;\n        }\n      }\n\n      .dialog-heading{\n        display: flex; \n        align-items: center; \n        justify-content: center; \n        font-size: 1.5rem; \n        font-weight: 900;\n        color: white;\n      }\n\n      .flex-center{\n          display:flex;\n          align-items: center;\n          justify-content: center;\n      }\n\n      sl-dialog::part(panel){\n          background: var(--dialog-background);\n      }\n\n      .pad-bottom{\n          padding-bottom: 20px;\n      }\n\n      .toggle-dialogs{\n        cursor: pointer;\n        color: var(--brand-color);\n        text-decoration: underline;\n      }\n\n      .toggle-dialogs:hover{\n        color: white;\n      }\n\n      .toggle-text{\n        margin: 0;\n        color: white;\n      }\n\n      .toggle-switch{\n        --width: 60px; --height: 30px; --thumb-size: 28px;\n        color: white;\n        margin: 10px 0;\n      }\n\n      .input-labels{\n        color: white;\n      }\n\n      .text-input-sml{\n        width: 10rem;\n      }\n\n      .text-input-xs{\n        width: 5rem;\n      }\n\n      .hidden{\n        display: none;\n      }\n    </style>  \n    <!-- Sign in dialog -->\n    <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n    <sl-dialog no-header=\"true\" slot=\"label\" class=\"signin-dialog\" style=\"--width: 30vw;\">\n    <span class=\"dialog-heading\">Sign In</span>\n    <div class=\"page-content page-centered\">\n        <div class=\"signinup-box\">\n        <div class=\"flex-center\">\n            <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">account_circle</div>          \n        </div>\n        <sl-form class=\"form-signup dark-theme\" @sl-submit=", ">          \n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom email-input\" name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n            </div>\n            <sl-button class=\"submit-btn\" type=\"primary\" submit style=\"width: 100%;\">Sign In</sl-button>\n        </sl-form>\n        <p>No Account? <span class=\"toggle-dialogs\">Sign Up</span></p>\n        </div>\n    </div>\n    </sl-dialog>\n    <!-- Sign up dialog -->\n    <sl-dialog no-header=\"true\" slot=\"label\" class=\"signup-dialog\" style=\"--width: 30vw;\">\n    <span class=\"dialog-heading\">Sign up</span>\n    <div class=\"page-content page-centered\">\n        <div class=\"signupup-box\">\n        <div class=\"flex-center\">\n            <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">account_circle</div>          \n        </div>\n        <sl-form class=\"form-signup\" @sl-submit=", ">\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"firstName\" type=\"text\" placeholder=\"First Name\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"lastName\" type=\"text\" placeholder=\"Last Name\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n            <sl-input class=\"pad-bottom\" name=\"username\" type=\"text\" placeholder=\"Username\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"email\" type=\"email\" placeholder=\"Email\" required></sl-input>\n            </div>\n            <div class=\"input-group\">\n              <sl-input class=\"pad-bottom\" name=\"password\" type=\"password\" placeholder=\"Password\" required toggle-password></sl-input>\n            </div>      \n            ", "\n            <sl-button type=\"primary\" class=\"submit-btn\" submit style=\"width: 100%;\">Sign Up</sl-button>\n        </sl-form>\n        <p>Have an account? <span class=\"toggle-dialogs\">Sign In</span></p>\n        </div>\n    </div>\n    </sl-dialog>\n    <!-- Register device menu -->\n    <sl-dialog no-header=\"true\" class=\"register-device-dialog\" style=\"--width: 30vw;\">\n      <span class=\"dialog-heading\">Register Device</span>\n      <div class=\"page-content page-centered\">\n          <div class=\"flex-center\">\n              <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">sensors</div>          \n          </div>\n          <sl-form class=\"form-register-device dark-theme\" @sl-submit=", ">\n              <div class=\"input-group pad-bottom input-labels\">\n                <sl-input name=\"name\" type=\"text\" id=\"device-name\" placeholder=\"Device name... e.g. Hallway LEDs\" required></sl-input>\n              </div>\n              <div class=\"input-group pad-bottom\">\n                <sl-select id=\"register-device-dropdown\" placeholder=\"Select device type...\"></sl-select>\n              </div>      \n              <div class=\"input-group pad-bottom\">\n                <sl-select id=\"register-device-location-dropdown\" placeholder=\"Select device location...\"></sl-select>\n              </div>\n              <div class=\"input-group input-labels\">\n                <p class=\"toggle-text\">Advanced Settings</p>\n                <sl-switch class=\"toggle-switch\" id=\"advanced-settings-toggle\" @sl-change=", "></sl-switch>      \n              </div>\n              <div class=\"advanced-device-settings hidden\">\n                <div style=\"display:flex; justify-content: center; align-items: center; border-bottom: 1px solid white; padding: 0 0 1rem 0; margin-bottom: 1rem; color: white;\">\n                  <div>Advanced Settings</div>\n                </div>\n                <div class=\"input-group pad-bottom input-labels\">\n                  <p class=\"toggle-text\">Disable/Enable</p>\n                  <sl-switch class=\"toggle-switch\" id=\"disable-enable-toggle\"></sl-switch>      \n                </div>\n                <div class=\"input-group pad-bottom input-labels\">\n                  <p class=\"toggle-text\">Manual/Auto</p>\n                  <sl-switch class=\"toggle-switch\" id=\"manual-auto-toggle\" @sl-change=", " checked></sl-switch>      \n                </div>\n                <div class=\"input-group\">\n                <!-- Will be replaced with custom made component containing two selector in one line -->\n                  <sl-range class=\"min-on-setting\" label=\"Moisture level on trigger\" help-text=\"Turn on at %.\"min=\"0\"max=\"100\" value=\"30\" @sl-change=", "></sl-range>\n                  <sl-range class=\"min-off-setting\" label=\"Moisture level off trigger\" help-text=\"Turn off at %.\"min=\"0\"max=\"100\" value=\"80\" @sl-change=", "></sl-range>\n                </div>\n                <div class=\"input-group input-labels\" style=\"display: flex;\">\n                  <sl-input class=\"pad-bottom text-input-xs min-input-value\" name=\"minTrigger\" type=\"number\" label=\"Min.\" @sl-change=", " value=\"30\"></sl-input>\n                  <sl-input class=\"pad-bottom text-input-xs max-input-value\" style=\"margin-left: 1rem;\" name=\"maxTrigger\" type=\"number\" label=\"Max.\" @sl-change=", " value=\"80\"></sl-input>\n                </div>\n                <div class=\"input-group input-labels\">\n                  <sl-input class=\"pad-bottom text-input-xs\" name=\"reportingRate\" label=\"Reporting interval (sec)\" type=\"number\" value=\"60\"></sl-input>\n                </div>\n                <div class=\"input-group input-labels\">\n                  <sl-input class=\"pad-bottom text-input-xs\" name=\"pollRate\" label=\"Polling rate (sec)\" type=\"number\" value=\"15\"></sl-input>\n                </div>\n                <div class=\"input-group input-labels\">\n                  <sl-input class=\"pad-bottom text-input-sml\" id=\"ip-input\" name=\"ipAddress\" label=\"IP address\" type=\"text\" value=\"\"></sl-input>\n                </div>\n                <div class=\"input-group input-labels\">\n                  <sl-input class=\"pad-bottom text-input-sml\" id=\"mqtt-input\" name=\"mqttTopic\" label=\"MQTT topic\" type=\"string\" value=\"\"></sl-input>\n                </div>\n              </div>           \n              <sl-button class=\"cancel-btn cancel pad-bottom\" type=\"primary\" submit style=\"width: 100%;\">Cancel</sl-button>\n              <sl-button class=\"submit-btn register-device pad-bottom\" id=\"register-device-submit-btn\" type=\"primary\" submit style=\"width: 100%;\">Register</sl-button>\n          </sl-form>\n      </div>\n    </sl-dialog>\n    <!-- Register place menu -->\n    <sl-dialog no-header=\"true\" slot=\"label\" class=\"register-place-dialog\" style=\"--width: 30vw;\">\n      <span class=\"dialog-heading\">Register Place</span>\n      <div class=\"page-content page-centered\">\n          <div class=\"flex-center\">\n              <div class=\"material-icons\" style=\"font-size: 8rem; margin: 1rem; color: white;\">home</div>          \n          </div>\n          <sl-form class=\"form-register-place dark-theme\" @sl-submit=", ">\n              <div class=\"input-group pad-bottom\">\n                <sl-input name=\"placeName\" type=\"text\" placeholder=\"Place name... e.g. Master Bedroom\" required></sl-input>\n              </div>\n              <div class=\"input-group pad-bottom\">\n              <sl-select id=\"register-place-dropdown\" name=\"location\" placeholder=\"Select location...\">\n              </sl-select>\n            </div>      \n              <sl-button class=\"cancel-btn cancel pad-bottom\" type=\"primary\" submit style=\"width: 100%;\">Cancel</sl-button>\n              <sl-button class=\"submit-btn register-place\" type=\"primary\" submit style=\"width: 100%;\">Register</sl-button>\n          </sl-form>\n      </div>\n    </sl-dialog>\n    <!-- Hamburger -->\n    <header class=\"app-header\" style=\"display:flex; justify-content: space-between; align-items:center;\">\n      <div class=\"left-navs\">\n        <sl-icon-button class=\"hamburger-btn\" name=\"list\" @click=\"", "\"></sl-icon-button>       \n      </div>\n      <!-- Main (top) menus -->\n      <div class=\"right-navs\">\n        <nav class=\"app-top-nav\">\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"bell-icon\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon id=\"alert-icon\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n            </a>\n          <sl-dropdown>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n              <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 1.9rem;\"></sl-icon>\n            </a>\n            <sl-menu>            \n            <!-- Not yet implemented -->\n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n              <sl-menu-item @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n          <sl-dropdown distance=\"0\" class=\"dropdowns\">\n            <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n              <sl-avatar image=", "></sl-avatar> ", "\n            </a>\n            <sl-menu>            \n            ", "\n              </sl-menu-item>\n              <sl-menu-item class=\"manage-account menu-items\" id=\"manage-account\" @click=\"", "\">\n                <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                  Manage Account\n              </sl-menu-item>\n              ", "\n              <sl-menu-item class=\"menu-items\" @click=\"", "\">\n                <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                  Sign Out\n              </sl-menu-item>\n            </sl-menu>\n          </sl-dropdown>\n        </nav>\n      </div>\n    </header>\n    <sl-drawer class=\"app-side-menu\" placement=\"left\">\n      <div class=\"sidenav-content\">\n        <!-- accordion (details) container to list all entities categorically -->\n        <div class=\"accordion-container\">\n        <link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">\n          <div class=\"accordion-menu\">\n            <sl-details class=\"dashboard-button\" @click=\"", "\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">dashboard</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Dashboard</span></sl-details>\n            <sl-details class=\"details places-list\" summary=\"Places\" ><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">home</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Places</span></sl-details>\n            <sl-details class=\"details devices-list\" summary=\"Devices\"><span slot=\"summary\" class=\"material-icons\" style=\"font-size: 40px;\">sensors</span><span style=\"margin-left: 10px; font-weight:900;\" slot=\"summary\">Devices</span></sl-details>\n            ", "\n          </div>\n          <style>\n            .details-group-example sl-details:not(:last-of-type) {\n              margin-bottom: var(--sl-spacing-xx-small);\n            }\n          </style>\n        </div>\n        <!--  -->\n        <div class=\"bottom-menus\">\n          <nav class=\"app-side-nav\">\n            <!-- <a href=\"/\" @click=\"", "\">Home</a>         -->\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"bell-icon-sidenav\" slot=\"icon\" name=\"bell\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon id=\"alert-icon-sidenav\" slot=\"icon\" name=\"exclamation-circle\" style=\"font-size: 2rem;\"></sl-icon>\n              </a>\n            <sl-dropdown skidding=\"-109\" distance=\"10\">\n              <a slot=\"trigger\" href=\"#\" style=\"display: flex; align-items: center;\" @click=\"", "\">\n                <sl-icon slot=\"icon\" name=\"gear-fill\" style=\"font-size: 2rem; color: white;\"></sl-icon>\n              </a>\n              <sl-menu class=\"left-menu\">            \n              <!-- Not yet implemented -->\n                <sl-menu-item class=\"menu-items\" @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"wifi\"></sl-icon>System Status</sl-menu-item>\n                <sl-menu-item class=\"menu-items\" @click=\"", "\"><sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"list-ul\"></sl-icon>Logs</sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n            <sl-dropdown skidding=\"-171\" distance=\"10\" class=\"dropdowns-left\">\n              <a slot=\"trigger\" href=\"#\" @click=\"", "\">\n                <sl-avatar image=", ">\n              </a>\n              <sl-menu class=\"left-menu\">            \n                ", "\n                  </sl-menu-item>\n                  <sl-menu-item class=\"manage-account menu-items\" id=\"manage-account-side\" @click=\"", "\">\n                    <sl-icon class=\"dropdown-icon\" slot=\"prefix\" name=\"person\"></sl-icon>\n                    <sl-icon class=\"add-icon\" slot=\"prefix\" name=\"gear-fill\"></sl-icon>\n                      Manage Account\n                  </sl-menu-item>\n                  ", "\n                  <sl-menu-item class=\"menu-items\" @click=\"", "\">\n                    <sl-icon class=\"signout-icon\" slot=\"prefix\" name=\"box-arrow-right\"></sl-icon>\n                      Sign Out\n                  </sl-menu-item>\n              </sl-menu>\n            </sl-dropdown>\n          </nav>\n        </div>\n      </div>\n    </sl-drawer>\n    "]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -27422,9 +27727,8 @@ customElements.define('va-app-header', class AppHeader extends _litElement.LitEl
 
     if (e.target.innerText === "Cancel") {
       registerDeviceDialog.hide();
-    }
+    } // window.location.reload() // This for some reason doesn't allow the submission process to finish
 
-    window.location.reload();
   }
 
   handleAdvancedSettings(e) {
@@ -27765,7 +28069,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64320" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57321" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

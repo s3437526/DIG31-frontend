@@ -1,20 +1,22 @@
 import App from '../../App'
 import { html, render } from 'lit-html'
-import { gotoRoute, anchorRoute } from '../../Router'
 import Auth from '../../Auth'
 import Utils from '../../Utils'
 import FetchAPI from '../../FetchAPI'
 import gsap from 'gsap'
+import LightDialog from './../../components/aa-light-dialog'
 
 class DevicesView {
     async init() {
         document.title = 'Devices'
         let devices = await FetchAPI.getItemsAsync()
+            // let places = await FetchAPI.getPlacesAsync()
         await this.render(devices)
         this.animateStatus()
         Utils.pageIntroAnim()
     }
 
+    // blinking light for active status
     animateStatus() {
         const tl1 = new gsap.to(".active", {
             backgroundColor: "#3B90FF",
@@ -25,11 +27,12 @@ class DevicesView {
         });
     }
 
-    handleClick(device) {
+    handleClick(device, devices) {
         console.log(`Device selected... ${JSON.stringify(device)}`)
+        LightDialog.init(device, devices)
     }
 
-    async render(devices) {
+    async render(devices, places) {
             const template = html `
       <style>
         .status-container{
@@ -106,12 +109,10 @@ class DevicesView {
           justify-content: flex-start;
         }
 
-        .col4{
-          /* justify-content: flex-start; */
+        /* .col4{
         }
 
         .col5{
-          /* justify-content: flex-start; */
         }
 
         .col6{
@@ -120,7 +121,7 @@ class DevicesView {
 
         .col7{
 
-        }
+        } */
 
         .link{
           cursor: pointer;
@@ -128,10 +129,6 @@ class DevicesView {
 
         .col1 .material-icons{
           font-size: 48px !important;
-        }
-
-        div::part(body){
-          /* background: orange; */
         }
 
       </style>
@@ -193,7 +190,7 @@ class DevicesView {
               <div class="${device.pinned ? "pinned" : "unpinned"} material-icons">${device.pinned ? "push_pin" : ""}</div>
             </div>
               <div class="cols col7">
-                <div class="material-icons link" @click=${() => this.handleClick(device)}>handyman</div>
+                <div class="material-icons link" @click=${() => this.handleClick(device, devices)}>handyman</div>
               </div>
             </div>
             `
@@ -202,7 +199,7 @@ class DevicesView {
         </div>
       </div>
     </aa-panel-template>
-  </div>     
+  </div> 
 `
   render(template, App.rootEl)
   }

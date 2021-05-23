@@ -355,7 +355,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 if (e.target.innerText === "Cancel") {
                     registerDeviceDialog.hide()
                 }
-                window.location.reload()
+                // window.location.reload() // This for some reason doesn't allow the submission process to finish
             }
 
             handleAdvancedSettings(e) {
@@ -775,7 +775,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
     </div>
     </sl-dialog>
     <!-- Register device menu -->
-    <sl-dialog no-header="true" slot="label" class="register-device-dialog" style="--width: 30vw;">
+    <sl-dialog no-header="true" class="register-device-dialog" style="--width: 30vw;">
       <span class="dialog-heading">Register Device</span>
       <div class="page-content page-centered">
           <div class="flex-center">
@@ -785,10 +785,10 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
               <div class="input-group pad-bottom input-labels">
                 <sl-input name="name" type="text" id="device-name" placeholder="Device name... e.g. Hallway LEDs" required></sl-input>
               </div>
-              <div class="input-group pad-bottom input-labels">
+              <div class="input-group pad-bottom">
                 <sl-select id="register-device-dropdown" placeholder="Select device type..."></sl-select>
               </div>      
-              <div class="input-group pad-bottom input-labels">
+              <div class="input-group pad-bottom">
                 <sl-select id="register-device-location-dropdown" placeholder="Select device location..."></sl-select>
               </div>
               <div class="input-group input-labels">

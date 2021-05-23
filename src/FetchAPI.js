@@ -178,5 +178,34 @@ class FetchAPI {
         let data = await response.json();
         return data;
     }
+
+    // PUT - create place function using asynchronous fetch API call
+    async putItemAsync(formData) {
+
+        console.log(formData)
+        headers = {
+            "Authorization": `Bearer ${localStorage.accessToken}` //,
+                // "access": JSON.stringify(currentUser.accessLevel)
+        }
+        let response = await fetch(`${App.apiBase}/item`, {
+                method: 'PUT',
+                headers: {
+                    "Authorization": `Bearer ${localStorage.accessToken}`,
+                    'Content-Type': 'application/json'
+                        // 'Content-Type': 'application/json'
+                },
+                // mode: 'cors',
+                body: JSON.stringify(formData)
+            })
+            // Handle result of API call - if unsuccessful, throw error with customised message
+        if (!response.ok) {
+            Toast.show(`Problem updating item: ${response.status}`)
+            const message = `Problem updating item ${response.status}`
+            throw new Error(message)
+        }
+        // If successful, convert data to JSON and return it to the calling function
+        let data = await response.json();
+        return data;
+    }
 }
 export default new FetchAPI();
