@@ -17,21 +17,7 @@ class GuideView {
       <div class="page-content calign">
         <h3 class="brand-color">Welcome ${Auth.currentUser.firstName}!</h3>
         <p>This is a quick tour to teach you the basics of using Haircuts ...</p>
-      
-        <div class="guide-step">
-          <h4>Search Hairdressers</h4>
-          <img src="https://plchldr.co/i/500x300?&bg=dddddd&fc=666666&text=IMAGE">
-        </div>
-      
-        <div class="guide-step">
-          <h4>Find a haircut</h4>
-          <img src="https://plchldr.co/i/500x300?&bg=dddddd&fc=666666&text=IMAGE">
-        </div>
-      
-        <div class="guide-step">
-          <h4>Save haircuts to favourites</h4>
-          <img src="https://plchldr.co/i/500x300?&bg=dddddd&fc=666666&text=IMAGE">
-        </div>
+
       
         <sl-button type="primary" @click=${()=> gotoRoute('/')}>Okay got it!</sl-button>
       

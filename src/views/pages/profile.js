@@ -24,7 +24,7 @@ class ProfileView {
         `}
         <h2>${Auth.currentUser.firstName} ${Auth.currentUser.lastName}</h2>
         <p>${Auth.currentUser.email}</p>
-        
+
         <p>Updated: ${moment(Auth.currentUser.updatedAt).format('MMMM Do YYYY, @ h:mm a')}</p>
 
         ${Auth.currentUser.bio ? html`

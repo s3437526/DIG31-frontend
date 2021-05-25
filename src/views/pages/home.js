@@ -64,7 +64,7 @@ class HomeView {
         console.log('HomeView.init')
         document.title = 'Overview'
         if (localStorage.accessLevel >= 1) {
-            users = await FetchAPI.getUsersAsync()
+            users = localStorage.accessLevel == 2 ? users = await FetchAPI.getUsersAsync() : ""
             items = await FetchAPI.getItemsAsync()
             places = await FetchAPI.getPlacesAsync()
                 // console.log(`Users are: ${users}`)
@@ -163,17 +163,20 @@ class HomeView {
                     backgroundColor: [ // this will be random generated and other colours are opacity variations
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)'
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(100, 206, 86, 0.2)'
                     ],
                     borderColor: [
                         'rgba(255, 99, 132, 1)',
                         'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)'
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(100, 206, 86, 1)'
                     ],
                     hoverBackgroundColor: [
                         'rgba(255, 99, 132, 0.5)',
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(255, 206, 86, 0.5)'
+                        'rgba(54, 162, 235, 0.5)', ,
+                        'rgba(100, 206, 86, 0.2)',
+                        'rgba(255, 206, 86, 0.2)'
                     ],
                     borderWidth: 1
                 }]

@@ -15,7 +15,7 @@ class UserAPI {
             // fetch response header normal (form data)
             responseHeader = {
                 method: "PUT",
-                headers: { "Authorization": `Bearer ${localStorage.accessToken}` },
+                headers: { "Authorization": `Bearer ${localStorage.accessToken}`, "access": localStorage.accessLevel },
                 body: userData
             }
 

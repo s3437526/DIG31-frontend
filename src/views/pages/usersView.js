@@ -14,7 +14,9 @@ class UsersView {
     }
 
     handleClick(user) {
-        console.log(`User selected... ${JSON.stringify(user)}`)
+        // console.log(`User selected... ${JSON.stringify(user)}`)
+        gotoRoute('/profile', Auth.currentUser)
+        console.log(Auth.currentUser)
     }
 
     async render(users) {

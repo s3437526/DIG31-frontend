@@ -74,7 +74,7 @@ class LightDialog {
         console.log(devices)
 
         this.renderDialog(device)
-        console.log(device)
+        console.log(`The device is: ${JSON.stringify(device)}`)
 
         this.renderDevices()
     }
@@ -144,11 +144,11 @@ class LightDialog {
         // check that the mqttTopic, ipAddress do not already exist
 
         FetchAPI.postItemAsync(formData)
-
-        // if (e.target.innerText === "Cancel") {
-        //     registerDeviceDialog.hide()
-        // }
-        // window.location.reload() // This for some reason doesn't allow the submission process to finish
+            // window.location.reload()
+            // if (e.target.innerText === "Cancel") {
+            //     registerDeviceDialog.hide()
+            // }
+            // window.location.reload() // This for some reason doesn't allow the submission process to finish
     }
 
     renderDevices() {
@@ -203,18 +203,27 @@ class LightDialog {
             // const formData = e.detail.formData
         const pinnedInput = document.querySelector('#off-on-toggle')
         if (e.target.checked) {
-            console.log(e.target.checked)
             pinnedInput.setAttribute('checked', true)
                 // formData.set("state", "1")
-            FetchAPI.putItemAsync(JSON.parse('{ "state": "1" }'))
+            FetchAPI.putItemAsync(JSON.parse('{ "state": "1" }'), this.device._id) // get actual id, refresh on update, read the state when loading
+            this.device.state = "1"
         } else {
             pinnedInput.removeAttribute('checked')
                 // formData.set("state", "0")
-            FetchAPI.putItemAsync(JSON.parse('{ "state": "0" }'))
+            FetchAPI.putItemAsync(JSON.parse('{ "state": "0" }'), this.device._id)
+            this.device.state = "0"
         }
-        console.log(e.target.checked)
-            // pinnedInput.value = e.target.value
-            // FetchAPI.putItemAsync(e.target.value)
+        console.log(`This device passed in is: ${JSON.stringify(this.device)}`)
+        console.log(`Local array state of device is: ${JSON.stringify(this.device.state)}`)
+    }
+
+    handleDelete(e) {
+        e.preventDefault()
+            // do some delete confirmation here first...
+
+        // delete the object from the database and remove it from the array
+        FetchAPI.deleteItemAsync(this.device._id) //, JSON.parse('{ "activityHistory": "1" }')
+            // window.location.reload()
     }
 
     renderDialog(device) {
@@ -288,6 +297,10 @@ class LightDialog {
             .hidden{
                 display: none;
             }
+
+            .md-48{ 
+                font-size: 48px !important; height: 48px; width: 48px; 
+            }
         </style>
 
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -306,12 +319,12 @@ class LightDialog {
                     <sl-select id="register-device-location-dropdown" value=${device.placeName.placeName}></sl-select>
                 </div> -->
                 <div class="input-group pad-bottom input-labels">
-                        <p class="toggle-text">Pin to dash</p>
-                        <sl-switch class="toggle-switch" id="pin-unpin-toggle" name="pinned" @sl-change=${this.handlePinnedUnpinned}></sl-switch>      
+                    <p class="toggle-text">Pin to dash</p>
+                    <sl-switch class="toggle-switch" id="pin-unpin-toggle" name="pinned" @sl-change=${this.handlePinnedUnpinned}></sl-switch>      
                 </div>
                 <div class="input-group pad-bottom input-labels">
-                        <p class="toggle-text">Off/On</p>
-                        <sl-switch class="toggle-switch" id="off-on-toggle" name="pinned" @sl-change=${this.handlePowerStatus}></sl-switch>      
+                    <p class="toggle-text">Off/On</p>
+                    <sl-switch class="toggle-switch" id="off-on-toggle" name="state" @sl-change=${this.handlePowerStatus.bind(this)}></sl-switch>      
                 </div>
                 <div class="input-group">
                 <!-- Will be replaced with custom made component containing two selector in one line -->
@@ -345,9 +358,12 @@ class LightDialog {
                     <div class="input-group input-labels">
                         <sl-input class="pad-bottom text-input-sml" id="mqtt-input" name="mqttTopic" label="MQTT topic" type="string"  value=${device.mqttTopic}></sl-input>
                     </div>
-                </div>           
-                <sl-button class="cancel-btn cancel pad-bottom" type="primary" submit style="width: 100%;">Cancel</sl-button>
-                <sl-button class="submit-btn register-device pad-bottom" id="register-device-submit-btn" type="primary" submit style="width: 100%;">Register</sl-button>
+                    <div style="display: flex; align-items: center; justify-content: flex-end; cursor: pointer; padding: 1rem; color: white;">
+                        <span class="material-icons md-48" @click=${this.handleDelete.bind(this)}>delete_forever</span>  
+                    </div>
+                </div>         
+                <!-- <sl-button class="cancel-btn cancel pad-bottom" type="primary" submit style="width: 100%;">Cancel</sl-button>
+                <sl-button class="submit-btn register-device pad-bottom" id="register-device-submit-btn" type="primary" submit style="width: 100%;">Register</sl-button> -->
             </sl-form>
         `
         render(dialogContent, lightDialog)

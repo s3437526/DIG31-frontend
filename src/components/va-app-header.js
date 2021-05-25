@@ -102,7 +102,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 })
 
                 // register place dropdown items
-                localStorage.accessLevel >= 1 ? collections.locations.forEach(location => { // could just be straight up 2?
+                localStorage.accessLevel == 2 ? collections.locations.forEach(location => { // could just be straight up 2?
                     let dropdown = document.createElement('sl-menu-item')
                     dropdown.innerHTML = location.locationType
                     dropdown.classList.add('register-place-dropdown-item')
@@ -111,7 +111,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                     registerPlaceDropdown.appendChild(dropdown)
                 }) : ""
 
-                localStorage.accessLevel >= 1 ? collections.places.forEach(place => { // could just be straight up 2?
+                localStorage.accessLevel == 2 ? collections.places.forEach(place => { // could just be straight up 2?
                     let dropdown = document.createElement('sl-menu-item')
                     dropdown.innerHTML = place.placeName
                     dropdown.classList.add('register-device-dropdown-location-item')
@@ -120,7 +120,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                     registerDeviceLocationDropdown.appendChild(dropdown)
                 }) : ""
 
-                localStorage.accessLevel >= 1 ? collections.devices.forEach(device => { // could just be straight up 2?
+                localStorage.accessLevel == 2 ? collections.devices.forEach(device => { // could just be straight up 2?
                     let dropdown = document.createElement('sl-menu-item')
                     dropdown.innerHTML = device.type
                     dropdown.classList.add('register-device-dropdown-type-item')
@@ -890,7 +890,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                   Register User
               ` : ``}
               </sl-menu-item>
-              <sl-menu-item class="manage-account menu-items" id="manage-account" @click="${() => gotoRoute('/users')}">
+              <sl-menu-item class="manage-account menu-items" id="manage-account" @click="${() => localStorage.accessLevel == 2 ? gotoRoute('/users') : gotoRoute('/profile')}">
                 <sl-icon class="dropdown-icon" slot="prefix" name="person"></sl-icon>
                 <sl-icon class="add-icon" slot="prefix" name="gear-fill"></sl-icon>
                   Manage Account
@@ -978,7 +978,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                       Register User
                   ` : ``}
                   </sl-menu-item>
-                  <sl-menu-item class="manage-account menu-items" id="manage-account-side" @click="${() => gotoRoute('/users')}">
+                  <sl-menu-item class="manage-account menu-items" id="manage-account-side" @click="${() => localStorage.accessLevel == 2 ? gotoRoute('/users') : gotoRoute('/profile', Auth.currentUser)}">
                     <sl-icon class="dropdown-icon" slot="prefix" name="person"></sl-icon>
                     <sl-icon class="add-icon" slot="prefix" name="gear-fill"></sl-icon>
                       Manage Account
