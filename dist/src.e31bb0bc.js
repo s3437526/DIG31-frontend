@@ -7829,8 +7829,7 @@ class Auth {
 
     _Router.default.init();
 
-    (0, _Router.gotoRoute)('/');
-    window.location.reload();
+    (0, _Router.gotoRoute)('/'); // window.location.reload()
   }
 
   async check(success) {
@@ -34106,7 +34105,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61517" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62868" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

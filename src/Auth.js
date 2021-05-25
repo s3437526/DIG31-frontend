@@ -76,7 +76,7 @@ class Auth {
         // Initialise router and load all relevant entities
         Router.init()
         gotoRoute('/')
-        window.location.reload()
+            // window.location.reload()
     }
 
 
