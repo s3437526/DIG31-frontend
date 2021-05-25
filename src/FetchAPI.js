@@ -152,7 +152,7 @@ class FetchAPI {
         return data;
     }
 
-    // POST - create place function using asynchronous fetch API call
+    // POST - create item function using asynchronous fetch API call
     async postItemAsync(formData) {
         headers = {
             "Authorization": `Bearer ${localStorage.accessToken}` //,
@@ -179,15 +179,15 @@ class FetchAPI {
         return data;
     }
 
-    // PUT - create place function using asynchronous fetch API call
-    async putItemAsync(formData) {
+    // PUT - update item function using asynchronous fetch API call
+    async putItemAsync(formData, id) {
 
         console.log(formData)
         headers = {
             "Authorization": `Bearer ${localStorage.accessToken}` //,
                 // "access": JSON.stringify(currentUser.accessLevel)
         }
-        let response = await fetch(`${App.apiBase}/item`, {
+        let response = await fetch(`${App.apiBase}/item/${id}`, {
                 method: 'PUT',
                 headers: {
                     "Authorization": `Bearer ${localStorage.accessToken}`,
@@ -201,6 +201,32 @@ class FetchAPI {
         if (!response.ok) {
             Toast.show(`Problem updating item: ${response.status}`)
             const message = `Problem updating item ${response.status}`
+            throw new Error(message)
+        }
+        // If successful, convert data to JSON and return it to the calling function
+        let data = await response.json();
+        return data;
+    }
+
+    // DELETE - delete item function using asynchronous fetch API call
+    async deleteItemAsync(id) {
+        console.log(id)
+        headers = {
+            "Authorization": `Bearer ${localStorage.accessToken}` //,
+                // "access": JSON.stringify(currentUser.accessLevel)
+        }
+        let response = await fetch(`${App.apiBase}/item/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    "Authorization": `Bearer ${localStorage.accessToken}`
+                        // 'Content-Type': 'application/json'
+                },
+                // mode: 'cors',
+            })
+            // Handle result of API call - if unsuccessful, throw error with customised message
+        if (!response.ok) {
+            Toast.show(`Problem deleting item: ${response.status}`)
+            const message = `Problem deleting item ${response.status}`
             throw new Error(message)
         }
         // If successful, convert data to JSON and return it to the calling function

@@ -3,10 +3,11 @@ import homeView from './views/pages/home'
 import fourOFourView from './views/pages/404'
 import placesView from './views/pages/places'
 import devicesView from './views/pages/devices'
-// import profileView from './views/pages/profile'
-// import editProfileView from './views/pages/editProfile'
+import profileView from './views/pages/profile'
+import editProfileView from './views/pages/editProfile'
 import guideView from './views/pages/guide'
 import usersView from './views/pages/usersView'
+import Auth from './Auth'
 
 // define routes
 const routes = {
@@ -15,9 +16,9 @@ const routes = {
     '/users': usersView,
     '404': fourOFourView,
     '/places': placesView,
-    '/devices': devicesView
-        // '/profile': profileView,
-        // '/editProfile': editProfileView
+    '/devices': devicesView,
+    '/profile': profileView,
+    '/editProfile': editProfileView
 }
 
 class Router {
@@ -49,8 +50,9 @@ class Router {
         }
     }
 
-    gotoRoute(pathname) {
+    gotoRoute(pathname, object) {
         window.history.pushState({}, pathname, window.location.origin + pathname);
+        console.log(`%cUser object passed is: ${object}`, `color: blue; font-size: 1.5em;`)
         this.route(pathname)
     }
 }

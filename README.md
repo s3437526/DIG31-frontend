@@ -54,3 +54,5 @@ TODO
 - Login credentials unsecured visible in dev tools??
 - When signed out cannot go back to the signin screeen from sign up
 - Device view dialog disappears if selecting dropdown and clicking away from it. Looks to be caused by the sl-after-hide statement which removes the dialog from the page
+- Dialogs do not refresh when adding and deleting devices
+- Send selected user data to profile page via the goToRoute() function
