@@ -64,17 +64,17 @@ class HomeView {
         console.log('HomeView.init')
         document.title = 'Overview'
         if (localStorage.accessLevel >= 1) {
-            users = localStorage.accessLevel == 2 ? users = await FetchAPI.getUsersAsync() : ""
+            users = localStorage.accessLevel == 2 ? await FetchAPI.getUsersAsync() : null
+            console.log(`%cFetch of users completed, users are : ${JSON.stringify(users)}`, `color:blue; font-size: 18px;`)
             items = await FetchAPI.getItemsAsync()
+            console.log(`%cFetch of items completed, items are : ${JSON.stringify(items)}`, `color:green; font-size: 18px;`)
             places = await FetchAPI.getPlacesAsync()
-                // console.log(`Users are: ${users}`)
-                // console.log(`Items are: ${items}`)
-                // console.log(`Places are: ${places}`)
+            console.log(`%cFetch of places completed, places are : ${JSON.stringify(places)}`, `color:purple; font-size: 18px;`)
         }
 
         await this.render()
-        if (localStorage.accessLevel >= 1) await this.renderCharts(users, items, places)
-        Utils.pageIntroAnim()
+        if (localStorage.accessLevel >= 1) { await this.renderCharts(users, items, places) }
+        // Utils.pageIntroAnim()
     }
 
     handleClick() {
@@ -174,9 +174,9 @@ class HomeView {
                     ],
                     hoverBackgroundColor: [
                         'rgba(255, 99, 132, 0.5)',
-                        'rgba(54, 162, 235, 0.5)', ,
-                        'rgba(100, 206, 86, 0.2)',
-                        'rgba(255, 206, 86, 0.2)'
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(100, 206, 86, 0.5)'
                     ],
                     borderWidth: 1
                 }]
@@ -364,6 +364,13 @@ class HomeView {
                 min-width: 400px;
                 min-height: 400px;
                 padding: 1rem;
+            }
+
+
+            .page-content{
+            display: flex;
+            align-items: center;
+            justify-content: center;
             }
 
             /* RESPONSIVE - SMALLER MONITORS -------------------*/

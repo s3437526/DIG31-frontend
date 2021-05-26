@@ -28,9 +28,10 @@ class Router {
 
     init() {
         // initial call
+        console.log("Router.init")
         this.route(window.location.pathname)
-
-        // on back/forward
+        console.log(window.location.pathname)
+            // on back/forward
         window.addEventListener('popstate', () => {
             this.route(window.location.pathname)
         })
@@ -50,9 +51,9 @@ class Router {
         }
     }
 
-    gotoRoute(pathname, object) {
+    gotoRoute(pathname) {
         window.history.pushState({}, pathname, window.location.origin + pathname);
-        console.log(`%cUser object passed is: ${object}`, `color: blue; font-size: 1.5em;`)
+        // console.log(`%cUser object passed is: ${object}`, `color: blue; font-size: 1.5em;`)
         this.route(pathname)
     }
 }

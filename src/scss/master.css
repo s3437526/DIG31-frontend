@@ -117,16 +117,9 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
+  overflow-y: scroll;
+  width: 100%;
   padding: 1em;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
 }
 
 .page-content.no-pad {
@@ -143,8 +136,6 @@ aa-panel-template {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  height: 95%;
-  width: 98%;
 }
 
 .page-centered {

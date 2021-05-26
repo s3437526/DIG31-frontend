@@ -56,33 +56,55 @@ class UsersView {
           padding: 0.5rem 0;
         }
 
-        .col1{
-        }
+        /* .col1{
+        } */
 
         .col2{
           justify-content: flex-start;
           padding: 0 1rem;
         }
 
-        .col3{
+        /* .col3{
 
-        }
+        } */
 
         .col4{
           justify-content: flex-end;
         }
 
         .link{
-          cursor: pointer;
+          cursor: pointer; 
         }
 
         .col1 .material-icons{
           font-size: 48px !important;
         }
 
-        div::part(body){
-          /* background: orange; */
+        .page-content{
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
+
+        aa-panel-template{
+          min-width: 600px;
+            width: 95%;
+            height: 98%;
+            /* overflow: scroll; */
+          }
+
+      /* RESPONSIVE - MOBILE ------------------- */
+      @media all and (max-width: 600px){  
+        aa-panel-template{
+          width: 500px;
+          /* overflow: scroll; */
+          /* align-self: flex-end; */
+        }
+
+        /* .page-content{
+          justify-content: space-evenly;
+        } */
+      }
 
       </style>
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

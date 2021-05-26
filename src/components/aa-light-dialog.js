@@ -309,6 +309,7 @@ class LightDialog {
                 <div class="material-icons" style="font-size: 8rem; margin: 1rem; color: white;">${device.type.iconURL}</div>          
             </div>
             <sl-form class="form-register-device dark-theme" @sl-submit=${this.registerSubmitHandler}>
+            <!-- Look up hoisting to fix this issue -->
                 <!-- <div class="input-group pad-bottom input-labels">
                     <sl-input name="name" type="text" id="device-name" required value=${device.name} disabled="true"></sl-input>
                 </div> -->

@@ -131,6 +131,36 @@ class DevicesView {
           font-size: 48px !important;
         }
 
+        .page-content{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        aa-panel-template{
+          min-width: 1024px;
+            width: 95%;
+            height: 98%;
+            /* overflow: scroll; */
+          }
+
+        /* RESPONSIVE - TABLET ------------------- */
+        @media all and (max-width: 1024px){  
+          /* aa-panel-template::part(container){ */
+            /* width: 1024px !important; */
+            /* overflow: scroll; */
+          /* } */
+
+          /* .page-content{
+            width: 1024px;
+            overflow: scroll;
+          } */
+
+          /* .container{
+            width: 1024px;
+            overflow: scroll;
+          } */
+        }
       </style>
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <va-app-header title="Devices" user="${JSON.stringify(Auth.currentUser)}"></va-app-header>
@@ -163,8 +193,8 @@ class DevicesView {
           </div>
           <div slot="body" part="body">
             <div class="grid-container">
-              ${devices.map(device => 
-                html`
+            ${devices.map(device =>
+              html`
             <div class="cols col1">
               <div class="material-icons">${device.type.iconURL}</div>
             </div>
@@ -196,12 +226,11 @@ class DevicesView {
             `
             )}
             </div>
-        </div>
-      </div>
-    </aa-panel-template>
-  </div> 
+          </div>
+        </aa-panel-template>
+      </div> 
 `
-  render(template, App.rootEl)
+    render(template, App.rootEl)
   }
 }
 
