@@ -57,7 +57,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
 
                 // if user is not signed in do not allow them to cancel the dialogs, otherwise
                 // a signed in user is creating a new user and should be able to dismiss it
-                if (typeof Auth.currentUser.accessLevel === 'undefined') signinDialog.show()
+                if (typeof localStorage.accessLevel === 'undefined') signinDialog.show()
                 if (!localStorage.accessLevel >= 1) {
                     signinDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault())
                     signupDialog.addEventListener('sl-overlay-dismiss', event => event.preventDefault())
@@ -219,9 +219,8 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                     submitBtn.setAttribute('loading', '')
                         // sign in using Auth    
                     Auth.signIn(formData, () => {
-                            submitBtn.removeAttribute('loading')
-                        })
-                        // console.log(localStorage.accessLevel)
+                        submitBtn.removeAttribute('loading')
+                    })
                     if (localStorage.accessLevel >= 1) {
                         signinDialog.hide()
                         submitBtn.removeAttribute('loading')
@@ -639,9 +638,16 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
         font-size: 2rem;
       }
 
-      /* RESPONSIVE - MOBILE ------------------- */
-      @media all and (max-width: 768px){       
-        
+      .signin-dialog{
+        --width: 500px;
+      }
+
+      .signup-dialog{
+        --width: 500px;
+      }
+
+      /* RESPONSIVE - TABLET ------------------- */
+      @media all and (max-width: 768px){  
         .app-top-nav {
           display: none;
         }
@@ -650,6 +656,18 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
           display:flex;
           align-items: center;
           justify-content: space-evenly;
+        }
+      }
+
+      /* RESPONSIVE - MOBILE ------------------- */
+      @media all and (max-width: 600px){       
+        
+        .signin-dialog{
+          --width: 90%;
+        }
+
+        .signup-dialog{
+          --width: 90%;
         }
       }
 
@@ -715,7 +733,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
     </style>  
     <!-- Sign in dialog -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <sl-dialog no-header="true" slot="label" class="signin-dialog" style="--width: 30vw;">
+    <sl-dialog no-header="true" slot="label" class="signin-dialog">
     <span class="dialog-heading">Sign In</span>
     <div class="page-content page-centered">
         <div class="signinup-box">
@@ -759,7 +777,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
             <div class="input-group">
               <sl-input class="pad-bottom" name="password" type="password" placeholder="Password" required toggle-password></sl-input>
             </div>      
-            ${Auth.currentUser.accessLevel == 2 ? html`
+            ${localStorage.accessLevel == 2 ? html`
             <div class="input-group">
             <p class="toggle-text">User type (regular/admin)</p>
               <sl-switch class="toggle-switch" id="access-level-toggle"></sl-switch>      
@@ -767,7 +785,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
             <div class="input-group">
             <p class="toggle-text">User status (inactive/active)</p>
               <sl-switch class="toggle-switch"  id="user-status-toggle" checked></sl-switch>
-            `:``}
+            `: ``}
             <sl-button type="primary" class="submit-btn" submit style="width: 100%;">Sign Up</sl-button>
         </sl-form>
         <p>Have an account? <span class="toggle-dialogs">Sign In</span></p>
@@ -883,7 +901,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
               <sl-avatar image=${(this.user && this.user.imageURL) ? `${App.apiBase}/images/${this.user.imageURL}` : ``}></sl-avatar> ${this.user && this.user.firstName}
             </a>
             <sl-menu>            
-            ${Auth.currentUser.accessLevel == 2 ? html`
+            ${localStorage.accessLevel == 2 ? html`
               <sl-menu-item class="register-user menu-items" id="register-user">
                 <sl-icon class="dropdown-icon" slot="prefix" name="person"></sl-icon>
                 <sl-icon class="settings-icon" slot="prefix" name="plus"></sl-icon>
@@ -895,7 +913,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 <sl-icon class="add-icon" slot="prefix" name="gear-fill"></sl-icon>
                   Manage Account
               </sl-menu-item>
-              ${Auth.currentUser.accessLevel == 2 ? html`
+              ${localStorage.accessLevel == 2 ? html`
               <sl-menu-divider></sl-menu-divider>
                 <sl-menu-item class="register-place menu-items" id="register-place">
                   <sl-icon class="dropdown-icon" slot="prefix" name="house-door"></sl-icon>
@@ -938,7 +956,7 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
             <sl-details class="dashboard-button" @click="${() => gotoRoute('/')}"><span slot="summary" class="material-icons" style="font-size: 40px;">dashboard</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Dashboard</span></sl-details>
             <sl-details class="details places-list" summary="Places" ><span slot="summary" class="material-icons" style="font-size: 40px;">home</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Places</span></sl-details>
             <sl-details class="details devices-list" summary="Devices"><span slot="summary" class="material-icons" style="font-size: 40px;">sensors</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Devices</span></sl-details>
-            ${localStorage.accessLevel == 2 ? html `<sl-details class="details users-list" summary="Users"><span slot="summary" class="material-icons" style="font-size: 40px;">account_circle</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Users</span></sl-details>`:``}
+            ${localStorage.accessLevel == 2 ? html`<sl-details class="details users-list" summary="Users"><span slot="summary" class="material-icons" style="font-size: 40px;">account_circle</span><span style="margin-left: 10px; font-weight:900;" slot="summary">Users</span></sl-details>` : ``}
           </div>
           <style>
             .details-group-example sl-details:not(:last-of-type) {
@@ -971,19 +989,19 @@ customElements.define('va-app-header', class AppHeader extends LitElement {
                 <sl-avatar image=${(this.user && this.user.avatar) ? `${App.apiBase}/images/${this.user.avatar}` : ``}>
               </a>
               <sl-menu class="left-menu">            
-                ${Auth.currentUser.accessLevel == 2 ? html`
+                ${localStorage.accessLevel == 2 ? html`
                   <sl-menu-item class="register-user menu-items" id="register-user-side">
                     <sl-icon class="dropdown-icon" slot="prefix" name="person"></sl-icon>
                     <sl-icon class="settings-icon" slot="prefix" name="plus"></sl-icon>
                       Register User
                   ` : ``}
                   </sl-menu-item>
-                  <sl-menu-item class="manage-account menu-items" id="manage-account-side" @click="${() => localStorage.accessLevel == 2 ? gotoRoute('/users') : gotoRoute('/profile', Auth.currentUser)}">
+                  <sl-menu-item class="manage-account menu-items" id="manage-account-side" @click="${() => localStorage.accessLevel == 2 ? gotoRoute('/users') : gotoRoute('/profile')}">
                     <sl-icon class="dropdown-icon" slot="prefix" name="person"></sl-icon>
                     <sl-icon class="add-icon" slot="prefix" name="gear-fill"></sl-icon>
                       Manage Account
                   </sl-menu-item>
-                  ${Auth.currentUser.accessLevel == 2 ? html`
+                  ${localStorage.accessLevel == 2 ? html`
                   <sl-menu-divider></sl-menu-divider>
                     <sl-menu-item class="register-place-side menu-items"  id="register-place-side">
                       <sl-icon class="dropdown-icon" slot="prefix" name="house-door"></sl-icon>

@@ -8,6 +8,8 @@ class UserAPI {
         // validate
         if (!userId || !userData) return
 
+        console.log(`User data is: ${JSON.stringify(userData)}`)
+
         let responseHeader
 
         // form data

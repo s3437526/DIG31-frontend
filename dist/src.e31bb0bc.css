@@ -107,10 +107,9 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
+  overflow-y: scroll;
+  width: 100%;
   padding: 1em;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 .page-content.no-pad {
   padding: 0;
@@ -120,8 +119,6 @@ aa-panel-template {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 95%;
-  width: 98%;
 }
 
 .page-centered {

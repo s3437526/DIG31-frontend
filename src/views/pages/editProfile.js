@@ -65,9 +65,10 @@ class EditProfileView {
             <div class="input-group">
               <sl-textarea name="bio" rows="4" value="${this.user.bio}" placeholder="Bio"></sl-textarea>
             </div>      
+            ${localStorage.accessLevel == 2 ? html `
             <div class="input-group">
               <sl-input type="number" name="accessLevel" value="${this.user.accessLevel}" min="1" max="2"></sl-input>
-            </div>     
+            </div>     ` : ``}
             <div class="input-group">
               <label>Avatar</label><br>          
               ${(this.user.avatar) ? html`

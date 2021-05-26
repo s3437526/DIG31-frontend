@@ -75,8 +75,15 @@ class Auth {
 
         // Initialise router and load all relevant entities
         Router.init()
-        gotoRoute('/')
-            // window.location.reload()
+        if (data.user.newUser) {
+            // redirect to guide page
+            gotoRoute('/guide')
+            window.location.reload()
+        } else {
+            console.log("Auth.js line 82 not new user anymore")
+            gotoRoute('/')
+            window.location.reload()
+        }
     }
 
 

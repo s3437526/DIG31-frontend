@@ -54,17 +54,17 @@ class PlacesView {
         padding: 0.5rem 0;
       }
 
-      .col1{
-      }
+      /* .col1{
+      } */
 
       .col2{
         justify-content: flex-start;
         padding: 0 1rem;
       }
 
-      .col3{
+      /* .col3{
 
-      }
+      } */
 
       .col4{
         justify-content: flex-end;
@@ -78,10 +78,19 @@ class PlacesView {
         font-size: 48px !important;
       }
 
-      div::part(body){
-        /* background: orange; */
-      }
+      .page-content{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
 
+        aa-panel-template{
+          min-width: 400px;
+            width: 95%;
+            height: 98%;
+            /* overflow: scroll; */
+          }
+        
     </style>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <va-app-header title="Places" user="${JSON.stringify(Auth.currentUser)}"></va-app-header>
@@ -103,7 +112,7 @@ class PlacesView {
         <div slot="body" part="body">
           <div class="grid-container">
             ${places.map(place =>
-          html`
+      html`
             <div class="cols col1">
                 <div class="material-icons">${place.locationType.iconURL}</div>
               </div>
@@ -115,15 +124,15 @@ class PlacesView {
               </div>
             </div>
             `
-        )}
+    )}
               </div>
           </div>
         </div>
       </aa-panel-template>
     </div>      
     `
-        render(template, App.rootEl)
-      }
+    render(template, App.rootEl)
+  }
 }
 
 
