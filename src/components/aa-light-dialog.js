@@ -325,7 +325,7 @@ class LightDialog {
                 </div>
                 <div class="input-group pad-bottom input-labels">
                     <p class="toggle-text">Off/On</p>
-                    <sl-switch class="toggle-switch" id="off-on-toggle" name="state" @sl-change=${this.handlePowerStatus.bind(this)}></sl-switch>      
+                    <sl-switch class="toggle-switch" id="off-on-toggle" name="state" ?checked=${device.state} @sl-change=${this.handlePowerStatus.bind(this)}></sl-switch>      
                 </div>
                 <div class="input-group">
                 <!-- Will be replaced with custom made component containing two selector in one line -->
